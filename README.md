@@ -1,2 +1,2 @@
-# jsp_pj_ndw
+# jspPJ_nadw
 jsp 프로젝트
