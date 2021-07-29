@@ -1,0 +1,111 @@
+1. 프로젝트 생성(Dynamic WEB PROJECT)
+2. WEB_INF/lib 폴더에 jar 파일(5개) 붙여 넣는다.
+3. encoding설정 : window > preference > 검색어 encoding > 
+     workspace, css, html, jsp, xml을 utf-8로 설정한다.   
+     
+4. GET 방식
+  (1) Servers > Tomcat v8.5 > server.xml 문서안에 아래처럼 UTF-8 추가 (한글 깨짐 방지)
+  63행 <Connector URIEncoding="UTF-8" connectionTimeout="20000" >
+  (2) 톰캣 서버 stop 한 후 "publish to the server" 버튼을 클릭해서 Synchronized(동기화) 시켜야 한다.
+      즉 이클립스에서 서버관련 xml 파일을 수정한 경우, 수정내역이 톰캣서버의 xml에 copy해서 반영하도록 하는 과정
+      Servers 탭의 Tomcatv85서버 [republish -> Synchronized로 변경]  
+
+5. 오라클 jsp_88 계정 생성 및 테이블 생성
+
+5-1.  <계정생성 jsp_88/tiger>
+-- [ 시스템 계정(System) 접속 ] ------
+
+-- 1. 계정 생성
+-- create user <계정이름> identified by <계정암호> default tablespace users;
+create user jsp_88 identified by tiger default tablespace users;
+
+-- 비밀번호 변경
+-- alter user <계정이름> identified by <변경 비밀번호>
+
+-- 2. 사용자 권한 부여
+-- grant connect, resource, create view to <계정이름>
+grant connect, resource, create view to jsp_88;
+grant create view to jsp_88;
+
+-- 3. 락해제
+-- alter user <계정> account unlock;
+alter user jsp_88 account unlock;
+
+-- 4. 계정 연결(+)
+=======================================
+<5-2. 테이블 생성>
+
+-- mvc_customer_tbl 생성
+DROP TABLE mvc_customer_tbl;
+CREATE TABLE mvc_customer_tbl(
+    id        VARCHAR2(20) PRIMARY KEY,
+    password  VARCHAR2(20) NOT NULL,
+    name      VARCHAR2(20) NOT NULL,
+    jumin1    VARCHAR2(6) NOT NULL,
+    jumin2    VARCHAR2(7) NOT NULL,
+    hp        VARCHAR2(13),
+    email     VARCHAR2(50) NOT NULL,
+    reg_date  TIMESTAMP DEFAULT sysdate   -- 가입일
+);
+
+SELECT * FROM tab;  -- 테이블 목록 확인
+DESC mvc_customer_tbl;
+
+6. 패키지 작성 및 WebContent 구성
+	
+	DAO(DATA ACCESS OBJECT)
+	Model => 로직처리 클래스(서비스 + DAO(JDBC) + DTO(VO))
+	View => jsp
+	Controller => servlet
+	
+	DAO => 싱글톤, 커넥션 풀(DB연결을 context.xml에서 resource로 처리)
+	인터페이스 => 기능정의서, 업무표준화
+	
+	// 컨트롤러(Java Resource)
+	mvc.customer.controller(=서블릿) => 컨트롤러
+
+	// 모델(java Resource)
+	mvc.customer.service
+	mvc.customer.dao
+	mvc.customer.vo(=dto) 
+	
+	// 뷰(Webcontent)
+	customer, admin 등등
+
+7. VO(Value Object=DTO)	=> 컬럼명 기준, input태그 name과 일치
+	CustomerVO.java
+	
+8. p415 커넥션 풀 구성(반드시 백업하고 서버 설치 후 다시 추가해야 함)
+Server -> Tomcat -> Context.xml 하단
+    <!-- 커넥션 풀: DBCP(DataBase Connection Pool) -->
+    <Resource author="Container"
+    	name="jdbc/jsp_88"
+    	username="jsp_88"
+    	password="tiger"
+    	url="jdbc:oracle:thin:@localhost:1521:xe"
+    	driverClassName="oracle.jdbc.driver.OracleDriver"
+    	maxActive="5"
+    	maxWait="1000"
+    	type="javax.sql.DataSource"
+    />		
+    	
+9. 컨트롤러 구현
+	CustomerController(=서블릿) => 서블릿 작성
+	
+10. 모델 구현 (서비스, DAO)
+	CustomerDAO => CustomerDAOImpl
+	CustomerService => CustomerServiceImpl
+	
+11. 뷰 구현
+	- jsp 작성
+	- javascript 작성
+	- css
+	- jQuery	 
+
+%컨트롤러 호출법 세 가지%
+1) submit:action="이동페이지" => action에서 지정한 페이지로 이동
+
+2) response.sendRedirect("mainSuccess.do?insertCnt=" + cnt); => get방식으로 페이지 이동
+	
+3) <input class="button" type="button" value="가입취소" onclick="window.location='main.do'">
+	=> window.location에서 지정한 페이지로 이동
