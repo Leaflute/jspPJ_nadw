@@ -1,0 +1,74 @@
+@charset "UTF-8";
+.navbar_logo i {
+	color: lime;
+}
+
+.navbar_menu {
+	display: flex; /*1줄 출력*/
+	list-style: none;
+	padding-left: 0;
+	
+}
+
+.navbar_menu li {
+	padding: 8px 12px;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.navbar_menu li:hover {
+	background-color: #d49466;
+	border-radius: 4px
+}
+
+.navbar_icons {
+	color: #f0f4f5;
+	list-style: none;
+	display : flex;
+	padding-left: 0;
+}
+
+.navbar_icons li {
+	padding: 8px 12px;
+	display: flex; 
+}
+
+/*bars 맨 오른쪽에 배치*/
+.navbar_togleBtn {
+	display: none; /* 화면크기가 작을때만 출력하게 하기 위함 */
+	right: 32px;
+	font-size: 24px;
+	color: black;
+}
+
+/* 반응형 웹 작성 - 미디어쿼리 */
+@media screen and (max-width: 768px) {
+	.navbar {
+		flex-direction: column;
+		align-items: flex-start;
+		width: 100%;
+	}
+	
+	.navbar_menu {
+		/* display:none; */
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+	}
+	
+	/* 마우스 올리면 하이라이트를 전체 크기로 주기*/
+	.navbar_menu li {
+		width: 100%;
+		text-align: center;
+	}
+	
+	/* 아이콘 가운데 정렬 */
+	.navbar_icons {
+		justify-content: center;
+		width: 100%;
+	}
+	
+	.navbar_togleBtn {
+		display : block;
+	}
+}

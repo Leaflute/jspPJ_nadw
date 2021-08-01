@@ -1,0 +1,110 @@
+@charset "UTF-8";
+
+#my_page_box {
+	display: flex;
+	border: 1px solid lightgray;
+	border-top-width: 0;
+}
+
+/* 사이드바 메뉴 */
+.nav_bar {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	width: 220px;
+	font: 24px;
+	font-weight: bolder; 	
+}
+
+.nav_bar li {
+	height: 40px;
+	margin: 20px;
+}
+
+.page_title {
+	font-size: 24px;
+}
+
+.nav_bar li:after {
+	content: "";
+	display: block;
+	width: 160px;
+	border-bottom: 1px solid #ddd;
+	margin: 15px auto;
+}
+
+#mem_pic {
+	background-color: #dfdfdf;
+	height: 280px;
+}
+
+/* 본문 */
+
+.mem_content {
+	width: 980px;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid lightgray;
+	border-top-width: 0;
+	border-right-width: 0;
+}
+
+#my_condition {
+	display: flex;
+	justify-content: space-around;
+	height: 240px;
+	background-color: #efefef;
+}
+
+#my_condition > div {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	width: 25%;
+	font-weight: bold;
+}
+
+#my_condition i {
+	font-size: 48px;
+}
+
+#my_condition li:last-child {
+	font-size: 60px;
+}
+
+
+
+.title_letter {
+	font-size: 36px;
+	font-weight: bold;
+	margin-botton: 2.5%;
+} 
+
+/* 테이블 영역 */
+
+table {
+	margin: 20px auto;
+	border: 1px solid lightgray;
+	border-left: 0px;
+	border-right: 0px;
+	border-top: 4px solid olive;
+	border-collapse: collapse;
+	text-align: center;
+	font-size: 18px;
+}
+
+th, td {
+	padding: 10px 30px;
+	border-bottom: 1px solid lightgray;
+}
+
+.little_btn {
+	font-size: 14px;
+	padding: 5px;
+	border-style: none;
+	border-radius: 2px;
+	margin: 10px;
+	background-color: #00c11f;
+	color:white;
+}

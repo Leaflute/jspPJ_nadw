@@ -1,0 +1,95 @@
+@charset "UTF-8";
+
+#hd_top {
+	display : flex;
+	justify-content: space-between;
+	color: gray;
+}
+
+#hd_top li {
+	float : left;
+	margin-left : 10px;
+}
+
+#hd_mid {
+	display: flex;
+	justify-content:space-between;
+	height: 140px;
+	align-items: center;
+}
+
+#search_box {
+	position: relative;
+	right:6%;
+	width: 360px;
+	height: 60px;
+	border: 5px solid #00c11f;
+	border-left-width: 0;
+	border-right-width: 0;
+	border-top-width: 0;
+}
+
+#hd_mid ul {
+	display:flex;
+} 
+
+input[type="search"] {
+	padding-top:30px;
+	width: 320px;
+	height: 48px;
+}
+
+#search_btn {
+	padding-top: 15px;
+	margin-left: 5px;
+	height: 48px;
+	color: #00c11f;
+	font-size: 30px;
+}
+
+#menu_icons {
+	font-size: 60px;
+}
+
+#menu_icons li {
+	margin: 20px auto;
+	color: gray; 
+}
+
+#hd_bot {
+}
+
+#bar_menu {
+	display: flex; /*가운데로 배치*/
+	justify-content: flex-start;
+	align-items: center; /* 가운데 수직 정렬 */
+	height: 60px;
+	
+}
+
+#bar_menu ul {
+	display: flex; /*가운데로 배치*/
+	height: 60px;
+	font-size : 20px;
+	justify-content: flex-start; 
+	align-items: center;
+}
+
+#bar_menu li {
+	margin : 20px;
+}
+
+#bar_toggleBtn {
+	background-color: #00c11f;
+	width:62px;
+	height:60px;
+}
+
+#bar_toggleBtn i {
+	font-size: 32px;
+	font-weight: bold;
+	color:white;
+	position:relative;
+	top:25%;
+	left:27.5%;
+}

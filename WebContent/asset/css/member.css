@@ -1,0 +1,79 @@
+@charset "UTF-8";
+
+fieldset {
+	border-style: none;
+}
+
+#signInBox {	
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform:translate(-50%, 10%);
+	text-align:center;
+}
+
+.cell_green {
+	border-style: none;
+	font-size: 18px;
+	color: white;
+	background-color: #00c11f;
+}
+
+.cell_white {
+	font-size: 18px;
+	border-color: #00c11f;
+	color: #00c11f;
+	background-color: white;
+}
+
+.btn_green {
+	color: white;
+	background-color: #00c11f;
+	padding: 4px;
+	border-radius: 2px;
+}
+
+.btn_white {
+	color: #00c11f;
+	background-color: white;
+}
+
+
+.member_box {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 400px;
+	height: 400px;
+}
+
+#hd_register {
+	height:40px;
+	line-height:40px;
+	font:x-large bold;	
+}
+
+.icon {
+	width:50px;
+}
+
+img {
+	object-fit: none;
+	margin: 15px;
+}
+
+table {
+	border:1px solid lightgray;
+	border-collapse: collapse;
+}
+
+tr {
+	height: 54px;
+	border:1px solid lightgray;
+}
+
+td, th {
+	padding: 5px;
+}
