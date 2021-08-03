@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../common/setting.jsp" %>     
+<%@ include file="../asset/setting.jsp" %>     
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,14 +12,14 @@
 </head>
 <body>
 <div class="wrapper">
-<%@ include file="member_header.jsp" %>
+<%@ include file="signHeader.jsp" %>
 
 <!-- article 시작 -->
 <article class="container">
 	<section class="wrap_inner">
 	<div id="signInBox">
-	<a href="index.me"><img src="${imgPath}leafcom-logo.png"></a>
-		<form action="logInAction.me" name="myForm" id="join">
+	<a href="index.co"><img src="${imgPath}leafcom-logo.png"></a>
+		<form action="logInAction.co" name="myForm" id="join">
 			<fieldset>
 				<table>
 					<tr>
@@ -42,7 +42,7 @@
 					<tr>
 						<td colspan="2" align="center" class="cell_white">
 						<input type="button" value="회원가입" class="btn_white" style="width:100%;height:100%" 
-							onclick="window.location='signIn.me'">
+							onclick="window.location='signIn.co'">
 						</td>
 					</tr>
 				</table>

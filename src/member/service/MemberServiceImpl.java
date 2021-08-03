@@ -37,8 +37,8 @@ public class MemberServiceImpl implements MemberService {
 	
 	// 회원가입 - 이메일 중복확인
 	@Override
-	public void confirmEmail(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("[Member][service][confirmEmail()]");
+	public void emailDupChk(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("[Member][service][emailDupChk()]");
 		// 3단계. 화면에서 입력받은 값을 추출
 		String strEmail = req.getParameter("email");
 		
@@ -74,22 +74,60 @@ public class MemberServiceImpl implements MemberService {
 		req.setAttribute("insertCnt", insertCnt);
 	}
 
+	// 회원탈퇴 -> 비밀번호 재확인
 	@Override
 	public void withdrawMemAction(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
+		System.out.println("[Member][service][withdrawMemAction()]");
+		String strEmail = (String)req.getSession().getAttribute("sessionID");
+		String strPw = req.getParameter("pw");
 		
+		MemberDAO dao = MemberDAOImpl.getInstance();
+		
+		int selectCnt = dao.idPwChk(strEmail, strPw);
+		int deleteCnt = 0;
+		
+		if (selectCnt==1) {
+			deleteCnt = dao.withrawMember(strEmail);
+		}
+		req.setAttribute("selectCnt", selectCnt);
+		req.setAttribute("deleteCnt", deleteCnt);
 	}
 
+	// 회원정보 조회
 	@Override
 	public void viewMemInfoAction(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
+		System.out.println("[Member][service][viewMemInfoAction()]");
+		String strEmail = (String)req.getSession().getAttribute("sessionID");
+		String strPw = req.getParameter("pw");
+		
+		MemberDAO dao = MemberDAOImpl.getInstance();
+		
+		int selectCnt = dao.idPwChk(strEmail, strPw);
+		
+		MemberVO vo = new MemberVO();
+		if (selectCnt==1) {
+			vo = dao.getMemberInfo(strEmail);
+		}
+		req.setAttribute("selectCnt", selectCnt);
+		req.setAttribute("vo", vo);
 		
 	}
-
+	
+	// 회원정보 수정
 	@Override
-	public void modifyMemInfoAction(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
+	public void updateMemInfoAction(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("[Member][service][updateMemInfoAction()]");
+		MemberDAO dao = MemberDAOImpl.getInstance();
+		MemberVO vo = new MemberVO();
 		
+		vo.setEmail((String)req.getSession().getAttribute("sessionID"));
+		vo.setPw(req.getParameter("pw"));
+		vo.setName(req.getParameter("name"));
+		vo.setPhone(req.getParameter("phone"));
+		
+		int updateCnt = dao.updateMember(vo);
+		
+		req.setAttribute("updateCnt", updateCnt);
 	}
 
 }

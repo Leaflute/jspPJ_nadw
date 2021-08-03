@@ -102,9 +102,7 @@ public class MemberDAOImpl implements MemberDAO {
 			
 			if(rs.next()) {
 				selectCnt = 1;
-			} else {
-				selectCnt = 0;
-			}
+			} 
 			
 			System.out.println("[Member][DAO] emailDupChk() selectCnt => " + selectCnt);
 		} catch (SQLException e) {
@@ -121,13 +119,44 @@ public class MemberDAOImpl implements MemberDAO {
 		
 		return selectCnt;
 	}
-
+	
+	// 회원 정보 조회
 	@Override
 	public MemberVO getMemberInfo(String strEmail) {
-		// TODO Auto-generated method stub
-		return null;
+		MemberVO vo = new MemberVO();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {	
+			conn = dataSource.getConnection();
+			String sql = "SELECT * FROM members WHERE mem_email = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, strEmail);
+			
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				vo.setEmail(rs.getString("mem_email"));
+				vo.setName(rs.getString("mem_name"));
+				vo.setPhone(rs.getString("mem_phone"));
+				vo.setRegDate(rs.getTimestamp("mem_regdate"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs!=null) rs.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				
+			}
+		}
+			
+		return vo;
 	}
-
+	
+	// 회원가입 - 입력 처리
 	@Override
 	public int insertMember(MemberVO vo) {
 		int insertCnt = 0;
@@ -147,7 +176,7 @@ public class MemberDAOImpl implements MemberDAO {
 			pstmt.setInt(7, vo.getCondition());
 			
 			insertCnt = pstmt.executeUpdate();
-			System.out.println("[MEMBER][DAO] insertMember() insertCnt => " + insertCnt);
+			System.out.println("[Member][DAO] insertMember() insertCnt => " + insertCnt);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -161,17 +190,68 @@ public class MemberDAOImpl implements MemberDAO {
 		}
 		return insertCnt;
 	}
-
+	
+	// 회원 탈퇴 처리
 	@Override
 	public int withrawMember(String strEmail) {
-		// TODO Auto-generated method stub
-		return 0;
+		int deleteCnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			String sql = "DELETE members WHERE mem_email = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, strEmail);
+			
+			deleteCnt = pstmt.executeUpdate();
+			System.out.println("[Member][DAO] withrawMember() deleteCnt => " + deleteCnt);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return deleteCnt;
 	}
-
+	
+	// 회원정보 수정
 	@Override
 	public int updateMember(MemberVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
+		int updateCnt = 0;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			String sql = "UPDATE members SET mem_pwd = ?, mem_name = ?, mem_phone = ? WHERE mem_email = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getPw());
+			pstmt.setString(2, vo.getName());
+			pstmt.setString(3, vo.getPhone());
+			pstmt.setString(4, vo.getEmail());
+			
+			updateCnt = pstmt.executeUpdate();
+			System.out.println("[Member][DAO] withrawMember() updateCnt => " + updateCnt);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return updateCnt;
 	}
 
 }

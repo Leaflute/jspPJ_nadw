@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../common/setting.jsp" %>       
+<%@ include file="../asset/setting.jsp" %>       
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,19 +8,20 @@
 <link rel="stylesheet" type="text/css" href="${cssPath}member.css">
 <link rel="stylesheet" type="text/css" href="${cssPath}article.css">
 <title>회원가입</title>
+<script type="text/javascript" src="${jsPath}jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="${jsPath}member.js"></script>
 </head>
 <body>
 <div class="wrapper">
 <!-- header 시작 -->
-<%@ include file="member_header.jsp" %>
+<%@ include file="signHeader.jsp" %>
 
 <!-- article 시작 -->
 <article class="container">
 	<section class="wrap_inner">
 	<div id="signInBox">
-		<a href="index.me"><img src="${imgPath}leafcom-logo.png"></a>
-		<form action="signInAction.me" method="post" name="signInForm" onsubmit="return signInChk();">
+		<a href="index.co"><img src="${imgPath}leafcom-logo.png"></a>
+		<form action="signInAction.co" method="post" name="signInForm" onsubmit="return signInChk();">
 			<input type="hidden" name="hiddenEmail" value="0">
 			<fieldset>
 				<table>
@@ -28,7 +29,7 @@
 						<th class="icon" ><i class="far fa-envelope"></i></th>
 						<td align="left">
 							<input type="text" name="email" size="40" placeholder="이메일 주소">
-							<input type="button" class="btn_green" name="emailDupChk"
+							<input type="button" class="btn_green popup" name="emailDupChk"
 								value="중복확인" onclick="confirmEmail();">
 						</td>	
 					</tr>

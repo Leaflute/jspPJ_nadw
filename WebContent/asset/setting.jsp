@@ -3,10 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<c:set var="path" value="/jsp_pj_ndw/common/"/>
-<c:set var="mPath" value="/jsp_pj_ndw/member/"/>
+<c:set var="mpath" value="/jsp_pj_ndw/member/"/>
 <c:set var="aPath" value="/jsp_pj_ndw/admin/"/>
-<c:set var="cPath" value="/jsp_pj_ndw/client/"/>
+<c:set var="cPath" value="/jsp_pj_ndw/customer/"/>
 <c:set var="iPath" value="/jsp_pj_ndw/item/"/>
 <c:set var="bPath" value="/jsp_pj_ndw/board/"/>
 

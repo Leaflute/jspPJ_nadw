@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../common/setting.jsp" %>     
+<%@ include file="../asset/setting.jsp" %>     
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,10 +23,16 @@
 </c:if>
 <c:if test="${not empty sessionScope.sessionID}">
 	<c:if test="${sessionScope.isAdmin==1}">
-		<c:redirect url="main.ad"></c:redirect>
+		<script type="text/javascript">
+			alert("관리자 로그인에 성공했습니다.");
+			window.location="adminMain.ad";
+		</script>
 	</c:if>
 	<c:if test="${sessionScope.isAdmin==0}">
-		<c:redirect url="index.me"></c:redirect>
+		<script type="text/javascript">
+			alert("회원 로그인에 성공했습니다.")
+			window.location="index.co";
+		</script>
 	</c:if>
 </c:if>
 

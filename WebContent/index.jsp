@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="./common/setting.jsp"%>    
+<%@ include file="./asset/setting.jsp"%>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +17,7 @@
 <body>
 
 <div class="wrapper">
-<%@ include file="./client/client_header.jsp" %>
+<%@ include file="./common/header.jsp" %>
 
 <!-- article 시작 -->
 <article class="container">

@@ -9,7 +9,7 @@ public interface MemberService {
 	public void loginAction(HttpServletRequest req, HttpServletResponse res);
 	
 	// 이메일 중복확인
-	public void confirmEmail(HttpServletRequest req, HttpServletResponse res);
+	public void emailDupChk(HttpServletRequest req, HttpServletResponse res);
 	
 	// 회원가입 처리
 	public void signInAction(HttpServletRequest req, HttpServletResponse res);
@@ -21,5 +21,5 @@ public interface MemberService {
 	public void viewMemInfoAction(HttpServletRequest req, HttpServletResponse res);
 	
 	// 회원정보 수정
-	public void modifyMemInfoAction(HttpServletRequest req, HttpServletResponse res);
+	public void updateMemInfoAction(HttpServletRequest req, HttpServletResponse res);
 }
