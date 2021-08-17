@@ -12,7 +12,7 @@
 <body>
 <!-- footer 시작 -->	
 <footer>
-	<div class="wrap_inner">
+	<div class="wrapper">
 		<div id="ft_menu">
 			<ul>
 				<li>회사소개</li>
@@ -25,7 +25,7 @@
 		</div>
 	</div>	
 	<br><hr color="lightgray" size="1px">
-	<div class="wrap_inner">
+	<div class="wrapper">
 		<div id="ft_company_detail">
 			<div>
 				<ul>

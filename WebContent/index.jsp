@@ -16,14 +16,13 @@
 </head>
 <body>
 
-<div class="wrapper">
 <%@ include file="./common/header.jsp" %>
 
 <!-- article 시작 -->
 <article class="container">
 	<!-- slider_ad -->
 	<section class="full_width" id="main_ad_wrap">
-		<div class="wrap_inner" id="ad_slider">
+		<div class="wrapper" id="ad_slider">
 			<div><img src="./asset/img/MainRollingBanner_94657.jpg"></div>
 			<div><img src="./asset/img/MainRollingBanner_95713.jpg"></div>
 			<div><img src="./asset/img/MainRollingBanner_95795.jpg"></div>
@@ -34,7 +33,7 @@
 	</section> 
 	
 	<!-- container -->
-	<section class="wrap_inner">
+	<section class="wrapper">
 		
 		<!-- 배너 -->
 		<div class="cnt_banner">
@@ -77,7 +76,6 @@
 </article>
 <!-- article 끝 -->
 <%@ include file="./common/footer.jsp" %>
-</div>
 <script type="text/javascript">
 $("#ad_slider").slick({
 	  slidesToShow: 2,

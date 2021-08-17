@@ -15,7 +15,7 @@
 <!-- header 상단 -->
 	
 	<div class="full_width" >
-		<div class="wrap_inner" id="hd_top">			
+		<div class="wrapper" id="hd_top">			
 			<ul id="top_left">
 				<li><i class="fab fa-facebook"></i></li>
 				<li><i class="fab fa-youtube"></i></li>
@@ -37,7 +37,7 @@
 	</div>
 	
 	<!-- header 중단 -->
-	<div class="wrap_inner" id="hd_mid">
+	<div class="wrapper" id="hd_mid">
 		<div>
 			<a href="index.co"><img src="${imgPath}leafcom-logo.png"></a>
 		</div>
@@ -69,7 +69,7 @@
 	
 	<!-- header 하단 -->
 	<div class="full_width" id="hd_bot">	
-		<div class="wrap_inner" id="bar_menu">
+		<div class="wrapper" id="bar_menu">
 			<div id="bar_toggleBtn">
 				<a href="#"><i class="fas fa-bars"></i></a>
 			</div>
