@@ -24,21 +24,19 @@
 			<section class="mem_content">
 				<div class="outer_content">
 					<div class="inner_content">
-						<h1>DASHBOARD홈</h1>
-						<table style="width:1000px" align="center">
+						<h1>고객문의관리</h1>
+						<table>
 							<tr>
 								<th colspan="6" style="height:25px">
-									게시글 목록(게시물 수:${cnt}) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									<a href="boardWrite.bo?pageNum=${pageNum}">글쓰기</a>
+									게시글 목록(게시물 수:${cnt})
 								</th>
 							</tr>
 							<tr>
-								<th style="width:10%">글번호(ref/refStep/refLevel)</th>
-								<th style="width:30%">글제목</th>
-								<th style="width:10%">작성자</th>
-								<th style="width:15%">작성일</th>
-								<th style="width:5%">조회수</th>
-								<th style="width:10%">IP</th>
+								<th>글번호(ref/refStep/refLevel)</th>
+								<th>글제목</th>
+								<th>작성자</th>
+								<th>작성일</th>
+								<th>IP</th>
 							</tr>
 							<c:if test="${cnt>0}">
 								<%-- <c:forEach var="작은바구니 참조변수" items="${ParamName}"> --%>
@@ -53,25 +51,19 @@
 										<!-- 답글인 경우: 들여쓰기 > 1 -->
 										<c:if test="${dto.refLevel > 1}">
 											<c:set var="wid" value="${(dto.refLevel-1)*10}"/>
-											<img src="${path}img/level.gif" border="0" width="${wid}" height="15">
+											<img src="${iPath}level.gif" border="0" width="${wid}" height="15">
 										</c:if>
 										
 										<!-- 답글인 경우: 들여쓰기 > 0 -->
 										<c:if test="${dto.refLevel > 0}">
 											<c:set var="wid" value="${(dto.refLevel-1)*10}"/>
-											<img src="${path}img/re.gif" border="0" width="20" height="15">
-										</c:if>
-										
-										<!-- hot 이미지 -->
-										<c:if test="${dto.readCount>10}">
-											<img src="${path}img/hot.gif" border="0" width="20" height="15">
+											<img src="${iPath}img/re.gif" border="0" width="20" height="15">
 										</c:if>
 										
 										<!-- 게시글 내용 보기 -->
-										<a href="boardDetail?num=${dto.num}&pageNum=${pageNum}&number=${number+1}">${dto.subject}</a></td>
+										<a href="boardDetail?num=${dto.postNum}&pageNum=${pageNum}&number=${number+1}">${dto.title}</a></td>
 										<td>${dto.writer}</td>
 										<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${dto.regDate}"/></td>
-										<td>${dto.readCount}</td>
 										<td>${dto.ip}</td>
 									</tr>
 								</c:forEach>
@@ -81,7 +73,7 @@
 							</c:if>
 							
 							<!-- 페이지 컨트롤 -->
-							<table style="width:1000px" align="center">
+							<table>
 								<tr>
 									<th align="center">
 										<!-- 게시글 존재 여부 -->

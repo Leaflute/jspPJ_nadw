@@ -47,15 +47,15 @@ public class BoardController extends HttpServlet {
 			System.out.println("[Bo][Controller][url=>/boardList.bo]");
 			service.boardList(req, res);
 			
-			viewPage = "/board/boardList.jsp";
-			
+			viewPage = "/admin/bbs/boardList.jsp";
+
 		// 게시글 상세 보기	
 		} else if (url.equals("/boardDetail.bo")) {
 			System.out.println("[Bo][Controller][url=>/boardDetail.bo]");
 			service.boardDetail(req, res);
 			
 			viewPage = "/board/boardDetail.jsp";
-		
+		/*	
 		// 게시글 수정 요청
 		} else if (url.equals("/boardModify.bo")) {	
 			System.out.println("[Bo][Controller][url=>/boardModify.bo]");
@@ -147,7 +147,8 @@ public class BoardController extends HttpServlet {
 			
 			viewPage = "/board/boardDeleteAction.jsp";	
 		}
-		
+		*/
+		}	
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 		dispatcher.forward(req, res);
 	}

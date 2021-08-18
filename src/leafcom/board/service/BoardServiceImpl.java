@@ -19,7 +19,7 @@ public class BoardServiceImpl implements BoardService {
 		// 3단계. 화면에서 입력받은 값을 가져옴
 		// 페이징
 		int pageSize = 5; 		// 한 페이지당 출력할 글 개수
-		int pageBlock = 3;		// 한 블럭당 페이지 개수
+		int pageBlock = 5;		// 한 블럭당 페이지 개수
 		
 		int cnt = 0;			// 게시글 개수
 		int start = 0;			// 현재 페이지 시작 게시글
@@ -38,7 +38,6 @@ public class BoardServiceImpl implements BoardService {
 		// 5-1단계. 게시글 개수 조회
 		cnt = dao.getBoardCount();
 		System.out.println("[Board][Service][cnt = " + cnt + " ]");
-		
 		
 		// 5-2단계. 게시글 목록 조회
 		pageNum = req.getParameter("pageNum");
@@ -81,12 +80,12 @@ public class BoardServiceImpl implements BoardService {
 		if (endPage > pageCount) endPage = pageCount;
 		
 		System.out.println("endPage: " + endPage);
-		System.out.println("==============================");
+		System.out.println("===================");
 		
 		ArrayList<BoardVO> dtos = null;
 		
 		if(cnt > 0) {
-			dtos = dao.getBoardList(start, end);
+			dtos = dao.getPostList(start, end);
 		}
 		
 		// 6단계. request나 session에 처리결과를 저장 -> jsp로 전달
@@ -103,7 +102,7 @@ public class BoardServiceImpl implements BoardService {
 			req.setAttribute("currentPage", currentPage);
 		}
 	}
-	
+/*	
 	// 게시글 상세 페이지 조회
 	@Override
 	public void boardDetail(HttpServletRequest req, HttpServletResponse res) {
@@ -220,5 +219,5 @@ public class BoardServiceImpl implements BoardService {
 		req.setAttribute("deleteCnt", deleteCnt);
 		req.setAttribute("selectCnt", selectCnt);
 	}
-
+*/
 }

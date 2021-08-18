@@ -52,16 +52,8 @@ public class AdminController extends HttpServlet {
 			
 			viewPage = "/admin/dashboardMain.jsp";
 			
-			
-		// 게시판 관리
-		} else if(url.equals("/dashboardBBS.co")) {
-			System.out.println("[Member][cnt][url ==> /dashboardBBS.co]");
-			
-			viewPage = "/admin/bbs/dashboardBBS.jsp";
-		}
-			
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 		dispatcher.forward(req, res);
-		
+		}
 	}
 }

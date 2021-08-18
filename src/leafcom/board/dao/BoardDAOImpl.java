@@ -11,7 +11,6 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import leafcom.board.vo.BoardVO;
-import oracle.net.aso.r;
 
 public class BoardDAOImpl implements BoardDAO {
 	
@@ -33,13 +32,13 @@ public class BoardDAOImpl implements BoardDAO {
 	private BoardDAOImpl() {
 		try {
 			Context context = new InitialContext();
-			dataSource = (DataSource)context.lookup("java:comp/env/jdbc/jsp_88");		
+			dataSource = (DataSource)context.lookup("java:comp/env/jdbc/leafcom");		
 			} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	// 게시글 개수 구하기
+	// 고객문의 게시글 개수 구하기
 	@Override
 	public int getBoardCount() {
 		int selectCnt = 0;
@@ -50,7 +49,8 @@ public class BoardDAOImpl implements BoardDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT COUNT(*) as cnt FROM mvc_board_tbl";
+			String sql = "SELECT COUNT(*) cnt FROM board WHERE board_id = ?";
+			pstmt.setInt(1, 1);
 			pstmt = conn.prepareStatement(sql);
 			
 			rs = pstmt.executeQuery();
@@ -74,9 +74,9 @@ public class BoardDAOImpl implements BoardDAO {
 		return selectCnt;
 	}
 	
-	// 게시글 개수 구하기
+	// 게시글 목록 구하기
 	@Override
-	public ArrayList<BoardVO> getBoardList(int start, int end) {
+	public ArrayList<BoardVO> getPostList(int start, int end) {
 		
 		// 1. 큰바구니(ArrayList) 선언
 		ArrayList<BoardVO> list = null;
@@ -88,13 +88,14 @@ public class BoardDAOImpl implements BoardDAO {
 			conn = dataSource.getConnection();
 			
 			String sql = "SELECT * "
-						+ "FROM (SELECT num, writer, pw, subject, content, readcount, "
-									+ "ref, ref_step, ref_level, regdate, ip, rowNum rNum "
-								+ "FROM (SELECT * FROM mvc_board_tbl ORDER BY ref DESC, ref_step ASC)) " 
+						+ "FROM (SELECT post_num, post_writer, post_title, post_content, post_hits, "
+									+ "post_ref, post_ref_step, post_ref_level, post_regdate, post_ip, rowNum rNum "
+								+ "FROM (SELECT * FROM post WHERE board_id = ? ORDER BY ref DESC, ref_step ASC)) " 
 						+ "WHERE rNum >= ? AND rNum <=?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, start);
-			pstmt.setInt(2, end);
+			pstmt.setInt(1, 1);
+			pstmt.setInt(2, start);
+			pstmt.setInt(3, end);
 			
 			rs = pstmt.executeQuery();
 			
@@ -109,17 +110,16 @@ public class BoardDAOImpl implements BoardDAO {
 					BoardVO vo = new BoardVO();
 					
 					// 4. 한 건을 읽어서 rs결과를 setter로 작은 바구니에 담음
-					vo.setNum(rs.getInt("num"));
-					vo.setWriter(rs.getString("writer"));
-					vo.setPw(rs.getString("pw"));
-					vo.setSubject(rs.getString("subject"));
-					vo.setContent(rs.getString("content"));
-					vo.setReadCount(rs.getInt("readcount"));
-					vo.setRef(rs.getInt("ref"));
-					vo.setRefStep(rs.getInt("ref_step"));
-					vo.setRefLevel(rs.getInt("ref_level"));
-					vo.setRegDate(rs.getTimestamp("regdate"));
-					vo.setIp(rs.getString("ip"));
+					vo.setPostNum(rs.getInt("post_num"));
+					vo.setWriter(rs.getString("post_writer"));
+					vo.setTitle(rs.getString("post_title"));
+					vo.setContent(rs.getString("post_content"));
+					vo.setHit(rs.getInt("post_hit"));
+					vo.setRegDate(rs.getTimestamp("post_regdate"));
+					vo.setRef(rs.getInt("post_ref"));
+					vo.setRefStep(rs.getInt("post_refref_step"));
+					vo.setRefLevel(rs.getInt("post_refref_level"));
+					vo.setIp(rs.getString("post_ip"));
 					
 					// 5. 큰 바구니에 작은 바구니를 담음
 					list.add(vo);
@@ -140,6 +140,7 @@ public class BoardDAOImpl implements BoardDAO {
 		
 		return list;
 	}
+
 
 	@Override
 	public void addReadCount(int num) {
@@ -166,7 +167,7 @@ public class BoardDAOImpl implements BoardDAO {
 			}
 		}
 	}
-	
+	/*
 	// 게시글 상세페이지, 수정 상세
 	@Override
 	public BoardVO getBoardDetail(int num) {
@@ -438,4 +439,5 @@ public class BoardDAOImpl implements BoardDAO {
 		}
 	return deleteCnt;
 	}
+	*/
 }

@@ -24,8 +24,8 @@
 				<li><a href="dashboard_order.html">주문관리</a></li>
 				<li><a href="dashboard_item.html">상품관리</a></li>
 				<li><a href="dashboard_report.html">결산관리</a></li>
-				<li><a href="dashboard_bbs.html">게시판관리</a></li>
-				<li><a href="../index.html">로그아웃</a></li>
+				<li><a href="boardList.bo">게시판관리</a></li>
+				<li><a href="logout.co">로그아웃</a></li>
 			</ul>
 		</div>
 	</nav>
