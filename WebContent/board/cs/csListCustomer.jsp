@@ -11,14 +11,14 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%@ include file="../dashboardHeader.jsp" %>
+<%@ include file="../../common/header.jsp" %>
 <!-- article 시작 -->
 <article class="container">
 	<!-- 컨테이너 -->
 	<div class="wrapper">
 		<div id="my_page_box">
 			<!-- 좌측 메뉴바 -->
-			<%@ include file="../dashboardNav.jsp" %>	
+			<%@ include file="../../common/nav.jsp" %>	
 			
 			<!-- section -->
 			<section class="mem_content">

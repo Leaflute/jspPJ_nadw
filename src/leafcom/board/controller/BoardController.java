@@ -42,23 +42,38 @@ public class BoardController extends HttpServlet {
 		BoardService service = new BoardServiceImpl();
 		
 		// 2단계. 요청분석
-		// 게시글 목록 조회
-		if (url.equals("/boardList.bo")||url.equals("/*.bo")) {
-			System.out.println("[Bo][Controller][url=>/boardList.bo]");
+		// 고객 문의 게시판(board_id=1)
+		// [관리자] 전체 고객문의 목록 조회
+		if (url.equals("/adminCsList.bo")||url.equals("/*.bo")) {
+			System.out.println("[Bo][Controller][url=>/adminCsList.bo]");
 			service.boardList(req, res);
 			
-			viewPage = "/admin/bbs/boardList.jsp";
-
-		// 게시글 상세 보기	
-		} else if (url.equals("/boardDetail.bo")) {
-			System.out.println("[Bo][Controller][url=>/boardDetail.bo]");
+			viewPage = "/admin/board/cs/adminCsList.jsp";
+		
+		// [고객] 고객문의 목록 조회(고객 본인 문의 게시글만 조회)
+		} else if (url.equals("/cutomerCsDetail.bo")) {
+			System.out.println("[Bo][Controller][url=>/cutomerCsDetail.bo]");
 			service.boardDetail(req, res);
 			
-			viewPage = "/board/boardDetail.jsp";
-		/*	
-		// 게시글 수정 요청
-		} else if (url.equals("/boardModify.bo")) {	
-			System.out.println("[Bo][Controller][url=>/boardModify.bo]");
+			viewPage = "/customer/board/cs/cutomerCsDetail.jsp";
+			
+		// [관리자] 게시글 상세 보기	
+		} else if (url.equals("/adminCsDetail.bo")) {
+			System.out.println("[Bo][Controller][url=>/adminCsDetail.bo]");
+			service.boardDetail(req, res);
+			
+			viewPage = "/admin/board/cs/adminCsDetail.jsp";
+		
+		// [고객] 게시글 상세 보기
+		} else if (url.equals("/customerCsDetail.bo")) {
+			System.out.println("[Bo][Controller][url=>/customerCsDetailCsDetail.bo]");
+			service.boardDetail(req, res);
+			
+			viewPage = "/customer/board/cs/customerCsDetail.jsp";
+		
+		// [관리자] 게시글 수정 요청
+		} else if (url.equals("/adminCsUpd.bo")) {	
+			System.out.println("[Bo][Controller][url=>/adminCsUpd.bo]");
 			
 			int num = Integer.parseInt(req.getParameter("num"));
 			int pageNum = Integer.parseInt(req.getParameter("pageNum"));
@@ -66,21 +81,47 @@ public class BoardController extends HttpServlet {
 			req.setAttribute("num", num);
 			req.setAttribute("pageNum", pageNum);
 			
-			viewPage = "/board/boardModify.jsp";
+			viewPage = "/admin/board/cs/adminCsUpd.jsp";
 			
-		// 게시글 수정을 위한 인증 -> 수정 상세페이지 이동
-		} else if (url.equals("/boardModifyDetail.bo")) {		
+		// [고객] 게시글 수정 요청
+		} else if (url.equals("/customerCsUpd.bo")) {	
+			System.out.println("[Bo][Controller][url=>/customerCsUpd.bo]");
+			
+			int num = Integer.parseInt(req.getParameter("num"));
+			int pageNum = Integer.parseInt(req.getParameter("pageNum"));
+			
+			req.setAttribute("num", num);
+			req.setAttribute("pageNum", pageNum);
+			
+			viewPage = "/customer/board/cs/customerCsUpd.jsp";	
+			
+		// [관리자] 게시글 수정을 위한 인증 -> 수정 상세페이지 이동
+		} else if (url.equals("/customerCsUpdDetail.bo")) {		
 			System.out.println("[Bo][Controller][url=>/boardModifyDetail.bo]");
 			service.boardModifyDetailAction(req, res);
 			
 			viewPage = "/board/boardModifyDetail.jsp";
+		
+		// [고객]  게시글 수정을 위한 인증 -> 수정 상세페이지 이동
+		} else if (url.equals("/boardModifyDetail.bo")) {		
+			System.out.println("[Bo][Controller][url=>/boardModifyDetail.bo]");
+			service.boardModifyDetailAction(req, res);
 			
-		// 수정 상세 -> 게시글 수정 처리	
-		} else if (url.equals("/boardModifyAction.bo")) {		
+			viewPage = "/board/boardModifyDetail.jsp";	
+			
+		// [관리자] 수정 상세 -> 게시글 수정 처리	
+		} else if (url.equals("/adminCsUpdAction.bo")) {		
 			System.out.println("[Bo][Controller][url=>/boardModifyAction.bo]");			
 			service.boardModifyAction(req, res);
 			
 			viewPage = "/board/boardModifyAction.jsp";
+			
+		// [고객] 수정 상세 -> 게시글 수정 처리	
+		} else if (url.equals("/boardModifyAction.bo")) {		
+			System.out.println("[Bo][Controller][url=>/boardModifyAction.bo]");			
+			service.boardModifyAction(req, res);
+			
+			viewPage = "/board/boardModifyAction.jsp";			
 		
 		// 게시글 작성 - 화면
 		} else if (url.equals("/boardWrite.bo")) {		
@@ -147,7 +188,7 @@ public class BoardController extends HttpServlet {
 			
 			viewPage = "/board/boardDeleteAction.jsp";	
 		}
-		*/
+
 		}	
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 		dispatcher.forward(req, res);

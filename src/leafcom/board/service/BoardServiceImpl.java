@@ -102,7 +102,7 @@ public class BoardServiceImpl implements BoardService {
 			req.setAttribute("currentPage", currentPage);
 		}
 	}
-/*	
+
 	// 게시글 상세 페이지 조회
 	@Override
 	public void boardDetail(HttpServletRequest req, HttpServletResponse res) {
@@ -118,7 +118,7 @@ public class BoardServiceImpl implements BoardService {
 		BoardDAO dao = BoardDAOImpl.getInstance();
 		
 		// 5-1단계. 조회수 증가
-		dao.addReadCount(num);
+		dao.getBoardCount(num);
 		
 		// 5-2단계. 게시글 상세페이지 조회
 		BoardVO vo = dao.getBoardDetail(num);
@@ -219,5 +219,4 @@ public class BoardServiceImpl implements BoardService {
 		req.setAttribute("deleteCnt", deleteCnt);
 		req.setAttribute("selectCnt", selectCnt);
 	}
-*/
 }

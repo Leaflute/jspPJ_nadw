@@ -13,6 +13,7 @@
 
 </head>
 <body>
+<c:if test="${sessionScope.isAdmin==0}">
 	<nav class="nav_bar">
 		<div id="mem_pic">회원정보 박스
 		</div>
@@ -28,5 +29,24 @@
 			</ul>
 		</div>
 	</nav>
+</c:if>
+<c:if test="${sessionScope.isAdmin==1}">	
+	<nav class="nav_bar">
+		<div id="mem_pic">DASHBOARD
+		</div>
+		<div>
+			<ul>
+				<li class="page_title"><a href="dashboard.html">DASHBOARD</a></li>				
+				<li><a href="#">관리자정보관리</a></li>
+				<li><a href="dashboard_mem.html">회원관리</a></li>
+				<li><a href="dashboard_order.html">주문관리</a></li>
+				<li><a href="dashboard_item.html">상품관리</a></li>
+				<li><a href="dashboard_report.html">결산관리</a></li>
+				<li><a href="boardList.bo">게시판관리</a></li>
+				<li><a href="logout.co">로그아웃</a></li>
+			</ul>
+		</div>
+	</nav>
+</c:if>	
 </body>
 </html>

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../../asset/setting.jsp" %>    
+<%@ include file="../../../asset/setting.jsp" %>    
 <!DOCTYPE html>
 <html>
 <head>

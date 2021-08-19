@@ -13,7 +13,7 @@
 <!-- header 시작 -->
 	<div class="full_width" >
 		<div class="wrap_inner" id="hd_top">
-			<img src="../asset/img/logo_little.png">			
+			<img src="${imgPath}logo_little.png">			
 		</div>
 	</div>
 <!-- header 종료 -->

@@ -74,7 +74,7 @@ public class BoardDAOImpl implements BoardDAO {
 		return selectCnt;
 	}
 	
-	// 게시글 목록 구하기
+	// 고객문의 게시글 목록 구하기
 	@Override
 	public ArrayList<BoardVO> getPostList(int start, int end) {
 		
@@ -143,7 +143,7 @@ public class BoardDAOImpl implements BoardDAO {
 
 
 	@Override
-	public void addReadCount(int num) {
+	public void addHit(int num) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
@@ -167,7 +167,7 @@ public class BoardDAOImpl implements BoardDAO {
 			}
 		}
 	}
-	/*
+
 	// 게시글 상세페이지, 수정 상세
 	@Override
 	public BoardVO getBoardDetail(int num) {
@@ -439,5 +439,4 @@ public class BoardDAOImpl implements BoardDAO {
 		}
 	return deleteCnt;
 	}
-	*/
 }
