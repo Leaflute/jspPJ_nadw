@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../include/setting.jsp" %>    
+<%@ include file="./setting.jsp" %>    
     
 <!DOCTYPE html>
 <html>
@@ -13,6 +13,7 @@
 
 </head>
 <body>
+<c:if test="${sessionScope.sessionRole==0}">
 	<nav class="nav_bar">
 		<div id="mem_pic">회원정보 박스
 		</div>
@@ -24,9 +25,28 @@
 				<li><a href="myaddress.html">MY배송지</a></li>
 				<li><a href="mycart.html">MY장바구니</a></li>
 				<li><a href="myestimate.html">MY견적서</a></li>
-				<li><a href="myqna.html">MY문의</a></li>
+				<li><a href="csList.bo?boardId=1&fullList=0">MY문의</a></li>
 			</ul>
 		</div>
 	</nav>
+</c:if>
+<c:if test="${sessionScope.sessionRole==1}">	
+	<nav class="nav_bar">
+		<div id="mem_pic">DASHBOARD
+		</div>
+		<div>
+			<ul>
+				<li class="page_title"><a href="dashboard.html">DASHBOARD</a></li>				
+				<li><a href="#">관리자정보관리</a></li>
+				<li><a href="dashboard_mem.html">회원관리</a></li>
+				<li><a href="dashboard_order.html">주문관리</a></li>
+				<li><a href="dashboard_item.html">상품관리</a></li>
+				<li><a href="dashboard_report.html">결산관리</a></li>
+				<li><a href="csList.bo?boardId=1&fullList=1">고객문의관리</a></li>
+				<li><a href="logout.co">로그아웃</a></li>
+			</ul>
+		</div>
+	</nav>
+</c:if>	
 </body>
 </html>

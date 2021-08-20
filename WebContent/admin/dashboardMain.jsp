@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../asset/setting.jsp" %>
+<%@ include file="../include/setting.jsp" %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,14 +11,14 @@
 <title>DashBoard</title>
 </head>
 <body>
-<%@ include file="./dashboardHeader.jsp" %>
+<%@ include file="../../include/header.jsp" %> 
 <!-- article 시작 -->
 <article class="container">
 	<!-- 컨테이너 -->
 	<div class="wrapper">
 		<div id="my_page_box">
 			<!-- 좌측 메뉴바 -->
-			<%@ include file="./dashboardNav.jsp" %>	
+			<%@ include file="../include/nav.jsp" %> 
 			
 			<!-- section -->
 			<section class="mem_content">
@@ -65,7 +65,7 @@
 </article>
 <!-- article 끝 -->
 
-<%@ include file="../../common/footer.jsp" %>
+<%@ include file="../include/footer.jsp" %>
 
 </body>
 </html>

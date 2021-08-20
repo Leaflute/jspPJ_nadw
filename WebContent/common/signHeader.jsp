@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>    
-<%@ include file="../../asset/setting.jsp" %>    
+<%@ include file="../include/setting.jsp" %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,7 +20,7 @@
 			</ul>
 
 			<ul id="top_right">
-				<li><a href="logIn.co">로그인</a></li>
+				<li><a href="login.co">로그인</a></li>
 				<li><a href="signIn.co">회원가입</a></li>
 				<li><a href="" id="register">고객센터</a></li>
 			</ul>

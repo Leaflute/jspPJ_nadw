@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../../../asset/setting.jsp" %>  
+<%@ include file="../../include/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +12,7 @@
 </head>
 <body>
 <form action="withrawMemAction.co" method="post" onsubmit="return withrawFinalChk()">
-<%@ include file="../../../common/header.jsp" %>
+<%@ include file="../../include/header.jsp" %>
 
 <!-- article 시작 -->
 <article class="container">
@@ -51,7 +51,7 @@
 </article>
 <!-- article 끝 -->
 
-<%@ include file="../../../common/footer.jsp" %>
+<%@ include file="../../include/footer.jsp" %>
 </form>	
 </body>
 </html>

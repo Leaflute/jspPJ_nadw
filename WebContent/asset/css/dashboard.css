@@ -91,12 +91,14 @@ table {
 	border-right: 0px;
 	border-top: 4px solid olive;
 	border-collapse: collapse;
-	font-size: 18px;
+	font-size: 12px;
+	width: 100%;
 }
 
 th, td {
 	padding: 10px 30px;
 	border-bottom: 1px solid lightgray;
+	text-align: center;
 }
 
 .little_btn {

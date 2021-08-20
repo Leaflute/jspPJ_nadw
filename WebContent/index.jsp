@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="./asset/setting.jsp"%>    
+<%@ include file="./include/setting.jsp"%>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<%@ include file="./common/header.jsp" %>
+<%@ include file="./include/header.jsp" %>
 
 <!-- article 시작 -->
 <article class="container">
@@ -75,7 +75,7 @@
 	</section>
 </article>
 <!-- article 끝 -->
-<%@ include file="./common/footer.jsp" %>
+<%@ include file="./include/footer.jsp" %>
 <script type="text/javascript">
 $("#ad_slider").slick({
 	  slidesToShow: 2,

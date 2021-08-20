@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../../../asset/setting.jsp" %>  
+<%@ include file="../../include/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,14 +11,14 @@
 </head>
 <body>
 <form action="viewInfoAction.co" method="post">
-<%@ include file="../../../common/header.jsp" %>
+<%@ include file="../../include/header.jsp" %>
 
 <!-- article 시작 -->
 <article class="container">
 	<!-- 컨테이너 -->
 	<div class="wrapper">
 		<div id="my_page_box">
-			<%@ include file="../myPageNav.jsp" %>
+			<%@ include file="../../include/nav.jsp" %>
 
 			<!-- section -->
 			<section class="mem_content">
@@ -38,7 +38,7 @@
 							<tr>
 								<th colspan="2">
 								<input type="submit" class="little_btn" value="제출">
-								<input type="button" class="little_btn" value="돌아가기" onclick="window.location='myPageMain.co'">
+								<input type="button" class="little_btn" value="돌아가기" onclick="window.location='myPageMain.cu'">
 							</tr>
 						</table>
 					</div>
@@ -50,7 +50,7 @@
 </article>
 <!-- article 끝 -->
 
-<%@ include file="../../../common/footer.jsp" %>
+<%@ include file="../../include/footer.jsp" %>
 </form>	
 </body>
 </html>

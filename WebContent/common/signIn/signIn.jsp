@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../../asset/setting.jsp" %>       
+<%@ include file="../../include/setting.jsp" %>       
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,41 +22,40 @@
 		<a href="index.co"><img src="${imgPath}leafcom-logo.png"></a>
 		<form action="signInAction.co" method="post" name="signInForm" onsubmit="return signInChk();">
 			<input type="hidden" name="hiddenEmail" value="0">
+			<input type="hidden" name="hiddenId" value="0">
 			<fieldset>
 				<table>
 					<tr>
-						<th class="icon" ><i class="far fa-envelope"></i></th>
+						<th class="icon" ><i class="xi-user-o"></i></th>
 						<td align="left">
-							<input type="text" name="email" size="40" placeholder="이메일 주소">
-							<input type="button" class="btn_green popup" name="emailDupChk"
-								value="중복확인" onclick="confirmEmail();">
-						</td>	
+							<input type="text" name="id" size="20" placeholder="아이디">
+							<input type="button" class="btn_green popup" name="idDupChk"
+								value="중복확인" onclick="confirmId();">
+						</td>			
 					</tr>
 					<tr>
 						<th class="icon"><i class="fas fa-key"></i></th>
 						<td><input type="password" name="pw" size="20" placeholder="비밀번호"></td>
 					</tr>
-					
 					<tr>
 						<th class="icon"><i class="fas fa-key"></i></th>
 						<td><input type="password" name="rePw" size="20" placeholder="비밀번호 확인"></td>
 					</tr>
-					
 					<tr>
 						<th class="icon"><i class="far fa-id-badge"></i></th>
 						<td><input type="text" name="name" size="40" placeholder="이름"></td>
 					</tr>
-					
+					<tr>
+						<th class="icon" ><i class="far fa-envelope"></i></th>
+						<td align="left">
+							<input type="text" name="email" size="40" placeholder="이메일 주소">
+						</td>	
+					</tr>
 					<tr>
 						<th class="icon"><i class="fas fa-mobile-alt"></i></th>
 						<td align="left">
 							<input type="text" name="phone" size="11" placeholder="휴대폰 번호">
 							<input type="button" value="인증" class="btn_green">
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2" align="center">
-							<input type="checkbox" name="consent_to_receive"> SMS 및 이메일 수신 동의
 						</td>
 					</tr>
 					<tr>
@@ -76,6 +75,6 @@
 	</section>	
 </article>
 
-<%@ include file="../../common/footer.jsp" %>
+<%@ include file="../../include/footer.jsp" %>
 </body>
 </html>

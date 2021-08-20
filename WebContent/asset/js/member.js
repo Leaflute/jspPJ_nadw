@@ -7,14 +7,18 @@ var deleteError = "회원탈퇴를 실패하였습니다. \n확인 후 다시 �
 var passwordError = "비밀번호가 일치하지 않습니다. \n확인 후 다시 시도하세요.";
 var notExistMemError = "존재하지 않는 회원입니다. \n확인 후 다시 시도하세요.";
 
-// 이메일 정규식 (알파벳or숫자@알파벳or숫자.알파벳2,3자리)
-var emailRule = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
+//비밀번호 정규식(최소 하나의 문자 및 하나의 숫자)
+var idRule = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
 
 // 비밀번호 정규식(최소 하나의 문자 및 하나의 숫자)
 var pwRule = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
 
 // 이름 정규식 (입력 시작부터 입력 끝까지 한글만 2~6자까지 입력하는 패턴으로 정규표현 객체를 생성)
 var nameRule = /^[가-힣]{2,6}$/;
+
+// 이메일 정규식 (알파벳or숫자@알파벳or숫자.알파벳2,3자리)
+var emailRule = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
 // 폰번호 정규식 (첫 숫자는 010,011,017,018 중 하나로 시작하고, 다음 숫자는 3~4개까지 오고, 마지먁 숫자는 숫자 4개)
 var phoneRule =/^(010|011|017|018)\d{3,4}\d{4}$/;
@@ -27,7 +31,10 @@ function errorAlert(errorMsg) {
 
 // 회원가입 정보 입력 타당성 검사
 function signInChk() {
-
+	
+	var iId = document.signInForm.id.value;
+	var chkId = idRule.test(iId);
+	
 	var iEmail = document.signInForm.email.value;
 	var chkEmail = emailRule.test(iEmail);
 
@@ -41,7 +48,17 @@ function signInChk() {
 	var iPhone = document.signInForm.phone.value;
 	var chkPhone = phoneRule.test(iPhone);
 	
-	if(!iEmail) {
+	if (!iId) {
+		alert("아이디를 입력하세요.");
+		document.signInForm.id.focus();
+		return false;
+		
+	} else if (!chkId) {
+		alert("올바른 아이디 형형식이 아닙니다.");
+		document.signInForm.email.focus();
+		return false;
+		
+	} else if(!iEmail) {
 		alert("이메일을 입력하세요.");
 		document.signInForm.email.focus();
 		return false;
@@ -86,8 +103,8 @@ function signInChk() {
 	
 	// 2. 중복확인 버튼을 클릭하지 않는 경우 "중복확인을 해주세요."
 	// signIn.jsp - hiddenId : 중복확인 버튼 클릭여부 체크(0: 클릭x, 1:클릭)
-	} else if (document.signInForm.hiddenEmail.value == 0) {
-		alert("이메일 중복확인을 하세요.");
+	} else if (document.signInForm.hiddenId.value == 0) {
+		alert("아이디 중복확인을 하세요.");
 		document.signInForm.emailDupChk.focus();
 		return false;
 	}
@@ -95,47 +112,48 @@ function signInChk() {
 
 //회원가입 - 아이디 중복 확인 페이지 - confirmId()
 //1. 중복확인 버튼 클릭 시 서브창 open
-function confirmEmail() {
-	var iEmail = document.signInForm.email.value;
-	var chkEmail = emailRule.test(iEmail);
+
+function confirmId() {
+	var iId = document.signInForm.id.value;
+	var chkId = idRule.test(iId);
 	
-	if(!iEmail) {
-		alert("이메일을 입력하세요.");
-		document.signInForm.email.focus();
-	} else if(!chkEmail) {
-		alert("올바른 이메일 형식이 아닙니다.");
-		document.signInForm.email.focus();
+	if(!iId) {
+		alert("아이디를 입력하세요.");
+		document.signInForm.id.focus();
+	} else if(!chkId) {
+		alert("올바른 아이디 형식이 아닙니다.");
+		document.signInForm.id.focus();
 	} else {
-		var url = "emailDupChk.co?email=" + document.signInForm.email.value;
-		window.open(url, "confirmEmail", "menubar=no, width=500, height=300");
+		var url = "idDupChk.co?id=" + document.signInForm.id.value;
+		window.open(url, "confirmId", "menubar=no, width=500, height=300");
 	}
 }
 
-// 이메일 적합도
-function confirmEmailChk() {
-	var iEmail = document.confirmForm.email.value;
-	var chkEmail = emailRule.test(iEmail);
+// 팝업창 아이디 적합도 체크
+function confirmIdChk() {
+	var iId = document.confirmForm.id.value;
+	var chkId = idRule.test(iId);
 	
-	if(!iEmail) {
+	if(!iId) {
 		alert("이메일을 입력하세요.");
-		document.confirmForm.email.focus();
+		document.confirmForm.id.focus();
 		return false;
-	} else if (!chkEmail) {
+	} else if (!chkId) {
 		alert("올바른 이메일 형식이 아닙니다.");
-		document.confirmForm.email.focus();
+		document.confirmForm.id.focus();
 		return false;
 	}	
 }
 
-//4. 자식창에서 부모창으로 ID값 전달
-function setEmail(email) {
+
+function setId(id) {
 	// opener : window 객체의 open() 메서드로 열린 새 창(=중복확인창()에서 부모창(=회원가입)에 접근할 때 사용
 	// self.close() : 메시지 없이 현재창을 닫을 때 사용
-	opener.document.signInForm.email.value = email;
-	opener.document.signInForm.hiddenEmail.value = 1;	// 중복확인 완료
+	opener.document.signInForm.id.value = id;
+	opener.document.signInForm.hiddenId.value = 1;	// 중복확인 완료
 	self.close();
 }
-
+ 
 // 팝업 창 크기를 HTML 크기에 맞추어 자동으로 크기를 조정하는 함수
 $(document).ready(function() {
     var strWidth;
@@ -166,6 +184,7 @@ $(document).ready(function() {
 
 //회원정보 수정 입력 타당성 검사
 function updateFormChk() {
+	
 	var iPw = document.updateForm.pw.value;
 	var chkPw = pwRule.test(iPw);
 	
@@ -173,6 +192,9 @@ function updateFormChk() {
 	
 	var iName = document.updateForm.name.value;
 	var chkName = nameRule.test(iName);
+	
+	var iEmail = document.updateForm.email.value;
+	var chkEmail = emailRule.test(iEmail);
 	
 	var iPhone = document.updateForm.phone.value;
 	var chkPhone = phoneRule.test(iPhone);
@@ -215,6 +237,7 @@ function updateFormChk() {
 		alert("휴대폰 번호를 입력하세요.");
 		document.updateForm.phone.focus();
 		return false;
+		
 	} else if(!chkPhone) {
 		alert("올바른 번호형식이 아닙니다.");
 		document.updateForm.phone.focus();
