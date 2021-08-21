@@ -78,7 +78,7 @@ public class CommonServiceImpl implements CommonService {
 	// 회원탈퇴 -> 비밀번호 재확인
 	@Override
 	public void withdrawMemAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("[Member][service][withdrawMemAction()]");
+		System.out.println("[co][service][withdrawMemAction()]");
 		String strId = (String)req.getSession().getAttribute("sessionID");
 		String strPw = req.getParameter("pw");
 		
@@ -97,7 +97,7 @@ public class CommonServiceImpl implements CommonService {
 	// 회원정보 조회
 	@Override
 	public void viewMemInfoAction(HttpServletRequest req, HttpServletResponse res) {
-		System.out.println("[Member][service][viewMemInfoAction()]");
+		System.out.println("[co][service][viewMemInfoAction()]");
 		String strId = (String)req.getSession().getAttribute("sessionID");
 		String strPw = req.getParameter("pw");
 		

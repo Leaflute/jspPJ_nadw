@@ -20,11 +20,11 @@
 			<section class="mem_content">
 				<div class="outer_content">
 					<div class="inner_content">
-						<h1>My문의</h1>
+						<div class="title_letter">상품상세보기</div>
 						<table align="center">
 							<tr>
-								<th> 번호</th>
-								<td align="center">${number}</td>
+								<th>상품번호</th>
+								<td align="center">${dto.itemId}</td>
 								<th>조회수</th>
 								<td>${dto.hit}</td>
 							</tr>
@@ -36,7 +36,7 @@
 							</tr>
 							<tr>
 								<th>제목 </th>
-								<td colspan="3" align="center">${dto.title}</td>
+								<td colspan="3" align="center">${dto.itemName}</td>
 							</tr>
 							<tr>
 								<th>내용 </th>
@@ -46,18 +46,12 @@
 							</tr>
 							<tr>
 								<th colspan="4">
-									<c:if test="${selectCnt==1}">
-										<input class="button" type="button" value="수정하기"
-											onclick="window.location='csUpdate.bo?boardId=${boardId}&fullList=${fullList}&num=${dto.postNum}&pageNum=${pageNum}&number=${number}'">
-										<input class="button" type="button" value="삭제하기"
-											onclick="window.location='csDelete.bo?boardId=${boardId}&fullList=${fullList}&num=${dto.postNum}&pageNum=${pageNum}'">
-									</c:if>
-									<c:if test="${sessionScope.sessionRole==1}">
-										<input class="button" type="button" value="답글하기"
-											onclick="window.location='csWrite.bo?boardId=${boardId}&fullList=${fullList}&num=${dto.postNum}&pageNum=${pageNum}&ref=${dto.ref}&refStep=${dto.refStep}&refLevel=${dto.refLevel}'">
-									</c:if>
+									<input class="button" type="button" value="수정하기"
+										onclick="window.location='csUpdate.bo?num=${dto.itemId}&pageNum=${pageNum}&number=${number}'">
+									<input class="button" type="button" value="삭제하기"
+										onclick="window.location='csDelete.bo?num=${dto.itemId}'">
 									<input class="button" type="button" value="목록"
-										onclick="window.location='csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${pageNum}'">
+										onclick="window.location='itemManagement.ad'">
 								</th>
 							</tr>
 						</table>

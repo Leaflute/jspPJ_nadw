@@ -28,7 +28,7 @@
 						<table>
 							<tr>
 								<th colspan="6" style="height:25px">
-									게시글 목록(게시물 수:${cnt})
+									문의 목록(게시물 수:${cnt})
 								</th>
 							</tr>
 							<tr>

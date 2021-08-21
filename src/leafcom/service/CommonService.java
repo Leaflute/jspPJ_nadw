@@ -22,4 +22,6 @@ public interface CommonService {
 	
 	// 회원정보 수정
 	public void updateMemInfoAction(HttpServletRequest req, HttpServletResponse res);
+	
+
 }

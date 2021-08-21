@@ -45,21 +45,21 @@ public class PostController extends HttpServlet {
 		// 고객 문의 게시판(Post_id=1)
 		// 고객문의 목록 조회
 		if (url.equals("/csList.bo")||url.equals("/*.bo")) {
-			System.out.println("[Bo][Controller][url=>/csList.bo]");
+			System.out.println("[bo][Controller][url=>/csList.bo]");
 			service.postList(req, res);
 			
 			viewPage = "/board/cs/csList.jsp";
 		
 		// 게시글 상세 보기	
 		} else if (url.equals("/csDetail.bo")) {
-			System.out.println("[Bo][Controller][url=>/csDetail.bo]");
+			System.out.println("[bo][Controller][url=>/csDetail.bo]");
 			service.postDetail(req, res);
 			
 			viewPage = "/board/cs/csDetail.jsp";
 		
 		// 게시글 수정 요청
 		} else if (url.equals("/csUpdate.bo")) {	
-			System.out.println("[Bo][Controller][url=>/csUpdate.bo]");
+			System.out.println("[bo][Controller][url=>/csUpdate.bo]");
 			
 			int boardId = Integer.parseInt(req.getParameter("boardId"));
 			int fullList = Integer.parseInt(req.getParameter("fullList"));
@@ -77,14 +77,14 @@ public class PostController extends HttpServlet {
 
 		// 게시글 수정 처리
 		} else if (url.equals("/csUpdateAction.bo")) {		
-			System.out.println("[Bo][Controller][url=>/csUpdateAction.bo]");			
+			System.out.println("[bo][Controller][url=>/csUpdateAction.bo]");			
 			service.postUpdateAction(req, res);
 			
 			viewPage = "/board/cs/csUpdateAction.jsp";
 
 		// 게시글 작성 - 화면
 		} else if (url.equals("/csWrite.bo")) {		
-			System.out.println("[Bo][Controller][url=>/csWrite.bo]");			
+			System.out.println("[bo][Controller][url=>/csWrite.bo]");			
 			
 			// 3단계. 화면에서 받은 hidden값을 받아온다
 			// 새 글쓰기

@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="../../include/setting.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+<form action="" method="post" enctype="multipart/form-date">
 <%@ include file="../../include/header.jsp" %>
 <!-- article 시작 -->
 <article class="container">
@@ -20,22 +20,26 @@
 			<section class="mem_content">
 				<div class="outer_content">
 					<div class="inner_content">
-
-					<!-- 삭제 성공 -->
-					<c:if test="${deleteCnt==1}">
-						<script type="text/javascript">
-							alert("게시글을 삭제했습니다.");
-							window.location='csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${pageNum}';
-						</script>
-					</c:if>
-					<!-- 삭제 실패 -->
-					<c:if test="${deleteCnt!=1}">
-						<script type="text/javascript">
-							errorAlert(deleteError);
-						</script>
-					</c:if>
+						<div class="title_letter">상품추가</div>
+						<table>
+							<tr>
+								<th>카테고리</th>
+								<td>
+									<select id="">
+										<option>모니터</option>
+										<option>CPU</option>
+										<option>메인보드</option>
+										<option>그래픽카드</option>
+										<option></option>
+										<option></option>
+										<option></option>
+										<option></option>
+									</select>
+								</td>
+							</tr>
+						</table>
 					</div>
-				</div>					
+				</div>
 			</section>
 			<!-- section 종료 -->
 		</div>
@@ -43,6 +47,8 @@
 </article>
 <!-- article 끝 -->
 
-<%@ include file="../../include/footer.jsp" %>			
+<%@ include file="../../include/footer.jsp" %>		
+</body>
+</form>
 </body>
 </html>

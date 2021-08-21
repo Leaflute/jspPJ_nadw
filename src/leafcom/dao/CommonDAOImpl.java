@@ -140,7 +140,7 @@ public class CommonDAOImpl implements CommonDAO {
 				vo.setEmail(rs.getString("mem_email"));
 				vo.setName(rs.getString("mem_name"));
 				vo.setPhone(rs.getString("mem_phone"));
-				vo.setRegDate(rs.getTimestamp("mem_reg_date"));
+				vo.setRegDate(rs.getTimestamp("mem_regdate"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

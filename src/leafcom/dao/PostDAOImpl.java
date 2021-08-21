@@ -94,7 +94,7 @@ public class PostDAOImpl implements PostDAO {
 			conn = dataSource.getConnection();
 			
 			String sql = "SELECT * "
-						+ "FROM (SELECT post_num, board_id, post_writer, post_title, post_content, post_reg_date, "
+						+ "FROM (SELECT post_num, board_id, post_writer, post_title, post_content, post_regdate, "
 									+ "post_hit, post_ref, post_ref_level, post_ref_step, writer_ip, post_condition, rowNum rNum "
 								+ "FROM (SELECT * FROM post WHERE board_id = ? ";
 									
@@ -135,7 +135,7 @@ public class PostDAOImpl implements PostDAO {
 					vo.setTitle(rs.getString("post_title"));
 					vo.setContent(rs.getString("post_content"));
 					vo.setHit(rs.getInt("post_hit"));
-					vo.setRegDate(rs.getTimestamp("post_reg_date"));
+					vo.setRegDate(rs.getTimestamp("post_regdate"));
 					vo.setRef(rs.getInt("post_ref"));
 					vo.setRefStep(rs.getInt("post_ref_step"));
 					vo.setRefLevel(rs.getInt("post_ref_level"));
@@ -215,7 +215,7 @@ public class PostDAOImpl implements PostDAO {
 				vo.setTitle(rs.getString("post_title"));
 				vo.setContent(rs.getString("post_content"));
 				vo.setHit(rs.getInt("post_hit"));
-				vo.setRegDate(rs.getTimestamp("post_reg_date"));
+				vo.setRegDate(rs.getTimestamp("post_regdate"));
 				vo.setRef(rs.getInt("post_ref"));
 				vo.setRefStep(rs.getInt("post_ref_step"));
 				vo.setRefLevel(rs.getInt("post_ref_level"));
@@ -334,11 +334,10 @@ public class PostDAOImpl implements PostDAO {
 				// 작성중인 답변글은 한 줄 아래 위치하고 한 칸 들여씀
 				refStep++;
 				refLevel++;
-				postCondition=1;
 				
 				// 답 글인 경우
-				sql="INSERT INTO post (post_num, board_id, post_writer, post_title, post_content, post_reg_date, "
-						+ "post_hit, post_ref, post_ref_step, post_ref_level, writer_ip ,post_condition)"
+				sql="INSERT INTO post (post_num, board_id, post_writer, post_title, post_content, post_regdate, "
+						+ "post_hit, post_ref, post_ref_step, post_ref_level, writer_ip, post_condition)"
 						+ "VALUES (post_num_seq.nextval, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?)";
 				
 				pstmt = conn.prepareStatement(sql);
@@ -359,7 +358,7 @@ public class PostDAOImpl implements PostDAO {
 				refLevel = 0;
 				
 				// 새 글인 경우
-				sql="INSERT INTO post (post_num, board_id, post_writer, post_title, post_content, post_reg_date, "
+				sql="INSERT INTO post (post_num, board_id, post_writer, post_title, post_content, post_regdate, "
 						+ "post_hit, post_ref, post_ref_step, post_ref_level, writer_ip, post_condition)"
 						+ "VALUES (post_num_seq.nextval, ?, ?, ?, ?, ?, 0, post_num_seq.currval, ?, ?, ?, ?)";
 				

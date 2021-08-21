@@ -37,7 +37,7 @@ public class PostServiceImpl implements PostService {
 		int endPage = 0;		// 마지막 페이지
 		  
 		cnt = dao.getPostCount(boardId, fullList, writer);
-		System.out.println("[Board][Service][cnt = " + cnt + " ]");
+		System.out.println("[bo][Service][cnt = " + cnt + " ]");
 		
 		pageNum = req.getParameter("pageNum");
 		
