@@ -75,41 +75,40 @@
 							<c:if test="${cnt==0}">
 								내  고객문의가 존재하지 않습니다.
 							</c:if>
+						</table>	
 						<!-- 페이지 컨트롤 -->
-							<tr>
-								<th colspan="6">
-									<!-- 게시글 존재 여부 -->
-									<c:if test="${cnt>0}">
-										<!-- 처음[◀◀]/이전블록[◀]/ -->
-										<c:if test="${startPage > pageBlock}">
-											<a href="csList.bo?boardId=${boardId}&fullList=${fullList}">◀◀</a>
-											<a href="csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${startPage - pageBlock}">◀</a>
-										</c:if>
-										<!-- 블럭 내의 페이지 번호 -->
-										<c:forEach var="i" begin="${startPage}" end="${endPage}">
-											<c:if test="${i==currentPage}">
-												<span><b>[${i}]</b></span>
-											</c:if>
-											<c:if test="${i!=currentPage}">
-												<a href="csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${i}">[${i}]</a>
-											</c:if>
-										</c:forEach>
-										<!-- 다음블럭[▶]/ 마지막[▶▶] -->
-										<c:if test="${pageCount > endPage}">
-											<a href="csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${startPage + pageBlock}">[▶]</a>
-											<a href="csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${pageCount}">[▶▶]</a>
-										</c:if>
-									</c:if>
-								</th>
-							</tr>
-							<c:if test="${sessionScope.sessionRole!=1}">
-								<td colspan="6" align="right">
-									<a href="csWrite.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${pageNum}">
-										<input type="button" value="문의하기">
-									</a>
-								</td>
+						<div class="outer_content">
+						<!-- 게시글 존재 여부 -->
+						<c:if test="${cnt>0}">
+							<!-- 처음[◀◀]/이전블록[◀]/ -->
+							<c:if test="${startPage > pageBlock}">
+								<a href="csList.bo?boardId=${boardId}&fullList=${fullList}">◀◀</a>
+								<a href="csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${startPage - pageBlock}">◀</a>
 							</c:if>
-						</table>
+							<!-- 블럭 내의 페이지 번호 -->
+							<c:forEach var="i" begin="${startPage}" end="${endPage}">
+								<c:if test="${i==currentPage}">
+									<span><b>[${i}]</b></span>
+								</c:if>
+								<c:if test="${i!=currentPage}">
+									<a href="csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${i}">[${i}]</a>
+								</c:if>
+							</c:forEach>
+							<!-- 다음블럭[▶]/ 마지막[▶▶] -->
+							<c:if test="${pageCount > endPage}">
+								<a href="csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${startPage + pageBlock}">[▶]</a>
+								<a href="csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${pageCount}">[▶▶]</a>
+							</c:if>
+						</c:if>
+						<br><br>
+						</div>
+						<c:if test="${sessionScope.sessionRole!=1}">
+						<div class="outer_content"> 
+							<a href="csWrite.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${pageNum}">
+								<input type="button" value="문의하기" class="little_btn">
+							</a>
+						</div>
+						</c:if>	
 					</div>
 				</div>
 			</section>

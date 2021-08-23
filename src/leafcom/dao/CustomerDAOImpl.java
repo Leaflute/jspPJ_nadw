@@ -1,10 +1,14 @@
 package leafcom.dao;
 
+import java.util.List;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-public class CustomerDAOImpl {
+import leafcom.vo.ItemVO;
+
+public class CustomerDAOImpl implements CustomerDAO{
 	// 싱글톤 방식으로 객체 생성
 	private static CustomerDAOImpl instance = new CustomerDAOImpl();
 	
@@ -26,5 +30,11 @@ public class CustomerDAOImpl {
 			} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void addCart(List<ItemVO> vo) {
+		// TODO Auto-generated method stub
+		
 	}
 }

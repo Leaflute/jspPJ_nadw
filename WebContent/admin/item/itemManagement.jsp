@@ -7,8 +7,9 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="${cssPath}article.css">
 <link rel="stylesheet" type="text/css" href="${cssPath}dashboard.css">
+<script type="text/javascript" src="${jsPath}item.js"></script>
 <script src="./asset/js/jquery-3.6.0.min.js" type="text/javascript"></script>
-<title>DashBoard</title>
+<title>상품관리</title>
 </head>
 <body>
 <form action="" method="post">
@@ -29,9 +30,9 @@
 						<table>
 							<thead>
 								<tr>
-									<th><input type="checkbox" name="allSelectChk"></th>
-									<th>상품번호</th>
+									<th>No</th>
 									<th>상품이미지</th>
+									<th>카테고리</th>
 									<th>상품명</th>
 									<th>가격</th>
 									<th>재고</th>
@@ -39,57 +40,61 @@
 								</tr>
 							</thead>
 							<tbody>
-							<c:forEach var="dto" items="${dtos}">
+							<c:forEach var="itemDto" items="${itemDtos}">
 							<tr>
-								<td><input type="checkbox" name="selectChk"></td>
-								<td><a href="">{dto.itemId}</a></td>
-								<td><a href="">{dto.smallImg}</a></td>
-								<td>{dto.categoryName}</td>
-								<td><a href="">{dto.itemName}</a></td>
-								<td>{dto.price}</td>
-								<td>{dto.quantity}</td>
-								<td><a href=""><input type="button" value="수정하기" class="little_btn"></a>
+								<td>${itemDto.itemId}</td>
+								<td><img src="${upPath}${itemDto.smallImg}"></a></td>
+								<td>${itemDto.categoryName}</td>
+								<td><a href="itemDetail.ad?itemId=${itemDto.itemId}&categoryId=${itemDto.categoryId}&pageNum=${pageNum}&number=${number}">${itemDto.itemName}</a></td>
+								<td>￦<fmt:formatNumber value="${itemDto.price}" pattern="#,###"/></td>
+								<td>${itemDto.quantity}</td>
+								<td>
+									<input type="button" value="수정하기" class="little_btn"
+										onclick="window.location='updateItem.ad?itemId=${itemDto.itemId}&categoryId=${itemDto.categoryId}&pageNum=${pageNum}'">
+									<input type="button" value="삭제하기" class="little_btn"
+										onclick="window.location='deleteItem.ad?itemId=${itemDto.itemId}&categoryId=${itemDto.categoryId}&pageNum=${pageNum}'">
+								</td>		
 							</tr>
 							 </c:forEach>
 							</tbody>
-							<!-- 페이지 컨트롤 -->
-							<tr>
-								<th colspan="6">
-									<!-- 게시글 존재 여부 -->
-									<c:if test="${cnt>0}">
-										<!-- 처음[◀◀]/이전블록[◀]/ -->
-										<c:if test="${startPage > pageBlock}">
-											<a href="itemManagement.ad?">◀◀</a>
-											<a href="itemManagement.ad?pageNum=${startPage - pageBlock}">◀</a>
-										</c:if>
-										<!-- 블럭 내의 페이지 번호 -->
-										<c:forEach var="i" begin="${startPage}" end="${endPage}">
-											<c:if test="${i==currentPage}">
-												<span><b>[${i}]</b></span>
-											</c:if>
-											<c:if test="${i!=currentPage}">
-												<a href="csList.bo?pageNum=${i}">[${i}]</a>
-											</c:if>
-										</c:forEach>
-										<!-- 다음블럭[▶]/ 마지막[▶▶] -->
-										<c:if test="${pageCount > endPage}">
-											<a href="csList.bo?pageNum=${startPage + pageBlock}">[▶]</a>
-											<a href="csList.bo?pageNum=${pageCount}">[▶▶]</a>
-										</c:if>
-									</c:if>
-								</th>
-							</tr>
 						</table>
+						<!-- 페이지 컨트롤 -->
+						<!-- 게시글 존재 여부 -->
+						<div class="outer_content">	
+							<c:if test="${cnt>0}">
+								<!-- 처음[◀◀]/이전블록[◀]/ -->
+								<c:if test="${startPage > pageBlock}">
+									<a href="itemManagement.ad?">◀◀</a>
+									<a href="itemManagement.ad?pageNum=${startPage - pageBlock}">◀</a>
+								</c:if>
+								<!-- 블럭 내의 페이지 번호 -->
+								<c:forEach var="i" begin="${startPage}" end="${endPage}">
+									<c:if test="${i==currentPage}">
+										<span><b>[${i}]</b></span>
+									</c:if>
+									<c:if test="${i!=currentPage}">
+										<a href="itemManagement.ad?pageNum=${i}">[${i}]</a>
+									</c:if>
+								</c:forEach>
+								<!-- 다음블럭[▶]/ 마지막[▶▶] -->
+								<c:if test="${pageCount > endPage}">
+									<a href="itemManagement.ad?pageNum=${startPage + pageBlock}">[▶]</a>
+									<a href="itemManagement.ad?pageNum=${pageCount}">[▶▶]</a>
+								</c:if>
+							</c:if>
+						</div>	
+						<br>
 						<div class="outer_content">
-							<select name="category" onchange="window.location='itemManagement.ad?categoryId=${category.categoryId}'">
-								<c:forEach var="category" items="${dtos}">
-									<option id="selected" value="${category.categoryId}">${category.categoryId}</option>
+							<select id="selectedCategory" onchange="displayByCategory()">
+								<option value="0">전체보기</option>
+								<c:forEach var="categoryMap" items="${categoryMap}">
+									<option value="${categoryMap.key}" ${categoryMap.key==categoryId ? 'selected="selected"':''}>${categoryMap.value}</option>
 								</c:forEach>
 							</select>
 						</div>
+						<br>
 						<div class="outer_content">
 							<input type="button" value="상품추가" class="little_btn" onclick="window.location='addItem.ad'">
-							<input type="button" value="선택제거" class="little_btn">
 						</div>
 					</div>
 				</div>

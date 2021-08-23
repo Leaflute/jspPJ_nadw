@@ -27,13 +27,13 @@
 						<div class="title_letter">상품추가</div>
 						<c:if test="${insertCnt==0}">
 							<script type="text/javascript">
-								errorAlert(insertError);
+								errorAlert(updateError);
 							</script>
 						</c:if>
 						<c:if test="${insertCnt!=0}">
 							<script type="text/javascript">
-								alert("상품이 추가되었습니다.");
-								window.location='itemManagement.ad';
+								alert("상품을 수정했습니다.");
+								window.location='itemManagement.ad?categoryId=${categoryId}&pageNum=${pageNum}';
 							</script>
 						</c:if>
 					</div>

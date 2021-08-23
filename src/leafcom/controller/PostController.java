@@ -62,7 +62,7 @@ public class PostController extends HttpServlet {
 			System.out.println("[bo][Controller][url=>/csUpdate.bo]");
 			
 			int boardId = Integer.parseInt(req.getParameter("boardId"));
-			int fullList = Integer.parseInt(req.getParameter("fullList"));
+			boolean fullList = Boolean.parseBoolean(req.getParameter("fullList"));
 			int num = Integer.parseInt(req.getParameter("num"));
 			int pageNum = Integer.parseInt(req.getParameter("pageNum"));
 			
@@ -89,7 +89,7 @@ public class PostController extends HttpServlet {
 			// 3단계. 화면에서 받은 hidden값을 받아온다
 			// 새 글쓰기
 			int boardId = Integer.parseInt(req.getParameter("boardId"));
-			int fullList = Integer.parseInt(req.getParameter("fullList"));
+			boolean fullList = Boolean.parseBoolean(req.getParameter("fullList"));
 			int num = 0;
 			int pageNum = 0;
 			int ref = 0;
@@ -130,7 +130,7 @@ public class PostController extends HttpServlet {
 			System.out.println("[Bo][Controller][url=>/PostDelete.bo]");			
 			
 			int boardId = Integer.parseInt(req.getParameter("boardId"));
-			int fullList = Integer.parseInt(req.getParameter("fullList"));
+			boolean fullList = Boolean.parseBoolean(req.getParameter("fullList"));
 			int num = Integer.parseInt(req.getParameter("num"));
 			int pageNum = Integer.parseInt(req.getParameter("pageNum"));
 			
@@ -146,7 +146,7 @@ public class PostController extends HttpServlet {
 			System.out.println("[Bo][Controller][url=>/csDeleteAction.bo]");			
 			
 			int boardId = Integer.parseInt(req.getParameter("boardId"));
-			int fullList = Integer.parseInt(req.getParameter("fullList"));
+			boolean fullList = Boolean.parseBoolean(req.getParameter("fullList"));
 			int num = Integer.parseInt(req.getParameter("num"));
 			int pageNum = Integer.parseInt(req.getParameter("pageNum"));
 			

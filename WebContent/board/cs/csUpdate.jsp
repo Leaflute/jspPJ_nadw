@@ -50,10 +50,10 @@
 							</tr>
 							<tr>
 								<th colspan="2">
-									<input class="button" type="submit" value="수정하기">
-									<input class="button" type="reset" value="초기화">
-									<input class="button" type="button" value="목록"
-										onclick="window.history.back()">
+									<input class="little_btn" type="submit" value="수정하기">
+									<input class="little_btn" type="reset" value="초기화">
+									<input class="little_btn" type="button" value="목록"
+										onclick="window.location='csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${pageNum}'">
 								</th>
 							</tr>
 						</table>

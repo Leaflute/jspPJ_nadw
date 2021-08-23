@@ -5,6 +5,10 @@ grant connect, resource, create view to leafcom;
 grant create view to leafcom;
 alter user jsp_88 account unlock;
 
+/* COMMIt */
+SAVEPOINT s1;
+COMMIT;
+
 /* Recyclebean */
 PURGE RECYCLEBIN;
 
@@ -22,6 +26,7 @@ CREATE TABLE categories
     category_name varchar2(50),
     PRIMARY KEY (category_id)
 );
+truncate table categories;
 
 INSERT INTO categories
 VALUES(1, 'CPU');
@@ -61,43 +66,82 @@ CREATE TABLE item
 	item_large_img varchar2(100) NOT NULL,
 	item_detail_img varchar2(100) NOT NULL,
 	item_regdate timestamp DEFAULT SYSDATE NOT NULL,
-	item_content varchar2(4000) NOT NULL,
+	item_info varchar2(4000) NOT NULL,
 	item_quantity number(3) NOT NULL,
 	item_cost number(8) NOT NULL,
 	item_price number(8) NOT NULL,
-	item_grade number(1,2),
+	item_grade number(3,2) DEFAULT 0,
 	PRIMARY KEY (item_id),
     FOREIGN KEY (category_id) REFERENCES categories(category_id)
 );
 
-SELECT * FROM
-    (SELECT i.item_id, c.category_id, c.category_name, i.item_name, i.item_company, i.item_small_img, i.item_large_img, 
-            i.item_detail_img, i.item_regdate, i.item_content, i.item_quantity, i.item_cost, i.item_price, i.item_grade,
-            ROWNUM rNum
-            FROM (SELECT * FROM item i JOIN categories c ON i.category_id = c.category_id AND i.category_id = 1 ORDER BY i.item_regdate DESC));
+DELETE FROM item WHERE item_id = 10001;
 
-SELECT * FROM item i JOIN categories c ON i.category_id = c.category_id AND i.category_id = 1 ORDER BY i.item_regdate DESC;
-
-SELECT i.item_id
-    , c.category_id
-    , c.category_name
-    , i.item_name
-    , i.item_company
-    , i.item_small_img
-    , i.item_large_img
-    , i.item_detail_img
-    , i.item_regdate
-    , i.item_content
-    , i.item_quantity
-    , i.item_cost
-    , i.item_price
-    , i.item_grade
-    , ROWNUM rNum
-FROM (SELECT * FROM item i JOIN categories c ON i.category_id = c.category_id AND i.category_id = 1 ORDER BY i.item_regdate DESC);
+CREATE OR REPLACE VIEW item_v
+AS
+SELECT i.item_id, c.category_id, c.category_name, i.item_name, i.item_company, i.item_small_img, i.item_large_img, 
+    i.item_detail_img, i.item_regdate, i.item_info, i.item_quantity, i.item_cost, i.item_price, i.item_grade, ROWNUM rNum
+FROM item i JOIN categories c
+ON i.category_id = c.category_id;
 
 WHERE rNum >= ? AND rNum <=?;
+ORDER BY i.item_regdate DESC;
 
+DROP SEQUENCE cpu_num_seq;
+CREATE SEQUENCE cpu_num_seq
+ START WITH 10000
+ INCREMENT BY 1
+ MAXVALUE 19999;
 
+DROP SEQUENCE ram_num_seq;
+CREATE SEQUENCE ram_num_seq
+ START WITH 20000
+ INCREMENT BY 1
+ MAXVALUE 29999;
+
+DROP SEQUENCE mb_num_seq;
+CREATE SEQUENCE mb_num_seq
+ START WITH 30000
+ INCREMENT BY 1
+ MAXVALUE 39999;
+ 
+DROP SEQUENCE gpu_num_seq;
+CREATE SEQUENCE gpu_num_seq
+ START WITH 40000
+ INCREMENT BY 1
+ MAXVALUE 49999;
+
+DROP SEQUENCE powsup_num_seq;
+CREATE SEQUENCE powsup_num_seq
+ START WITH 50000
+ INCREMENT BY 1
+ MAXVALUE 59999;
+
+DROP SEQUENCE ssd_num_seq;
+CREATE SEQUENCE ssd_num_seq
+ START WITH 60000
+ INCREMENT BY 1
+ MAXVALUE 69999;
+
+DROP SEQUENCE hdd_num_seq;
+CREATE SEQUENCE hdd_num_seq
+ START WITH 70000
+ INCREMENT BY 1
+ MAXVALUE 79999;
+
+DROP SEQUENCE case_num_seq;
+CREATE SEQUENCE case_num_seq
+ START WITH 80000
+ INCREMENT BY 1
+ MAXVALUE 89999;
+
+DROP SEQUENCE mon_num_seq;
+CREATE SEQUENCE mon_num_seq
+ START WITH 90000
+ INCREMENT BY 1
+ MAXVALUE 99999;
+ 
+ 
 
 CREATE TABLE members
 (
@@ -112,6 +156,8 @@ CREATE TABLE members
 	PRIMARY KEY (mem_id)
 );
 
+INSERT INTO members VALUES('admin','admin','包府磊','leafcom@gmail.com','01000000000',sysdate,1,0);
+commit;
 
 CREATE TABLE post
 (
@@ -136,12 +182,29 @@ CREATE SEQUENCE post_num_seq;
  INCREMENT BY 1
  MAXVALUE 999999;
 
+SELECT * FROM
+    (SELECT rownum rNum, p.* 
+       FROM (SELECT * 
+               FROM post 
+              WHERE board_id = 1 
+                AND post_ref IN (SELECT post_ref 
+                                  FROM post 
+                                 WHERE post_writer = 'test1234') 
+              ORDER BY post_ref DESC, post_ref_step ASC) p) 
+      WHERE rNum >= 1 AND rNum <= 4;
 
-INSERT INTO members VALUES('admin','admin','包府磊','leafcom@gmail.com','01000000000',sysdate,1,0);
-commit;
+SELECT * FROM
+    (SELECT rownum rNum, p.* 
+       FROM (SELECT * 
+               FROM post 
+              WHERE board_id = 1 
+              ORDER BY post_ref DESC, post_ref_step ASC) p) 
+      WHERE rNum >= 1 AND rNum <= 5;      
+
 
 SELECT * FROM members;
 SELECT * FROM post;
 SELECT * FROM item;
 SELECT * FROM categories;
-
+SELECT * FROM item_v;
+SELECT COUNT(*) cnt FROM item WHERE category_id = 2;

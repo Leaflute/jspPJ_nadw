@@ -18,11 +18,14 @@ import leafcom.util.ImageUploaderHandler;
 
 //http://localhost/jsp_pj_ndw/*.co
 @WebServlet("*.ad")
-@MultipartConfig(location = "D:\\Dev88\\workspace\\jsp_88_ndw\\WebContent\\upload", fileSizeThreshold = 1024
-* 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5)
+@MultipartConfig(
+		location = "D:\\Dev88\\workspace\\jsp_pj_ndw\\WebContent\\asset\\uploaded", 
+		fileSizeThreshold = 1024* 1024, 
+		maxFileSize = 1024 * 1024 * 5, 
+		maxRequestSize = 1024 * 1024 * 5 * 5)
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String IMG_UPLOAD_DIR = "D:\\\\Dev88\\\\workspace\\\\jsp_88_ndw\\\\WebContent\\\\upload";
+	private static final String IMG_UPLOAD_DIR = "D:\\\\Dev88\\\\workspace\\\\jsp_pj_ndw\\\\WebContent\\\\asset\\\\uploaded";
 	
 	private ImageUploaderHandler uploader;
 	
@@ -72,7 +75,7 @@ public class AdminController extends HttpServlet {
 		
 		// 상품 상세 페이지
 		} else if (url.equals("/itemDetail.ad")) {
-			System.out.println("[ad][cnt][url ==> /itemManagement.ad]");
+			System.out.println("[ad][cnt][url ==> /itemDetail.ad]");
 			
 			service.itemDetail(req, res);
 			
@@ -81,6 +84,8 @@ public class AdminController extends HttpServlet {
 		// 상품 추가 입력
 		} else if (url.equals("/addItem.ad")) {
 			System.out.println("[ad][cnt][url ==> /itemManagement.ad]");
+			
+			service.categoryMap(req, res);
 			
 			viewPage = "/admin/item/addItem.jsp";
 	
@@ -100,6 +105,54 @@ public class AdminController extends HttpServlet {
 			service.addItem(req, res);
 			
 			viewPage = "/admin/item/addItemAction.jsp";
+		
+		// 상품 수정 입력
+		} else if (url.equals("/updateItem.ad")) {
+			System.out.println("[ad][cnt][url ==> /updateItem.ad]");
+			service.categoryMap(req, res);
+			service.itemDetail(req, res);
+			
+			viewPage = "/admin/item/updateItem.jsp";	
+		
+		// 상품 수정 처리	
+		} else if (url.equals("/updateItemAction.ad")) {
+		System.out.println("[ad][cnt][url ==> /updateItemAction.ad]");
+		
+			// 이미지 업로드 설정 시작
+			String contentType = req.getContentType();
+			if (contentType != null && contentType.toLowerCase().startsWith("multipart/")) {
+				 uploader = new ImageUploaderHandler(); // image uploader 핸들러 호출
+				 uploader.setUploadPath(IMG_UPLOAD_DIR); // img 경로
+				 uploader.imageUpload(req, res);
+			}
+			// 이미지 업로드 설정 끝
+		
+			service.updateItem(req, res);
+		
+			viewPage = "/admin/item/updateItemAction.jsp";
+		
+		// 상품 삭제 확인 페이지 로드
+		} else if (url.equals("/deleteItem.ad")) {
+			System.out.println("[ad][cnt][url ==> /deleteItem.ad]");
+				
+			int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+			int pageNum = Integer.parseInt(req.getParameter("pageNum"));
+			int itemId = Integer.parseInt(req.getParameter("itemId"));
+			
+			req.setAttribute("itemId", itemId);
+			req.setAttribute("pageNum", pageNum);
+			req.setAttribute("categoryId", categoryId);
+			
+			viewPage = "/admin/item/deleteItem.jsp";
+		
+		// 상품 삭제
+		} else if (url.equals("/deleteItemAction.ad")) {
+			System.out.println("[ad][cnt][url ==> /deleteItemAction.ad]");
+		
+			service.deleteItem(req, res);
+		
+			viewPage = "/admin/item/deleteItemAction.jsp";
+		
 		}
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);

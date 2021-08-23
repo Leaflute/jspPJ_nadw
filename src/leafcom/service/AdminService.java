@@ -8,6 +8,9 @@ public interface AdminService {
 	// 상품 리스트
 	public void itemList(HttpServletRequest req, HttpServletResponse res);
 	
+	// 카테고리 맵
+	public void categoryMap(HttpServletRequest req, HttpServletResponse res);
+	
 	// 상품 세부 정보
 	public void itemDetail(HttpServletRequest req, HttpServletResponse res);
 	

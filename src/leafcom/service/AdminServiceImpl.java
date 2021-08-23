@@ -1,6 +1,8 @@
 package leafcom.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,12 +18,14 @@ public class AdminServiceImpl implements AdminService {
 	// 상품 리스트
 	@Override
 	public void itemList(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("[ad][service][itemList()]");
 		int categoryId = 0;
 		
 		if (req.getParameter("categoryId")!=null) {
 			categoryId = Integer.parseInt(req.getParameter("categoryId"));
 		}
-		
+		System.out.println("categoryId: " + categoryId);
+			
 		int pageSize = 5; 		// 한 페이지당 출력할 글 개수
 		int pageBlock = 5;		// 한 블럭당 페이지 개수
 		
@@ -80,18 +84,18 @@ public class AdminServiceImpl implements AdminService {
 		System.out.println("endPage: " + endPage);
 		System.out.println("===================");
 		
-		ArrayList<ItemVO> dtos= null;
+		ArrayList<ItemVO> itemDtos= null;
+		HashMap<Integer, String> categoryMap = dao.getCategoryName();
 		
-		// 5-2단계. 게시글 목록 조회
 		if(cnt > 0) {
-			dtos = dao.getItemList(start, end, categoryId);
+			itemDtos = dao.getItemList(start, end, categoryId);
 		}
 		
-		// 6단계. request나 session에 처리결과를 저장 -> jsp로 전달
-		req.setAttribute("dtos", dtos);		//게시글 목록
-		req.setAttribute("cnt", cnt);		//글 개수
-		req.setAttribute("number", number);	//글 번호
-		req.setAttribute("pageNum", pageNum);//페이지 번호
+		req.setAttribute("itemDtos", itemDtos);
+		req.setAttribute("categoryMap", categoryMap);
+		req.setAttribute("cnt", cnt);		
+		req.setAttribute("number", number);
+		req.setAttribute("pageNum", pageNum);
 		req.setAttribute("categoryId", categoryId);
 		
 		if (cnt > 0) {
@@ -106,6 +110,7 @@ public class AdminServiceImpl implements AdminService {
 	// 상품 상세 페이지
 	@Override
 	public void itemDetail(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("[ad][service][itemDetail()]");
 		int categoryId = Integer.parseInt(req.getParameter("categoryId"));
 		int itemId = Integer.parseInt(req.getParameter("itemId"));
 		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
@@ -119,18 +124,123 @@ public class AdminServiceImpl implements AdminService {
 		req.setAttribute("categoryId", categoryId);
 	}
 	
-	// 상품 추가
+	// 카테고리 맵 가져오기
+	@Override
+	public void categoryMap(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("[ad][service][categoryMap()]");
+		HashMap<Integer, String> categoryMap = dao.getCategoryName();
+		req.setAttribute("categoryMap", categoryMap);
+	}
+	
+	// 상품 추가 처리
 	@Override
 	public void addItem(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("[ad][service][addItem()]");
+		int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
+		int number = Integer.parseInt(req.getParameter("number"));
 		
+		HashMap<Integer, String> categoryMap = dao.getCategoryName();
+		String categoryName = categoryMap.get(categoryId);
+		
+		String itemName = req.getParameter("itemName");
+		String company = req.getParameter("company");
+		// sql에 저장할 이미지 경로 = "/플젝명/updload/" + 이미지 핸들러에서 보낸 속성값("fileName");
+		String smallImg = "/jsp_pj_ndw/asset/upload/" + (String) req.getAttribute("fileName");
+		String largeImg = "/jsp_pj_ndw/asset/upload/" + (String) req.getAttribute("fileName");
+		String detailImg = "/jsp_pj_ndw/asset/upload/" + (String) req.getAttribute("fileName");
+		String info = req.getParameter("info");
+		int quantity = Integer.parseInt(req.getParameter("quantity"));
+		int cost = Integer.parseInt(req.getParameter("cost"));
+		int price = Integer.parseInt(req.getParameter("price"));
+		
+		ItemVO vo = new ItemVO();
+		vo.setCategoryId(categoryId);
+		vo.setCategoryName(categoryName);
+		vo.setItemName(itemName);
+		vo.setCompany(company);
+		vo.setSmallImg(smallImg);
+		vo.setLargeImg(largeImg);
+		vo.setDetailImg(detailImg);
+		vo.setRegDate(new Timestamp(System.currentTimeMillis()));
+		vo.setInfo(info);
+		vo.setQuantity(quantity);
+		vo.setCost(cost);
+		vo.setPrice(price);
+		vo.setGrade(0);
+		
+		int insertCnt = dao.insertItem(vo);
+		
+		req.setAttribute("insertCnt",insertCnt);
+		req.setAttribute("number", number);
+		req.setAttribute("pageNum", pageNum);
 	}
-
+	
+	// 상품 수정 처리
 	@Override
 	public void updateItem(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
+		System.out.println("[ad][service][updateItem()]");
+		int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
 		
+		int itemId = Integer.parseInt(req.getParameter("itemId"));
+		
+		HashMap<Integer, String> categoryMap = dao.getCategoryName();
+		String categoryName = categoryMap.get(categoryId);
+		
+		String itemName = req.getParameter("itemName");
+		String company = req.getParameter("company");
+		
+		// 파일경로 원본
+		String smallImg = req.getParameter("originalSmallImg");
+		String largeImg = req.getParameter("originalLargeImg");
+		String detailImg = req.getParameter("originalDetailImg");
+		
+		// sql에 저장할 이미지 경로 = "/플젝명/updload/" + 이미지 핸들러에서 보낸 속성값("fileName");
+		String updateSmallImg = (String) req.getAttribute("fileName");
+		String updateLargeImg = (String) req.getAttribute("fileName");
+		String updateDetailImg = (String) req.getAttribute("fileName");
+		
+		if (updateSmallImg!=null) {
+			smallImg = "/jsp_pj_ndw/asset/uploaded/" + updateSmallImg;
+		}
+		if (updateLargeImg!=null) {
+			largeImg = "/jsp_pj_ndw/asset/uploaded/" + updateLargeImg;
+		}
+		if (updateSmallImg!=null) {
+			detailImg = "/jsp_pj_ndw/asset/uploaded/" + updateDetailImg;
+		}
+		
+		String info = req.getParameter("info");
+		int quantity = Integer.parseInt(req.getParameter("quantity"));
+		int cost = Integer.parseInt(req.getParameter("cost"));
+		int price = Integer.parseInt(req.getParameter("price"));
+		double grade = Double.parseDouble(req.getParameter("grade"));
+		
+		ItemVO vo = new ItemVO();
+		vo.setItemId(itemId);
+		vo.setCategoryId(categoryId);
+		vo.setCategoryName(categoryName);
+		vo.setItemName(itemName);
+		vo.setCompany(company);
+		vo.setSmallImg(smallImg);
+		vo.setLargeImg(largeImg);
+		vo.setDetailImg(detailImg);
+		vo.setRegDate(new Timestamp(System.currentTimeMillis()));
+		vo.setInfo(info);
+		vo.setQuantity(quantity);
+		vo.setCost(cost);
+		vo.setPrice(price);
+		vo.setGrade(grade);
+		
+		int updateCnt = dao.updateItem(vo);
+		
+		req.setAttribute("updateCnt",updateCnt);
+		req.setAttribute("pageNum", pageNum);
+		req.setAttribute("categoryId", categoryId);
 	}
-
+	
+	// 상품 삭제 처리
 	@Override
 	public void deleteItem(HttpServletRequest req, HttpServletResponse res) {
 		// TODO Auto-generated method stub

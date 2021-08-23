@@ -8,14 +8,13 @@
 <link rel="stylesheet" type="text/css" href="${cssPath}article.css">
 <link rel="stylesheet" type="text/css" href="${cssPath}dashboard.css">
 <script src="./asset/js/jquery-3.6.0.min.js" type="text/javascript"></script>
-<title>게시글 삭제요청</title>
+<title>상품 삭제요청</title>
 </head>
 <body>
-<form action="csDeleteAction.bo" method="post" name="pwForm">
-	<input type="hidden" name="num" value="${num}">
+<form action="csDeleteAction.bo" method="post" name="deleteitemform">
+	<input type="hidden" name="itemId" value="${itemId}">
 	<input type="hidden" name="pageNum" value="${pageNum}">
-	<input type="hidden" name="boardId" value="${boardId}">
-	<input type="hidden" name="fullList" value="${fullList}">
+	<input type="hidden" name="categoryId" value="${categoryId}">
 <%@ include file="../../include/header.jsp" %>
 <!-- article 시작 -->
 <article class="container">
@@ -40,7 +39,7 @@
 								<th colspan="2">
 									<input class="little_btn" type="submit" value="확인">
 									<input class="little_btn" type="reset" value="취소"
-										onclick="window.location='csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${pageNum}'">
+										onclick="window.location='itemManagement.ad?categoryId=${categoryId}&pageNum=${pageNum}'">
 								</th>
 							</tr>
 						</table>

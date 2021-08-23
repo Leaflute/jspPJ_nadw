@@ -26,12 +26,12 @@
 				<c:if test="${empty sessionScope.sessionID}">
 					<li><a href="login.co">로그인</a></li>
 					<li><a href="signIn.co">회원가입</a></li>
-					<li><a href="" id="">고객센터</a></li>
+					<li><a href="login.co" onclick="alert('로그인 후 이용해주세요.')">고객센터</a></li>
 				</c:if>
 				<c:if test="${not empty sessionScope.sessionID}">
 					<li><b>${sessionScope.sessionID}</b>님</li>
 					<li><a href="logout.co">로그아웃</a></li>
-					<li><a href="" id="">고객센터</a></li>
+					<li><a href="csList.bo?boardId=1&fullList=false">고객센터</a></li>
 				</c:if>
 			</ul>
 		</div>

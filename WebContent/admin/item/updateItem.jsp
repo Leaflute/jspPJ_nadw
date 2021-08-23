@@ -12,7 +12,11 @@
 <title>상품추가</title>
 </head>
 <body>
-<form action="addItemAction.ad" method="post" enctype="multipart/form-data" name="additemform" onsubmit="return addItemChk()">
+<form action="updateItemAction.ad" method="post" enctype="multipart/form-data" name="additemform" onsubmit="return addItemChk()">
+<input type="hidden" name="originalSmallImg" value="${dto.smallImg}">
+<input type="hidden" name="originalLargeImg" value="${dto.largeImg}">
+<input type="hidden" name="originalDetailImg" value="${dto.detailImg}">
+<input type="hidden" name="grade" value="${dto.grade}">
 <%@ include file="../../include/header.jsp" %>
 <!-- article 시작 -->
 <article class="container">
@@ -25,7 +29,7 @@
 			<section class="mem_content">
 				<div class="outer_content">
 					<div class="inner_content">
-						<div class="title_letter">상품추가</div>
+						<div class="title_letter">상품정보수정</div>
 						<table class="input_table">
 							<tr>
 								<th><label for="categoryId">카테고리 *</label></th>
@@ -40,39 +44,52 @@
 							</tr>
 							<tr>
 								<th><label for="itemName">상품이름 *</label></th>
-								<td><input type="text" id="itemName" name="itemName" size="40" placeholder="상품 이름 입력" required></td>	
+								<td><input type="text" id="itemName" name="itemName" size="40" 
+										value="${dto.itemName}" required></td>	
 							</tr>
 							<tr>
 								<th><label for="company">제조사 *</label></th>
-								<td><input type="text" id="company" name="company" size="40" placeholder="제조사 입력" required></td>	
+								<td><input type="text" id="company" name="company" size="40" 
+										value="${dto.company}" required></td>	
 							</tr>							
 							<tr>
 								<th><label for="smallImg">썸네일 이미지 *</label></th>
-								<td><input type="file" id="smallImg" name="smallImg" size="40" accept="image/*" required></td>	
+								<td><input type="file" id="smallImg" name="smallImg" size="40" 
+									accept="image/*" required></td>	
 							</tr>
 							<tr>
 								<th><label for="largeImg">메인 이미지 *</label></th>
-								<td><input type="file" id="largeImg" name="largeImg" size="40" accept="image/*" required></td>	
+								<td><input type="file" id="largeImg" name="largeImg" size="40" 
+									accept="image/*" required></td>	
 							</tr>
 							<tr>
 								<th><label for="detailImg">상품 설명 이미지 *</label></th>
-								<td><input type="file" id="detailImg" name="detailImg" size="40" accept="image/*"></td>	
+								<td><input type="file" id="detailImg" name="detailImg" 
+									size="40" accept="image/*" ></td>	
 							</tr>
 							<tr>
 								<th><label for="info">상품 정보 *</label></th>
-								<td><textarea id="info" name="info" rows="10" cols="50"></textarea></td>	
+								<td><textarea id="info" name="info" rows="10" cols="50" 
+										value="${dto.info}"></textarea></td>	
 							</tr>
 							<tr>
 								<th><label for="quantity">재고 수량 *</label></th>
-								<td><input type="number" min=1 max="1000" id="quantity" name="quantity" placeholder="수량"></td>	
+								<td><input type="number" min=1 max="1000" id="quantity" name="quantity" 
+										value="${dto.quantity}"></td>	
 							</tr>
 							<tr>
 								<th><label for="cost">상품 원가 *</label></th>
-								<td><input type="number" min=100 max="100000000" id="cost" name="cost" placeholder="원가"></td>	
+								<td><input type="number" min=100 max="100000000" id="cost" name="cost" 
+										value="${dto.cost}"></td>	
 							</tr>
 							<tr>
 								<th><label for="price">판매 가격 *</label></th>
-								<td><input type="number" min=100 max="100000000" id="price" name="price" placeholder="가격"></td>	
+								<td><input type="number" min=100 max="100000000" id="price" name="price" 
+										value="${dto.price}"></td>	
+							</tr>
+							<tr>
+								<th><label for="price">상품 평점</label></th>
+								<td>${dto.grade}</td>	
 							</tr>
 						</table>	
 						<div class="outer_content"> 

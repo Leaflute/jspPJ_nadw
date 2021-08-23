@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,9 +24,7 @@ public class ImageUploaderHandler {
     	
         File uploadDir = new File(uploadPath);
         // 업로드할 경로에 폴더가 없는 경우 폴더 생성
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();
-        }
+        if (!uploadDir.exists()) uploadDir.mkdir();
 
         try {
             uploadDir.setWritable(true);
@@ -59,4 +58,5 @@ public class ImageUploaderHandler {
         }
         return null; // filename이 없는 경우 (폼필드 데이터인 경우):
     }
+    
 }

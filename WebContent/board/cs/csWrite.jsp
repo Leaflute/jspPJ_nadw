@@ -28,7 +28,7 @@
 			<section class="mem_content">
 				<div class="outer_content">
 					<div class="inner_content">
-						<table align="center">
+						<table class="input_table">
 							<tr>
 								<th colspan="2"> 문의작성 </th>
 							</tr>
@@ -47,15 +47,13 @@
 								</textarea>
 								</td>
 							</tr>
-							<tr>
-								<th colspan="2">
-									<input class="button" type="submit" value="글 쓰기">
-									<input class="button" type="reset" value="초기화">
-									<input class="button" type="button" value="목록"
-										onclick="window.location='csList.bo?pageNum=${pageNum}'">
-								</th>
-							</tr>
 						</table>
+						<div class="outer_content">
+							<input class="little_btn" type="submit" value="글 쓰기">
+							<input class="little_btn" type="reset" value="초기화">
+							<input class="little_btn" type="button" value="목록"
+								onclick="window.location='csList.bo?pageNum=${pageNum}'">
+						</div>
 					</div>
 				</div>
 			</section>
@@ -65,6 +63,7 @@
 </article>
 <!-- article 끝 -->
 
-<%@ include file="../../include/footer.jsp" %>								
+<%@ include file="../../include/footer.jsp" %>
+</form>								
 </body>
 </html>

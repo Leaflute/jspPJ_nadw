@@ -25,7 +25,7 @@
 				<li><a href="myaddress.html">MY배송지</a></li>
 				<li><a href="mycart.html">MY장바구니</a></li>
 				<li><a href="myestimate.html">MY견적서</a></li>
-				<li><a href="csList.bo?boardId=1&fullList=0">MY문의</a></li>
+				<li><a href="csList.bo?boardId=1&fullList=false">MY문의</a></li>
 			</ul>
 		</div>
 	</nav>
@@ -42,7 +42,7 @@
 				<li><a href="dashboard_order.html">주문관리</a></li>
 				<li><a href="itemManagement.ad">상품관리</a></li>
 				<li><a href="dashboard_report.html">결산관리</a></li>
-				<li><a href="csList.bo?boardId=1&fullList=1">고객문의관리</a></li>
+				<li><a href="csList.bo?boardId=1&fullList=true">고객문의관리</a></li>
 				<li><a href="logout.co">로그아웃</a></li>
 			</ul>
 		</div>

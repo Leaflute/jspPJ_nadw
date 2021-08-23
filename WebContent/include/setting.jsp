@@ -12,6 +12,7 @@
 <c:set var="cssPath" value="/jsp_pj_ndw/asset/css/"/>
 <c:set var="jsPath" value="/jsp_pj_ndw/asset/js/"/>
 <c:set var="imgPath" value="/jsp_pj_ndw/asset/img/"/>
+<c:set var="upPath" value="jsp_pj_ndw/asset/uploaded/"/>
 
 <script src="https://kit.fontawesome.com/ef75f47104.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css"/>

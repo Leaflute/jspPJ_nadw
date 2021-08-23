@@ -7,10 +7,10 @@ import leafcom.vo.PostVO;
 public interface PostDAO {
 	
 	// 게시글 개수 구하기
-	public int getPostCount(int boardId, int fullList, String writer);
+	public int getPostCount(int boardId, boolean fullList, String writer);
 	
 	// 게시글 목록 조회
-	public ArrayList<PostVO> getPostList(int start, int end, int boardId, int fullList, String writer);
+	public ArrayList<PostVO> getPostList(int start, int end, int boardId, boolean fullList, String writer);
 
 	// 조회수 증가
 	public void addPostHit(int num);

@@ -3,11 +3,12 @@ package leafcom.service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import leafcom.dao.CustomerDAO;
 import leafcom.dao.CustomerDAOImpl;
 
 public class CustomerServiceImpl implements CustomerService {
 	
-	CustomerDAOImpl dao = dao.getInstance();
+	CustomerDAO dao = CustomerDAOImpl.getInstance();
 	
 	@Override
 	public void cartList(HttpServletRequest req, HttpServletResponse res) {

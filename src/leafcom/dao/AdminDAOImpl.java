@@ -5,13 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import leafcom.vo.ItemVO;
-import leafcom.vo.PostVO;
 
 public class AdminDAOImpl implements AdminDAO {
 
@@ -48,7 +48,7 @@ public class AdminDAOImpl implements AdminDAO {
 		
 		try {
 			conn = dataSource.getConnection();
-			String sql = "SELECT COUNT(*) cnt FROM item";
+			String sql = "SELECT COUNT(*) cnt FROM item\r\n";
 			
 			if (categoryId==0) {
 				pstmt = conn.prepareStatement(sql);
@@ -80,24 +80,29 @@ public class AdminDAOImpl implements AdminDAO {
 		return selectCnt;
 	}
 	
-	// 카테고리 이름 반환
+	// 카테고리 이름 맵
 	@Override
-	public String getCategoryName(int categoryId) {
-		String categoryName = null;
+	public HashMap<Integer, String> getCategoryName() {
+		HashMap<Integer, String> categoryMap = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
 		try {
 			conn = dataSource.getConnection();
-			String sql = "SELECT * FROM categories WHERE categoryId = ?";
+			String sql = "SELECT * FROM categories";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, categoryId);
 			
 			rs = pstmt.executeQuery();
 			
 			if (rs.next()) {
-				categoryName = rs.getString("category_name");
+				
+				categoryMap = new HashMap<Integer,String>();
+				
+				do {
+					categoryMap.put(rs.getInt("category_id"), rs.getString("category_name"));
+				} while (rs.next());
+				
 			}
 			
 		} catch (SQLException e) {
@@ -111,7 +116,7 @@ public class AdminDAOImpl implements AdminDAO {
 				e.printStackTrace();
 			}
 		}
-		return categoryName;
+		return categoryMap;
 	}
 	
 	// 상품 목록 구하기
@@ -125,17 +130,24 @@ public class AdminDAOImpl implements AdminDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM" + 
-					"    (SELECT item_id, category_id, item_name, item_company, item_small_img, item_large_img, item_detail_img, " + 
-					"            item_detail_img, item_regdate, item_content, item_quantity, item_cost, item_price, item_grade, " + 
-					"            ROWNUM rNum" + 
-					"            FROM (SELECT * FROM item WHERE category_id = ? ORDER BY item_regdate DESC))" + 
-					"	WHERE rNum >= ? AND rNum <=?";
+			String sql = "SELECT * FROM item_v\r\n";
+			
+			if (categoryId==0) {
+				sql +=	"WHERE rNum >= ? AND rNum <=?";
+				
+				pstmt = conn.prepareStatement(sql);	
+				pstmt.setInt(1, start);
+				pstmt.setInt(2, end);
+			} else {
+			
+				sql +=	"WHERE rNum >= ? AND rNum <=? AND category_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);		
-			pstmt.setInt(1, categoryId);
-			pstmt.setInt(2, start);
-			pstmt.setInt(3, end);
+			pstmt.setInt(1, start);
+			pstmt.setInt(2, end);
+			pstmt.setInt(3, categoryId);
+		
+			}
 			
 			rs = pstmt.executeQuery();
 
@@ -148,19 +160,18 @@ public class AdminDAOImpl implements AdminDAO {
 				do {
 					// 3. 작은바구니(PostVO) 생성
 					ItemVO vo = new ItemVO();
-					String categoryName = getCategoryName(categoryId);
 					
 					// 4. 한 건을 읽어서 rs결과를 setter로 작은 바구니에 담음
 					vo.setItemId(rs.getInt("item_id"));
 					vo.setCategoryId(rs.getInt("category_id"));
-					vo.setCategoryName(categoryName);
+					vo.setCategoryName(rs.getString("category_name"));
 					vo.setItemName(rs.getString("item_name"));
 					vo.setCompany(rs.getString("item_company"));
 					vo.setSmallImg(rs.getString("item_small_img"));
 					vo.setLargeImg(rs.getString("item_large_img"));
 					vo.setDetailImg(rs.getString("item_detail_img"));
-					vo.setRegDate(rs.getTimestamp("post_regdate"));
-					vo.setContent(rs.getString("item_content"));
+					vo.setRegDate(rs.getTimestamp("item_regdate"));
+					vo.setInfo(rs.getString("item_info"));
 					vo.setQuantity(rs.getInt("item_quantity"));
 					vo.setCost(rs.getInt("item_cost"));
 					vo.setPrice(rs.getInt("item_price"));
@@ -186,9 +197,7 @@ public class AdminDAOImpl implements AdminDAO {
 		return list;
 	}
 	
-	// 상품 카테고리 구하기
-	
-	// 상품 상세 페이지
+	// 상품 상세 정보 호출
 	@Override
 	public ItemVO getItemDetail(int itemId, int categoryId) {
 		ItemVO vo = null;
@@ -199,7 +208,7 @@ public class AdminDAOImpl implements AdminDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM item WHERE item_id = ?";
+			String sql = "SELECT * FROM item_v WHERE item_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, itemId);
 			
@@ -207,18 +216,17 @@ public class AdminDAOImpl implements AdminDAO {
 		
 			if(rs.next()) {
 				vo = new ItemVO();
-				String categoryName = getCategoryName(categoryId);
 				
 				vo.setItemId(rs.getInt("item_id"));
 				vo.setCategoryId(rs.getInt("category_id"));
-				vo.setCategoryName(categoryName);
+				vo.setCategoryName(rs.getString("category_name"));
 				vo.setItemName(rs.getString("item_name"));
 				vo.setCompany(rs.getString("item_company"));
 				vo.setSmallImg(rs.getString("item_small_img"));
 				vo.setLargeImg(rs.getString("item_large_img"));
 				vo.setDetailImg(rs.getString("item_detail_img"));
-				vo.setRegDate(rs.getTimestamp("post_regdate"));
-				vo.setContent(rs.getString("item_content"));
+				vo.setRegDate(rs.getTimestamp("item_regdate"));
+				vo.setInfo(rs.getString("item_info"));
 				vo.setQuantity(rs.getInt("item_quantity"));
 				vo.setCost(rs.getInt("item_cost"));
 				vo.setPrice(rs.getInt("item_price"));
@@ -247,13 +255,126 @@ public class AdminDAOImpl implements AdminDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
-		return 0;
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "INSERT INTO item VALUES (";
+			
+			switch (vo.getCategoryId()) {
+				case 1 :
+					sql += "cpu";
+					break;
+				case 2 :
+					sql += "ram";
+					break;
+				case 3 :
+					sql += "mb";
+					break;
+				case 4 :
+					sql += "gpu";
+					break;
+				case 5 :
+					sql += "powsup";
+					break;
+				case 6 :
+					sql += "ssd";
+					break;
+				case 7 :
+					sql += "hdd";
+					break;
+				case 8 :
+					sql += "case";
+					break;
+				case 9 :
+					sql += "mon";
+					break;					
+			}
+			sql += "_num_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, vo.getCategoryId());
+			pstmt.setString(2, vo.getItemName());
+			pstmt.setString(3, vo.getCompany());
+			pstmt.setString(4, vo.getSmallImg());
+			pstmt.setString(5, vo.getLargeImg());
+			pstmt.setString(6, vo.getDetailImg());
+			pstmt.setTimestamp(7, vo.getRegDate());
+			pstmt.setString(8, vo.getInfo());
+			pstmt.setInt(9, vo.getQuantity());
+			pstmt.setInt(10, vo.getCost());
+			pstmt.setInt(11, vo.getPrice());
+			
+			insertCnt = pstmt.executeUpdate();
+			
+			System.out.println("[ad][dao]insertCnt: "+ insertCnt + " ]");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return insertCnt;
 	}
 
 	@Override
 	public int updateItem(ItemVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
+		int updateCnt = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql="UPDATE item SET "
+					+ "category_id = ? "
+					+ "item_name = ? "
+					+ "item_company = ? "
+					+ "item_small_img = ? "
+					+ "item_large_img = ? "
+					+ "item_detail_img = ? "
+					+ "item_regdate = ? "
+					+ "item_info = ? "
+					+ "item_quantity = ? "
+					+ "item_cost = ? "
+					+ "item_price = ? "
+					+ "item_grade = ? "
+					+ "WHERE item_id = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, vo.getCategoryId());
+			pstmt.setString(2, vo.getItemName());
+			pstmt.setString(3, vo.getCompany());
+			pstmt.setString(4, vo.getSmallImg());
+			pstmt.setString(5, vo.getLargeImg());
+			pstmt.setString(6, vo.getDetailImg());
+			pstmt.setTimestamp(7, vo.getRegDate());
+			pstmt.setString(8, vo.getInfo());
+			pstmt.setInt(9, vo.getQuantity());
+			pstmt.setInt(10, vo.getCost());
+			pstmt.setInt(11, vo.getPrice());
+			pstmt.setDouble(12, vo.getGrade());
+			pstmt.setInt(13, vo.getItemId());
+			
+			updateCnt = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return updateCnt;
 	}
 
 	@Override
@@ -261,8 +382,5 @@ public class AdminDAOImpl implements AdminDAO {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
-
-	
 	
 }

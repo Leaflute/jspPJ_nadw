@@ -44,23 +44,21 @@
 									${dto.content}
 								</td>
 							</tr>
-							<tr>
-								<th colspan="4">
-									<c:if test="${selectCnt==1}">
-										<input class="button" type="button" value="수정하기"
-											onclick="window.location='csUpdate.bo?boardId=${boardId}&fullList=${fullList}&num=${dto.postNum}&pageNum=${pageNum}&number=${number}'">
-										<input class="button" type="button" value="삭제하기"
-											onclick="window.location='csDelete.bo?boardId=${boardId}&fullList=${fullList}&num=${dto.postNum}&pageNum=${pageNum}'">
-									</c:if>
-									<c:if test="${sessionScope.sessionRole==1}">
-										<input class="button" type="button" value="답글하기"
-											onclick="window.location='csWrite.bo?boardId=${boardId}&fullList=${fullList}&num=${dto.postNum}&pageNum=${pageNum}&ref=${dto.ref}&refStep=${dto.refStep}&refLevel=${dto.refLevel}'">
-									</c:if>
-									<input class="button" type="button" value="목록"
-										onclick="window.location='csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${pageNum}'">
-								</th>
-							</tr>
-						</table>
+						</table>	
+						<div class="outer_content">
+							<c:if test="${selectCnt==1}">
+								<input class="little_btn" type="button" value="수정하기"
+									onclick="window.location='csUpdate.bo?boardId=${boardId}&fullList=${fullList}&num=${dto.postNum}&pageNum=${pageNum}&number=${number}'">
+								<input class="little_btn" type="button" value="삭제하기"
+									onclick="window.location='csDelete.bo?boardId=${boardId}&fullList=${fullList}&num=${dto.postNum}&pageNum=${pageNum}'">
+							</c:if>
+							<c:if test="${sessionScope.sessionRole==1&&dto.refLevel>0}">
+								<input class="little_btn" type="button" value="답글하기"
+									onclick="window.location='csWrite.bo?boardId=${boardId}&fullList=${fullList}&num=${dto.postNum}&pageNum=${pageNum}&ref=${dto.ref}&refStep=${dto.refStep}&refLevel=${dto.refLevel}'">
+							</c:if>
+							<input class="little_btn" type="button" value="목록"
+								onclick="window.location='csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${pageNum}'">
+						</div>
 					</div>
 				</div>
 			</section>

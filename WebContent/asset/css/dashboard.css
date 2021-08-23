@@ -77,7 +77,7 @@
 
 
 .title_letter {
-	font-size: 36px;
+	font-size: 24px;
 	font-weight: bold;
 	margin-botton: 2.5%;
 } 
@@ -102,12 +102,27 @@ th, td {
 }
 
 .little_btn {
-	font-size: 15px;
+	font-size: 12px;
 	font-weight: bold;
-	padding: 10px;
+	padding: 7px;
 	border-style: none;
 	border-radius: 2px;
 	margin: 5px;
 	background-color: #00c11f;
 	color:white;
+}
+
+/* 입력 테이블 정렬 */
+.input_table input {
+	border: 1px rightgray;
+	outline: 1px black;
+}
+
+.input_table th {
+	text-align: right;
+	background-color: rightgray;	
+}
+
+.input_table td {
+	text-align: left;	
 }

@@ -4,6 +4,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="${cssPath}article.css">
+<link rel="stylesheet" type="text/css" href="${cssPath}dashboard.css">
+<script type="text/javascript" src="${jsPath}item.js"></script>
+<script src="./asset/js/jquery-3.6.0.min.js" type="text/javascript"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
@@ -25,36 +29,54 @@
 							<tr>
 								<th>상품번호</th>
 								<td align="center">${dto.itemId}</td>
-								<th>조회수</th>
-								<td>${dto.hit}</td>
+								<th>제조사</th>
+								<td>${dto.company}</td>
 							</tr>
 							<tr>
-								<th>작성자</th>
-								<td align="center">${dto.writer}</td>
-								<th>작성일</th>
+								<th>카테고리</th>
+								<td align="center">${dto.categoryName}</td>
+								<th>등록일</th>
 								<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${dto.regDate}"/></td>
 							</tr>
 							<tr>
-								<th>제목 </th>
+								<th>상품명</th>
 								<td colspan="3" align="center">${dto.itemName}</td>
 							</tr>
 							<tr>
-								<th>내용 </th>
-								<td colspan="3" word-break:break-all>
-									${dto.content}
+								<th>상품정보</th>
+								<td colspan="3" align="left" style="word-break:break-all">
+									${dto.info} 
 								</td>
 							</tr>
 							<tr>
-								<th colspan="4">
-									<input class="button" type="button" value="수정하기"
-										onclick="window.location='csUpdate.bo?num=${dto.itemId}&pageNum=${pageNum}&number=${number}'">
-									<input class="button" type="button" value="삭제하기"
-										onclick="window.location='csDelete.bo?num=${dto.itemId}'">
-									<input class="button" type="button" value="목록"
-										onclick="window.location='itemManagement.ad'">
-								</th>
+								<th>작은 이미지</th>
+								<td colspan="3"><img src="${dto.smallImg}"></td>
 							</tr>
-						</table>
+							<tr>
+								<th>큰 이미지</th>
+								<td colspan="3"><img src="${dto.largeImg}"></td>
+							</tr>
+							<tr>
+								<th>상품 설명 이미지</th>
+								<td colspan="3" ><img src="${dto.detailImg}"></td>
+							</tr>
+							<tr>
+								<th>상품원가</th><td>￦<fmt:formatNumber value="${dto.cost}" pattern="#,###"/></td>
+								<th>판매가격</th><td>￦<fmt:formatNumber value="${dto.price}" pattern="#,###"/></td>
+							</tr>
+							<tr>
+								<th>평점</th>
+								<td colspan="3">${dto.grade}</td>
+							<tr>
+						</table>	
+						<div class="outer_content">
+							<input class="little_btn" type="button" value="수정하기"
+								onclick="window.location='itemUpdate.ad?itemId=${dto.itemId}&categoryId=${dto.categoryId}&pageNum=${pageNum}'">
+							<input class="little_btn" type="button" value="삭제하기"
+								onclick="window.location='itemDelete.ad?itemId=${dto.itemId}&categoryId=${dto.categoryId}&pageNum=${pageNum}'">
+							<input class="little_btn" type="button" value="목록"
+								onclick="window.location='itemManagement.ad?categoryId=${dto.categoryId}&pageNum=${pageNum}&number=${number}'">
+						</div>
 					</div>
 				</div>
 			</section>

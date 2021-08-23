@@ -20,7 +20,10 @@ public class PostServiceImpl implements PostService {
 		
 		// 페이징
 		int boardId = Integer.parseInt(req.getParameter("boardId"));	//게시판 id
-		int fullList = Integer.parseInt(req.getParameter("fullList"));	//리스트 전체를 가져올지 여부
+		boolean fullList = true;		//리스트 전체를 가져올지 여부 0이면 전체,1이면 자기자신 글과 답글만
+		if(req.getParameter("fullList")!=null) {
+			fullList = Boolean.parseBoolean(req.getParameter("fullList"));
+		}
 		String writer = (String)req.getSession().getAttribute("sessionID");
 		int pageSize = 5; 		// 한 페이지당 출력할 글 개수
 		int pageBlock = 5;		// 한 블럭당 페이지 개수
@@ -110,7 +113,7 @@ public class PostServiceImpl implements PostService {
 	public void postDetail(HttpServletRequest req, HttpServletResponse res) {
 		
 		int boardId = Integer.parseInt(req.getParameter("boardId"));	//게시판 id
-		int fullList = Integer.parseInt(req.getParameter("fullList"));	//리스트 전체를 가져올지 여부
+		boolean fullList = Boolean.parseBoolean(req.getParameter("fullList"));	//리스트 전체를 가져올지 여부
 		int num = Integer.parseInt(req.getParameter("num"));
 		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
 		int number = Integer.parseInt(req.getParameter("number"));
@@ -137,7 +140,7 @@ public class PostServiceImpl implements PostService {
 		PostVO vo = new PostVO();
 		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
 		int boardId = Integer.parseInt(req.getParameter("boardId"));
-		int fullList = Integer.parseInt(req.getParameter("fullList"));
+		boolean fullList = Boolean.parseBoolean(req.getParameter("fullList"));
 		
 		vo.setPostNum(Integer.parseInt(req.getParameter("num")));
 		vo.setBoardId(boardId);
@@ -168,7 +171,7 @@ public class PostServiceImpl implements PostService {
 		int num = Integer.parseInt(req.getParameter("num"));
 		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
 		int boardId = Integer.parseInt(req.getParameter("boardId"));
-		int fullList = Integer.parseInt(req.getParameter("fullList"));
+		boolean fullList = Boolean.parseBoolean(req.getParameter("fullList"));
 		
 		PostVO vo = new PostVO();
 		vo.setPostNum(num);
@@ -192,7 +195,7 @@ public class PostServiceImpl implements PostService {
 		int num = Integer.parseInt(req.getParameter("num"));
 		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
 		int boardId = Integer.parseInt(req.getParameter("boardId"));	//게시판 id
-		int fullList = Integer.parseInt(req.getParameter("fullList"));	//리스트 전체를 가져올지 여부
+		boolean fullList = Boolean.parseBoolean(req.getParameter("fullList"));	//리스트 전체를 가져올지 여부
 		
 		int deleteCnt = 0; 
 		

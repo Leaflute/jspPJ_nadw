@@ -39,7 +39,7 @@ public class PostDAOImpl implements PostDAO {
 
 	// 게시글 수 구하기
 	@Override
-	public int getPostCount(int boardId, int fullList, String writer) {
+	public int getPostCount(int boardId, boolean fullList, String writer) {
 		int selectCnt = 0;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -50,7 +50,7 @@ public class PostDAOImpl implements PostDAO {
 			
 			String sql = "SELECT COUNT(*) cnt FROM Post WHERE board_id = ?";
 			
-			if (fullList==0) {
+			if (!fullList) {
 				sql += "AND post_writer = ?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, boardId);
@@ -83,32 +83,39 @@ public class PostDAOImpl implements PostDAO {
 	
 	// 고객문의 게시글 목록 구하기
 	@Override
-	public ArrayList<PostVO> getPostList(int start, int end, int boardId, int fullList, String writer) {
+	public ArrayList<PostVO> getPostList(int start, int end, int boardId, boolean fullList, String writer) {
 		
 		ArrayList<PostVO> list = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		System.out.println("fullist:" + fullList);
 		
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * "
-						+ "FROM (SELECT post_num, board_id, post_writer, post_title, post_content, post_regdate, "
-									+ "post_hit, post_ref, post_ref_level, post_ref_step, writer_ip, post_condition, rowNum rNum "
-								+ "FROM (SELECT * FROM post WHERE board_id = ? ";
+			String sql = "SELECT * FROM\r\n" + 
+					"    (SELECT rownum rNum, p.* \r\n" + 
+					"       FROM (SELECT * \r\n" + 
+					"               FROM post \r\n" + 
+					"              WHERE board_id = ?\r\n";
 									
-			if(fullList==0) {
-				sql += "AND post_writer IN (?, ?) ORDER BY post_ref DESC, post_ref_step ASC)) WHERE rNum >= ? AND rNum <= ?";
+			if(!fullList) {
+				sql += "AND post_ref IN (SELECT post_ref \r\n" + 
+						"                 FROM post \r\n" + 
+						"                WHERE post_writer = ?) \r\n" + 
+						"          ORDER BY post_ref DESC, post_ref_step ASC) p) \r\n" + 
+						"      WHERE rNum >= ? AND rNum <= ?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, boardId);
 				pstmt.setString(2, writer);
-				pstmt.setString(3, "admin");
-				pstmt.setInt(4, start);
-				pstmt.setInt(5, end);
+				pstmt.setInt(3, start);
+				pstmt.setInt(4, end);
 				System.out.println("고객문의 - 고객");
+				
 			} else {
-				sql += "ORDER BY post_ref DESC, post_ref_step ASC)) WHERE rNum >= ? AND rNum <= ?";
+				sql += "           ORDER BY post_ref DESC, post_ref_step ASC) p) \r\n" + 
+					   "       WHERE rNum >= ? AND rNum <= ?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, boardId);
 				pstmt.setInt(2, start);

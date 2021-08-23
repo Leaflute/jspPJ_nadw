@@ -12,11 +12,11 @@ public class ItemVO implements Cloneable {
 	private String largeImg;
 	private String detailImg;
 	private Timestamp regDate;
-	private String content;
+	private String info;
 	private int quantity;
 	private int cost;
 	private int price;
-	private float grade;
+	private double grade;
 	
 	public int getItemId() {
 		return itemId;
@@ -89,13 +89,13 @@ public class ItemVO implements Cloneable {
 	public void setRegDate(Timestamp regDate) {
 		this.regDate = regDate;
 	}
-
-	public String getContent() {
-		return content;
+	
+	public String getInfo() {
+		return info;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setInfo(String info) {
+		this.info = info;
 	}
 
 	public int getQuantity() {
@@ -122,11 +122,11 @@ public class ItemVO implements Cloneable {
 		this.price = price;
 	}
 
-	public float getGrade() {
+	public double getGrade() {
 		return grade;
 	}
 
-	public void setGrade(float grade) {
+	public void setGrade(double grade) {
 		this.grade = grade;
 	}
 
