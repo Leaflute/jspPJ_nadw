@@ -7,14 +7,15 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="${cssPath}article.css">
 <link rel="stylesheet" type="text/css" href="${cssPath}dashboard.css">
-<script src="./asset/js/jquery-3.6.0.min.js" type="text/javascript"></script>
+<script src="${jsPath}jquery-3.6.0.min.js" type="text/javascript"></script>
+<script src="${jsPath}item.js"></script>
 <title>상품 삭제요청</title>
 </head>
 <body>
-<form action="csDeleteAction.bo" method="post" name="deleteitemform">
-	<input type="hidden" name="itemId" value="${itemId}">
+<form action="deleteItemAction.ad" method="post" name="deleteitemform">
+	<input type="hidden" name="itemId" value="${dto.itemId}">
 	<input type="hidden" name="pageNum" value="${pageNum}">
-	<input type="hidden" name="categoryId" value="${categoryId}">
+	<input type="hidden" name="categoryId" value="${dto.categoryId}">
 <%@ include file="../../include/header.jsp" %>
 <!-- article 시작 -->
 <article class="container">
@@ -27,22 +28,26 @@
 			<section class="mem_content">
 				<div class="outer_content">
 					<div class="inner_content">
-						<h2>게시글 삭제</h2>
+						<h2>상품 삭제</h2>
 						<!-- input type="hidden" form 태그 안에서 작성 -->
 						<table>
 							<tr>
-								<th colspan="2">
-									정말로 삭제하시겠습니까?
-								</th>
+								<th>No</th><th>이름</th>
 							</tr>
 							<tr>
-								<th colspan="2">
-									<input class="little_btn" type="submit" value="확인">
-									<input class="little_btn" type="reset" value="취소"
-										onclick="window.location='itemManagement.ad?categoryId=${categoryId}&pageNum=${pageNum}'">
-								</th>
+								<td>${dto.itemId}</td><td>${dto.itemName}</td>
 							</tr>
 						</table>
+						<br>	
+						<div class="outer_content">
+							정말로 삭제하시겠습니까?
+						</div>
+						<br><br>
+						<div class="outer_content">
+							<input class="little_btn" type="submit" value="확인">
+							<input class="little_btn" type="reset" value="취소"
+								onclick="window.location='itemDetail.ad?itemId=${dto.itemId}&categoryId=${categoryId}&pageNum=${pageNum}'">
+						</div>
 					</div>
 				</div>
 			</section>

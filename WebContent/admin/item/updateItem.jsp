@@ -13,10 +13,13 @@
 </head>
 <body>
 <form action="updateItemAction.ad" method="post" enctype="multipart/form-data" name="additemform" onsubmit="return addItemChk()">
+<input type="hidden" name="itemId" value="${dto.itemId}">
 <input type="hidden" name="originalSmallImg" value="${dto.smallImg}">
 <input type="hidden" name="originalLargeImg" value="${dto.largeImg}">
 <input type="hidden" name="originalDetailImg" value="${dto.detailImg}">
+<input type="hidden" name="regDate" value="${dto.regDate}">
 <input type="hidden" name="grade" value="${dto.grade}">
+<input type="hidden" name="pageNum" value="${pageNum}">
 <%@ include file="../../include/header.jsp" %>
 <!-- article 시작 -->
 <article class="container">
@@ -31,6 +34,14 @@
 					<div class="inner_content">
 						<div class="title_letter">상품정보수정</div>
 						<table class="input_table">
+							<tr>
+								<th><label for="regdate">상품 번호</label>
+								<td>${dto.itemId}	
+							</tr>
+							<tr>
+								<th><label for="regdate">상품 등록일</label>
+								<td>${dto.regDate}	
+							</tr>
 							<tr>
 								<th><label for="categoryId">카테고리 *</label></th>
 								<td>
@@ -65,12 +76,11 @@
 							<tr>
 								<th><label for="detailImg">상품 설명 이미지 *</label></th>
 								<td><input type="file" id="detailImg" name="detailImg" 
-									size="40" accept="image/*" ></td>	
+									size="40" accept="image/*" required></td>	
 							</tr>
 							<tr>
 								<th><label for="info">상품 정보 *</label></th>
-								<td><textarea id="info" name="info" rows="10" cols="50" 
-										value="${dto.info}"></textarea></td>	
+								<td><textarea id="info" name="info" rows="10" cols="50">${dto.info}</textarea></td>	
 							</tr>
 							<tr>
 								<th><label for="quantity">재고 수량 *</label></th>
@@ -89,11 +99,11 @@
 							</tr>
 							<tr>
 								<th><label for="price">상품 평점</label></th>
-								<td>${dto.grade}</td>	
+								<td>${dto.grade}</td>
 							</tr>
 						</table>	
 						<div class="outer_content"> 
-							<input class="little_btn" type="submit" value="글 쓰기">
+							<input class="little_btn" type="submit" value="수정하기">
 							<input class="little_btn" type="reset" value="초기화">
 							<input class="little_btn" type="button" value="목록"
 								onclick="window.history.back()">

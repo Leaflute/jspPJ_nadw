@@ -32,11 +32,11 @@
 								</th>
 							</tr>
 							<tr>
-								<th>No(ref/refStep/refLevel)</th>
+								<th>No</th>
 								<th>제목</th>
 								<th>작성자</th>
 								<th>작성일</th>
-								<c:if test="${sessionScope.sessionRole==1}">
+								<c:if test="${sessionScope.member.role==1}">
 									<th>IP</th>
 								</c:if>
 							</tr>
@@ -46,7 +46,6 @@
 									<tr>
 										<td>${number}
 											<c:set var="number" value="${number-1}"/>
-											( ${dto.ref} / ${dto.refStep} / ${dto.refLevel} )
 										</td>
 										<td>
 										<!-- 답글 -->
@@ -66,7 +65,7 @@
 										<a href="csDetail.bo?boardId=${boardId}&fullList=${fullList}&num=${dto.postNum}&pageNum=${pageNum}&number=${number+1}">${dto.title}</a></td>
 										<td>${dto.writer}</td>
 										<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${dto.regDate}"/></td>
-										<c:if test="${sessionScope.sessionRole==1}">
+										<c:if test="${sessionScope.member.role==1}">
 											<td>${dto.ip}</td>
 										</c:if>
 									</tr>
@@ -102,7 +101,7 @@
 						</c:if>
 						<br><br>
 						</div>
-						<c:if test="${sessionScope.sessionRole!=1}">
+						<c:if test="${sessionScope.member.role!=1}">
 						<div class="outer_content"> 
 							<a href="csWrite.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${pageNum}">
 								<input type="button" value="문의하기" class="little_btn">

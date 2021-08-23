@@ -71,9 +71,9 @@
 						</table>	
 						<div class="outer_content">
 							<input class="little_btn" type="button" value="수정하기"
-								onclick="window.location='itemUpdate.ad?itemId=${dto.itemId}&categoryId=${dto.categoryId}&pageNum=${pageNum}'">
+								onclick="window.location='updateItem.ad?itemId=${dto.itemId}&categoryId=${dto.categoryId}&pageNum=${pageNum}'">
 							<input class="little_btn" type="button" value="삭제하기"
-								onclick="window.location='itemDelete.ad?itemId=${dto.itemId}&categoryId=${dto.categoryId}&pageNum=${pageNum}'">
+								onclick="window.location='deleteItem.ad?itemId=${dto.itemId}&categoryId=${dto.categoryId}&pageNum=${pageNum}'">
 							<input class="little_btn" type="button" value="목록"
 								onclick="window.location='itemManagement.ad?categoryId=${dto.categoryId}&pageNum=${pageNum}&number=${number}'">
 						</div>

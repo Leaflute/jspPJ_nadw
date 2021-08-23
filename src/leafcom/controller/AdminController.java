@@ -20,8 +20,8 @@ import leafcom.util.ImageUploaderHandler;
 @WebServlet("*.ad")
 @MultipartConfig(
 		location = "D:\\Dev88\\workspace\\jsp_pj_ndw\\WebContent\\asset\\uploaded", 
-		fileSizeThreshold = 1024* 1024, 
-		maxFileSize = 1024 * 1024 * 5, 
+		fileSizeThreshold = 1024 * 1024, 
+		maxFileSize = 1024 * 1024 * 5 * 5, 
 		maxRequestSize = 1024 * 1024 * 5 * 5)
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -134,23 +134,21 @@ public class AdminController extends HttpServlet {
 		// 상품 삭제 확인 페이지 로드
 		} else if (url.equals("/deleteItem.ad")) {
 			System.out.println("[ad][cnt][url ==> /deleteItem.ad]");
-				
-			int categoryId = Integer.parseInt(req.getParameter("categoryId"));
-			int pageNum = Integer.parseInt(req.getParameter("pageNum"));
-			int itemId = Integer.parseInt(req.getParameter("itemId"));
 			
-			req.setAttribute("itemId", itemId);
-			req.setAttribute("pageNum", pageNum);
-			req.setAttribute("categoryId", categoryId);
+			service.itemDetail(req, res);
+			
+			req.setAttribute("itemId", Integer.parseInt(req.getParameter("categoryId")));
+			req.setAttribute("pageNum", Integer.parseInt(req.getParameter("pageNum")));
+			req.setAttribute("categoryId", Integer.parseInt(req.getParameter("itemId")));
 			
 			viewPage = "/admin/item/deleteItem.jsp";
 		
-		// 상품 삭제
+		// 상품 삭제 처리
 		} else if (url.equals("/deleteItemAction.ad")) {
 			System.out.println("[ad][cnt][url ==> /deleteItemAction.ad]");
-		
+			
 			service.deleteItem(req, res);
-		
+			
 			viewPage = "/admin/item/deleteItemAction.jsp";
 		
 		}

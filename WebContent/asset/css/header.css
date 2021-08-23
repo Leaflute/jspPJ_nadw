@@ -83,13 +83,19 @@ input[type="search"] {
 	background-color: #00c11f;
 	width:62px;
 	height:60px;
+	position:relative;
+}
+
+#bar_toggleBtn:hover{
+	background-color: black;
 }
 
 #bar_toggleBtn i {
 	font-size: 32px;
 	font-weight: bold;
 	color:white;
-	position:relative;
+	position:absolute;
 	top:25%;
 	left:27.5%;
 }
+

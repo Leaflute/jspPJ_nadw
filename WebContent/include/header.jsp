@@ -8,11 +8,56 @@
 <title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="${cssPath}header.css">
 <script src="https://kit.fontawesome.com/ef75f47104.js" crossorigin="anonymous"></script>
+<style type="text/css">
+
+/* .dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+} */
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown_content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 240px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    top: 100%;
+    z-index: 15;
+}
+
+.dropdown_content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 24px;
+}
+
+.dropdown_content a:hover {
+    background-color: #f1f1f1
+}
+.dropdown:hover .dropdown_content {
+    display: block;
+}
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+
+</style>
 </head>
 <body>
 <!-- header 시작 -->
 <header>
-<c:if test="${sessionScope.sessionRole!=1}">
+<c:if test="${sessionScope.member.role!=1}">
 <!-- header 상단 -->
 	
 	<div class="full_width" >
@@ -23,13 +68,13 @@
 			</ul>
 
 			<ul id="top_right">
-				<c:if test="${empty sessionScope.sessionID}">
+				<c:if test="${empty sessionScope.member}">
 					<li><a href="login.co">로그인</a></li>
 					<li><a href="signIn.co">회원가입</a></li>
 					<li><a href="login.co" onclick="alert('로그인 후 이용해주세요.')">고객센터</a></li>
 				</c:if>
-				<c:if test="${not empty sessionScope.sessionID}">
-					<li><b>${sessionScope.sessionID}</b>님</li>
+				<c:if test="${not empty sessionScope.member}">
+					<li><b>${sessionScope.member.name}</b>님이 접속중입니다.</li>
 					<li><a href="logout.co">로그아웃</a></li>
 					<li><a href="csList.bo?boardId=1&fullList=false">고객센터</a></li>
 				</c:if>
@@ -52,12 +97,12 @@
 		<div id="menu_icons">
 			<ul>
 				<li>
-					<c:if test="${empty sessionScope.sessionID}">
+					<c:if test="${empty sessionScope.member}">
 						<a href="login.co">
 							<i class="xi-user-o"></i>
 						</a>
 					</c:if>
-					<c:if test="${not empty sessionScope.sessionID}">
+					<c:if test="${not empty sessionScope.member}">
 						<a href="myPageMain.co">
 							<i class="xi-user-o"></i>
 						</a>
@@ -71,8 +116,19 @@
 	<!-- header 하단 -->
 	<div class="full_width" id="hd_bot">	
 		<div class="wrapper" id="bar_menu">
-			<div id="bar_toggleBtn">
-				<a href="#"><i class="fas fa-bars"></i></a>
+			<div class="dropdown" id="bar_toggleBtn">
+				<i class="fas fa-bars"></i>
+				<div class="dropdown_content">
+					<a href="itemList.co?categoryId=1">CPU</a>
+					<a href="itemList.co?categoryId=2">RAM</a>
+					<a href="itemList.co?categoryId=3">메인보드</a>
+					<a href="itemList.co?categoryId=4">그래픽카드</a>
+					<a href="itemList.co?categoryId=5">파워서플라이</a>
+					<a href="itemList.co?categoryId=6">SSD</a>
+					<a href="itemList.co?categoryId=7">HDD</a>
+					<a href="itemList.co?categoryId=8">케이스</a>
+					<a href="itemList.co?categoryId=9">모니터</a>
+				 </div>
 			</div>
 			<div id="bar_general">
 				<ul>

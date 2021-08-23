@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import leafcom.dao.PostDAO;
 import leafcom.dao.PostDAOImpl;
+import leafcom.vo.MemberVO;
 import leafcom.vo.PostVO;
 
 public class PostServiceImpl implements PostService {
@@ -24,7 +25,8 @@ public class PostServiceImpl implements PostService {
 		if(req.getParameter("fullList")!=null) {
 			fullList = Boolean.parseBoolean(req.getParameter("fullList"));
 		}
-		String writer = (String)req.getSession().getAttribute("sessionID");
+		MemberVO memberVO = (MemberVO) req.getSession().getAttribute("member");
+		String writer = memberVO.getName();
 		int pageSize = 5; 		// 한 페이지당 출력할 글 개수
 		int pageBlock = 5;		// 한 블럭당 페이지 개수
 		
@@ -117,7 +119,8 @@ public class PostServiceImpl implements PostService {
 		int num = Integer.parseInt(req.getParameter("num"));
 		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
 		int number = Integer.parseInt(req.getParameter("number"));
-		String writer = (String)req.getSession().getAttribute("sessionID");
+		MemberVO memberVO = (MemberVO) req.getSession().getAttribute("member");
+		String writer = memberVO.getName();
 		
 		dao.addPostHit(num);
 		int selectCnt = dao.chkWriter(num, writer);

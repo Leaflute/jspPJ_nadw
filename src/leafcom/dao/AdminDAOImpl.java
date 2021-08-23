@@ -332,17 +332,17 @@ public class AdminDAOImpl implements AdminDAO {
 			conn = dataSource.getConnection();
 			
 			String sql="UPDATE item SET "
-					+ "category_id = ? "
-					+ "item_name = ? "
-					+ "item_company = ? "
-					+ "item_small_img = ? "
-					+ "item_large_img = ? "
-					+ "item_detail_img = ? "
-					+ "item_regdate = ? "
-					+ "item_info = ? "
-					+ "item_quantity = ? "
-					+ "item_cost = ? "
-					+ "item_price = ? "
+					+ "category_id = ?, "
+					+ "item_name = ?, "
+					+ "item_company = ?, "
+					+ "item_small_img = ?, "
+					+ "item_large_img = ?, "
+					+ "item_detail_img = ?, "
+					+ "item_regdate = ?, "
+					+ "item_info = ?, "
+					+ "item_quantity = ?, "
+					+ "item_cost = ?, "
+					+ "item_price = ?, "
 					+ "item_grade = ? "
 					+ "WHERE item_id = ?";
 			
@@ -379,8 +379,32 @@ public class AdminDAOImpl implements AdminDAO {
 
 	@Override
 	public int deleteItem(int itemId) {
-		// TODO Auto-generated method stub
-		return 0;
+		int deleteCnt = 0;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "DELETE FROM item WHERE item_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, itemId);
+			
+			deleteCnt = pstmt.executeUpdate();
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return deleteCnt;
 	}
 	
 }

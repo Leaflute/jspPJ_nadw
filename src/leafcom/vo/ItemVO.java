@@ -3,6 +3,9 @@ package leafcom.vo;
 import java.sql.Timestamp;
 
 public class ItemVO implements Cloneable {
+	
+
+
 	private int itemId;
 	private int categoryId;
 	private String categoryName;

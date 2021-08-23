@@ -52,7 +52,7 @@
 								<input class="little_btn" type="button" value="삭제하기"
 									onclick="window.location='csDelete.bo?boardId=${boardId}&fullList=${fullList}&num=${dto.postNum}&pageNum=${pageNum}'">
 							</c:if>
-							<c:if test="${sessionScope.sessionRole==1&&dto.refLevel>0}">
+							<c:if test="${sessionScope.member.role==1&&dto.refLevel>0}">
 								<input class="little_btn" type="button" value="답글하기"
 									onclick="window.location='csWrite.bo?boardId=${boardId}&fullList=${fullList}&num=${dto.postNum}&pageNum=${pageNum}&ref=${dto.ref}&refStep=${dto.refStep}&refLevel=${dto.refLevel}'">
 							</c:if>

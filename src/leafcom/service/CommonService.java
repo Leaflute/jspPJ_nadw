@@ -23,5 +23,10 @@ public interface CommonService {
 	// 회원정보 수정
 	public void updateMemInfoAction(HttpServletRequest req, HttpServletResponse res);
 	
+	// 상품 리스트 조회
+	public void itemList(HttpServletRequest req, HttpServletResponse res);
+	
+	// 상품 상세 페이지 조회
+	public void itemDetail(HttpServletRequest req, HttpServletResponse res);
 
 }

@@ -43,7 +43,7 @@
 							<c:forEach var="itemDto" items="${itemDtos}">
 							<tr>
 								<td>${itemDto.itemId}</td>
-								<td><img src="${upPath}${itemDto.smallImg}"></a></td>
+								<td><img src="${itemDto.smallImg}"></td>
 								<td>${itemDto.categoryName}</td>
 								<td><a href="itemDetail.ad?itemId=${itemDto.itemId}&categoryId=${itemDto.categoryId}&pageNum=${pageNum}&number=${number}">${itemDto.itemName}</a></td>
 								<td>￦<fmt:formatNumber value="${itemDto.price}" pattern="#,###"/></td>

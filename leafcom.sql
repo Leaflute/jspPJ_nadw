@@ -5,7 +5,7 @@ grant connect, resource, create view to leafcom;
 grant create view to leafcom;
 alter user jsp_88 account unlock;
 
-/* COMMIt */
+/* COMMIT */
 SAVEPOINT s1;
 COMMIT;
 
@@ -207,4 +207,4 @@ SELECT * FROM post;
 SELECT * FROM item;
 SELECT * FROM categories;
 SELECT * FROM item_v;
-SELECT COUNT(*) cnt FROM item WHERE category_id = 2;
+SELECT COUNT(*) cnt FROM item WHERE category_id = 1;

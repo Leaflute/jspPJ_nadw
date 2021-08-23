@@ -1,15 +1,20 @@
 package leafcom.service;
 
 import java.sql.Timestamp;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import leafcom.dao.CommonDAO;
 import leafcom.dao.CommonDAOImpl;
+import leafcom.util.Code;
 import leafcom.vo.MemberVO;
 
 public class CommonServiceImpl implements CommonService {
+	
+	CommonDAO dao = CommonDAOImpl.getInstance();
 	
 	// 로그인 처리
 	@Override
@@ -19,18 +24,14 @@ public class CommonServiceImpl implements CommonService {
 		String strId = req.getParameter("id");
 		String strPw = req.getParameter("pw");
 		
-		CommonDAO dao = CommonDAOImpl.getInstance();
-		
 		int selectCnt = dao.idPwChk(strId, strPw);
+		MemberVO vo = null;
 		
 		// 로그인 세션 추가
-		if(selectCnt==1) {
-			req.getSession().setAttribute("sessionID", strId);
-			req.getSession().setAttribute("sessionRole", 0);
-		} else if (selectCnt==2) {
-			req.getSession().setAttribute("sessionID", strId);
-			req.getSession().setAttribute("sessionRole", 1);
-		}
+		if(selectCnt>0) {
+			vo = dao.getMemberInfo(strId);
+			req.getSession().setAttribute("member", vo);
+		} 
 		
 		req.setAttribute("selectCnt", selectCnt);
 	}
@@ -41,9 +42,6 @@ public class CommonServiceImpl implements CommonService {
 		System.out.println("[co][service][idDupChk()]");
 		// 3단계. 화면에서 입력받은 값을 추출
 		String strId = req.getParameter("id");
-		
-		// 4단계. dao객체 생성
-		CommonDAO dao = CommonDAOImpl.getInstance();
 		
 		// 5단계. 중복확인 처리
 		int selectCnt = dao.idDupChk(strId);
@@ -57,20 +55,41 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	public void signInAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("[co][service][signInActions()]");
-		MemberVO vo = new MemberVO();
 		
+		// 랜덤 key 생성
+		StringBuffer temp = new StringBuffer();
+		Random rd = new Random();
+		
+		for(int i=0; i<6; i++) {
+			int rIndex = rd.nextInt(2);
+			switch (rIndex) {
+			case 0:
+				temp.append((char)((int)(rd.nextInt(26))+65));
+				break;
+			case 1:
+				temp.append((rd.nextInt(10)));
+				break;
+			}
+		}
+		
+		String key = temp.toString();
+		
+		MemberVO vo = new MemberVO();
+		String email = req.getParameter("email");
 		vo.setId(req.getParameter("id"));
 		vo.setPw(req.getParameter("pw"));
 		vo.setName(req.getParameter("name"));
-		vo.setEmail(req.getParameter("email"));
+		vo.setEmail(email);
 		vo.setPhone(req.getParameter("phone"));
 		vo.setRegDate(new Timestamp(System.currentTimeMillis()));
 		vo.setRole(0);
 		vo.setCondition(1);
-		
-		CommonDAO dao = CommonDAOImpl.getInstance();
+		vo.setKey(key);
 		
 		int insertCnt = dao.insertMember(vo);
+		if(insertCnt==1) {
+			dao.sendActivationEmail(email, key);
+		}
 		
 		req.setAttribute("insertCnt", insertCnt);
 	}
@@ -79,10 +98,9 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	public void withdrawMemAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("[co][service][withdrawMemAction()]");
-		String strId = (String)req.getSession().getAttribute("sessionID");
+		MemberVO vo = (MemberVO) req.getSession().getAttribute("member");
+		String strId = vo.getId();
 		String strPw = req.getParameter("pw");
-		
-		CommonDAO dao = CommonDAOImpl.getInstance();
 		
 		int selectCnt = dao.idPwChk(strId, strPw);
 		int deleteCnt = 0;
@@ -98,19 +116,17 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	public void viewMemInfoAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("[co][service][viewMemInfoAction()]");
-		String strId = (String)req.getSession().getAttribute("sessionID");
+		MemberVO vo = (MemberVO) req.getSession().getAttribute("member");
+		String strId = vo.getId();
 		String strPw = req.getParameter("pw");
-		
-		CommonDAO dao = CommonDAOImpl.getInstance();
 		
 		int selectCnt = dao.idPwChk(strId, strPw);
 		
-		MemberVO vo = new MemberVO();
 		if (selectCnt==1) {
 			vo = dao.getMemberInfo(strId);
 		}
 		req.setAttribute("selectCnt", selectCnt);
-		req.setAttribute("vo", vo);
+		req.setAttribute("dto", vo);
 		
 	}
 	
@@ -118,10 +134,9 @@ public class CommonServiceImpl implements CommonService {
 	@Override
 	public void updateMemInfoAction(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("[co][service][updateMemInfoAction()]");
-		CommonDAO dao = CommonDAOImpl.getInstance();
-		MemberVO vo = new MemberVO();
+		MemberVO vo = (MemberVO) req.getSession().getAttribute("member");
 		
-		vo.setId((String)req.getSession().getAttribute("sessionID"));
+		vo.setId(vo.getId());
 		vo.setPw(req.getParameter("pw"));
 		vo.setName(req.getParameter("name"));
 		vo.setEmail(req.getParameter("email"));
@@ -130,6 +145,18 @@ public class CommonServiceImpl implements CommonService {
 		int updateCnt = dao.updateMember(vo);
 		
 		req.setAttribute("updateCnt", updateCnt);
+	}
+
+	@Override
+	public void itemList(HttpServletRequest req, HttpServletResponse res) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void itemDetail(HttpServletRequest req, HttpServletResponse res) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

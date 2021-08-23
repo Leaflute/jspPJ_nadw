@@ -107,20 +107,18 @@ public class AdminServiceImpl implements AdminService {
 		}
 	}
 	
-	// 상품 상세 페이지
+	// 상품 상세 정보
 	@Override
 	public void itemDetail(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("[ad][service][itemDetail()]");
 		int categoryId = Integer.parseInt(req.getParameter("categoryId"));
 		int itemId = Integer.parseInt(req.getParameter("itemId"));
 		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
-		int number = Integer.parseInt(req.getParameter("number"));
 		
 		ItemVO vo = dao.getItemDetail(itemId,categoryId);
 		
 		req.setAttribute("dto", vo);
 		req.setAttribute("pageNum", pageNum);
-		req.setAttribute("number", number);
 		req.setAttribute("categoryId", categoryId);
 	}
 	
@@ -137,8 +135,6 @@ public class AdminServiceImpl implements AdminService {
 	public void addItem(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("[ad][service][addItem()]");
 		int categoryId = Integer.parseInt(req.getParameter("categoryId"));
-		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
-		int number = Integer.parseInt(req.getParameter("number"));
 		
 		HashMap<Integer, String> categoryMap = dao.getCategoryName();
 		String categoryName = categoryMap.get(categoryId);
@@ -146,9 +142,9 @@ public class AdminServiceImpl implements AdminService {
 		String itemName = req.getParameter("itemName");
 		String company = req.getParameter("company");
 		// sql에 저장할 이미지 경로 = "/플젝명/updload/" + 이미지 핸들러에서 보낸 속성값("fileName");
-		String smallImg = "/jsp_pj_ndw/asset/upload/" + (String) req.getAttribute("fileName");
-		String largeImg = "/jsp_pj_ndw/asset/upload/" + (String) req.getAttribute("fileName");
-		String detailImg = "/jsp_pj_ndw/asset/upload/" + (String) req.getAttribute("fileName");
+		String smallImg = "/jsp_pj_ndw/asset/uploaded/" + (String) req.getAttribute("fileName");
+		String largeImg = "/jsp_pj_ndw/asset/uploaded/" + (String) req.getAttribute("fileName");
+		String detailImg = "/jsp_pj_ndw/asset/uploaded/" + (String) req.getAttribute("fileName");
 		String info = req.getParameter("info");
 		int quantity = Integer.parseInt(req.getParameter("quantity"));
 		int cost = Integer.parseInt(req.getParameter("cost"));
@@ -172,8 +168,6 @@ public class AdminServiceImpl implements AdminService {
 		int insertCnt = dao.insertItem(vo);
 		
 		req.setAttribute("insertCnt",insertCnt);
-		req.setAttribute("number", number);
-		req.setAttribute("pageNum", pageNum);
 	}
 	
 	// 상품 수정 처리
@@ -191,24 +185,25 @@ public class AdminServiceImpl implements AdminService {
 		String itemName = req.getParameter("itemName");
 		String company = req.getParameter("company");
 		
-		// 파일경로 원본
-		String smallImg = req.getParameter("originalSmallImg");
-		String largeImg = req.getParameter("originalLargeImg");
-		String detailImg = req.getParameter("originalDetailImg");
-		
-		// sql에 저장할 이미지 경로 = "/플젝명/updload/" + 이미지 핸들러에서 보낸 속성값("fileName");
-		String updateSmallImg = (String) req.getAttribute("fileName");
-		String updateLargeImg = (String) req.getAttribute("fileName");
-		String updateDetailImg = (String) req.getAttribute("fileName");
-		
-		if (updateSmallImg!=null) {
-			smallImg = "/jsp_pj_ndw/asset/uploaded/" + updateSmallImg;
+		String smallImg = "";
+		String largeImg = "";
+		String detailImg = "";
+		if((String)req.getAttribute("fileName")==null) {
+			smallImg = req.getParameter("originalSmallImg");
+		} else {
+			smallImg = "/jsp_pj_ndw/asset/uploaded/" + (String)req.getAttribute("fileName");
 		}
-		if (updateLargeImg!=null) {
-			largeImg = "/jsp_pj_ndw/asset/uploaded/" + updateLargeImg;
+		
+		if((String)req.getAttribute("fileName")==null) {
+			largeImg = req.getParameter("originalLargeImg");
+		} else {
+			largeImg = "/jsp_pj_ndw/asset/uploaded/" + (String)req.getAttribute("fileName");
 		}
-		if (updateSmallImg!=null) {
-			detailImg = "/jsp_pj_ndw/asset/uploaded/" + updateDetailImg;
+		
+		if((String)req.getAttribute("fileName")==null) {
+			largeImg = req.getParameter("originalLargeImg");
+		} else {
+			largeImg = "/jsp_pj_ndw/asset/uploaded/" + (String)req.getAttribute("fileName");
 		}
 		
 		String info = req.getParameter("info");
@@ -216,6 +211,7 @@ public class AdminServiceImpl implements AdminService {
 		int cost = Integer.parseInt(req.getParameter("cost"));
 		int price = Integer.parseInt(req.getParameter("price"));
 		double grade = Double.parseDouble(req.getParameter("grade"));
+		Timestamp regdate = Timestamp.valueOf(req.getParameter("regDate"));
 		
 		ItemVO vo = new ItemVO();
 		vo.setItemId(itemId);
@@ -226,7 +222,7 @@ public class AdminServiceImpl implements AdminService {
 		vo.setSmallImg(smallImg);
 		vo.setLargeImg(largeImg);
 		vo.setDetailImg(detailImg);
-		vo.setRegDate(new Timestamp(System.currentTimeMillis()));
+		vo.setRegDate(regdate);
 		vo.setInfo(info);
 		vo.setQuantity(quantity);
 		vo.setCost(cost);
@@ -243,8 +239,15 @@ public class AdminServiceImpl implements AdminService {
 	// 상품 삭제 처리
 	@Override
 	public void deleteItem(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
+		System.out.println("[ad][service][deleteItem()]");
+		int itemId = Integer.parseInt(req.getParameter("itemId"));
+		int categoryId = Integer.parseInt(req.getParameter("categoryId"));
+		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
 		
+		dao.deleteItem(itemId);
+		
+		req.setAttribute("pageNum", pageNum);
+		req.setAttribute("categoryId", categoryId);
 	}
 
 	@Override

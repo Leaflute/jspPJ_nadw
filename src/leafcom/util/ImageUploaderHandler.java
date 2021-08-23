@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +29,7 @@ public class ImageUploaderHandler {
             uploadDir.setWritable(true);
             uploadDir.setReadable(true);
             uploadDir.setExecutable(true);
-
+            
             String fileName = "";
             for (Part part : req.getParts()) {
                 System.out.println(part.getHeader("content-disposition"));

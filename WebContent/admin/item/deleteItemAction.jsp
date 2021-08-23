@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>삭제 처리</title>
+<title>삭제처리</title>
 </head>
 <body>
 <%@ include file="../../include/header.jsp" %>
@@ -22,14 +22,14 @@
 					<div class="inner_content">
 
 					<!-- 삭제 성공 -->
-					<c:if test="${deleteCnt==1}">
+					<c:if test="${deleteCnt!=0}">
 						<script type="text/javascript">
-							alert("게시글을 삭제했습니다.");
-							window.location='csList.bo?boardId=${boardId}&fullList=${fullList}&pageNum=${pageNum}';
+							alert("상품을 삭제했습니다.");
+							window.location='itemManagement.ad?categoryId=${categoryId}&pageNum=${pageNum}';
 						</script>
 					</c:if>
 					<!-- 삭제 실패 -->
-					<c:if test="${deleteCnt!=1}">
+					<c:if test="${deleteCnt==0}">
 						<script type="text/javascript">
 							errorAlert(deleteError);
 						</script>

@@ -12,6 +12,7 @@ public class MemberVO {
 	private Timestamp regDate;
 	private int role;
 	private int condition;
+	private String key;
 	
 	public MemberVO() {}
 	
@@ -68,6 +69,14 @@ public class MemberVO {
 	}
 	public void setCondition(int condition) {
 		this.condition = condition;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
 	}
 	
 }
