@@ -139,7 +139,7 @@
 		</div>
 	</div>
 </c:if>
-<c:if test="${sessionScope.sessionRole==1}">
+<c:if test="${sessionScope.member.role==1}">
 	<div class="full_width" >
 		<div class="wrapper" id="hd_top">
 			<img src="${imgPath}logo_little.png">			
