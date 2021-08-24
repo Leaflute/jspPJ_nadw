@@ -13,7 +13,7 @@
 
 </head>
 <body>
-<c:if test="${sessionScope.sessionRole!=1}">
+<c:if test="${sessionScope.member.role!=1}">
 	<nav class="nav_bar">
 		<div id="mem_pic">회원정보 박스
 		</div>
@@ -23,14 +23,13 @@
 				<li><a href="viewInfo.co">MY정보관리</a></li>
 				<li><a href="myorder.html">MY주문관리</a></li>
 				<li><a href="myaddress.html">MY배송지</a></li>
-				<li><a href="mycart.html">MY장바구니</a></li>
 				<li><a href="myestimate.html">MY견적서</a></li>
 				<li><a href="csList.bo?boardId=1&fullList=false">MY문의</a></li>
 			</ul>
 		</div>
 	</nav>
 </c:if>
-<c:if test="${sessionScope.sessionRole==1}">	
+<c:if test="${sessionScope.member.role==1}">	
 	<nav class="nav_bar">
 		<div id="mem_pic">DASHBOARD
 		</div>

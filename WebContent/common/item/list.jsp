@@ -19,9 +19,9 @@
 		<div id="my_page_box">
 			<!-- 좌측 메뉴바 -->
 			<nav class="nav_bar">
-				<c:forEach var="" items="">
+				<c:forEach var="category" items="categoryMap">
 				<ul>
-					<li>${category}</li>
+					<li>${category.name}</li>
 				</ul>
 				</c:forEach>
 			</nav>
@@ -50,7 +50,7 @@
 										<img src="${dto.smallImg}">
 									</div>
 									<div class="box b">
-									<a href="item_detail.html"></a>
+									<a href="itemDetail.co?itemId=${dto.itemId}"></a>
 									</div>
 									<div class="box c">
 										<ul>
@@ -58,9 +58,9 @@
 											<li>${dto.grade}점</li>
 											<li>
 												<input type="button" class="little_btn" value="장바구니"
-													onclick="window.location='${not empty sessionScope.sessionID ? addCart.cu?dto : login.co}'">
+													onclick="window.location='${not empty sessionScope.member ? addCart.cu?itemId : login.co}'">
 												<input type="button" class="little_btn" value="구매하기"
-													onclick="window.location=''">
+													onclick="window.location='${not empty sessionScope.member ? buy.cu?dto : login.co'">
 											</li>
 										</ul>
 									</div>

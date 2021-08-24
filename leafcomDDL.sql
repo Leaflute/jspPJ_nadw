@@ -3,7 +3,11 @@
 create user leafcom identified by tiger default tablespace users;
 grant connect, resource, create view to leafcom;
 grant create view to leafcom;
-alter user jsp_88 account unlock;
+alter user leafcom account unlock;
+
+/* COMMIT */
+SAVEPOINT s1;
+COMMIT;
 
 /* Recyclebean */
 PURGE RECYCLEBIN;
@@ -13,9 +17,17 @@ PURGE RECYCLEBIN;
 DROP TABLE item CASCADE CONSTRAINTS;
 DROP TABLE members CASCADE CONSTRAINTS;
 DROP TABLE post CASCADE CONSTRAINTS;
-
+DROP TABLE categories CASCADE CONSTRAINTS;
 
 /* Create Tables */
+CREATE TABLE categories
+(
+    category_id number(1),
+    category_name varchar2(50),
+    PRIMARY KEY (category_id)
+);
+truncate table categories;
+
 
 CREATE TABLE item
 (
@@ -27,21 +39,21 @@ CREATE TABLE item
 	item_large_img varchar2(100) NOT NULL,
 	item_detail_img varchar2(100) NOT NULL,
 	item_regdate timestamp DEFAULT SYSDATE NOT NULL,
-	item_content varchar2(4000) NOT NULL,
+	item_info varchar2(4000) NOT NULL,
 	item_quantity number(3) NOT NULL,
 	item_cost number(8) NOT NULL,
 	item_price number(8) NOT NULL,
-	item_grade number(1,2),
-	PRIMARY KEY (item_id)
+	item_grade number(3,2) DEFAULT 0,
+	PRIMARY KEY (item_id),
+    FOREIGN KEY (category_id) REFERENCES categories(category_id)
 );
 
-SELECT * FROM
-    (SELECT item_id, category_id, item_name, item_company, item_small_img, item_large_img, item_detail_img, 
-            item_detail_img, item_regdate, item_content, item_quantity, item_cost, item_price, item_grade,
-            ROWNUM rNum
-            FROM (SELECT * FROM item WHERE category_id = ? ORDER BY item_regdate DESC))
-WHERE rNum >= ? AND rNum <=?;
-
+CREATE OR REPLACE VIEW item_v
+AS
+SELECT i.item_id, c.category_id, c.category_name, i.item_name, i.item_company, i.item_small_img, i.item_large_img, 
+    i.item_detail_img, i.item_regdate, i.item_info, i.item_quantity, i.item_cost, i.item_price, i.item_grade, ROWNUM rNum
+FROM item i JOIN categories c
+ON i.category_id = c.category_id;
 
 CREATE TABLE members
 (
@@ -55,6 +67,7 @@ CREATE TABLE members
 	mem_condition number(1) DEFAULT 0 NOT NULL,
 	PRIMARY KEY (mem_id)
 );
+
 
 
 CREATE TABLE post
@@ -74,18 +87,29 @@ CREATE TABLE post
 	PRIMARY KEY (post_num)
 );
 
-DROP SEQUENCE post_num_seq;
-CREATE SEQUENCE post_num_seq;
- START WITH 1
- INCREMENT BY 1
- MAXVALUE 999999;
+SELECT * FROM
+    (SELECT rownum rNum, p.* 
+       FROM (SELECT * 
+               FROM post 
+              WHERE bd_id = 1 
+                AND po_ref IN (SELECT po_ref 
+                                  FROM po 
+                                 WHERE po_writer = 'test1234') 
+              ORDER BY po_ref DESC, po_ref_step ASC) p) 
+      WHERE rNum >= 1 AND rNum <= 4;
 
+SELECT * FROM
+    (SELECT rownum rNum, p.* 
+       FROM (SELECT * 
+               FROM post 
+              WHERE bo_id = 1 
+              ORDER BY po_ref DESC, po_ref_step ASC) p) 
+      WHERE rNum >= 1 AND rNum <= 5;      
 
-INSERT INTO members VALUES('admin','admin','°ü¸®ÀÚ','leafcom@gmail.com','01000000000',sysdate,1,0);
-commit;
 
 SELECT * FROM members;
 SELECT * FROM post;
 SELECT * FROM item;
-
-
+SELECT * FROM categories;
+SELECT * FROM item_v;
+SELECT COUNT(*) cnt FROM item WHERE cg_id = 1;

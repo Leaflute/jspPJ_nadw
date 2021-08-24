@@ -11,6 +11,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import leafcom.util.Code;
 import leafcom.vo.ItemVO;
 
 public class AdminDAOImpl implements AdminDAO {
@@ -54,7 +55,7 @@ public class AdminDAOImpl implements AdminDAO {
 				pstmt = conn.prepareStatement(sql);
 				
 			} else {
-				sql += "WHERE category_id = ?";	
+				sql += "WHERE cg_id = ?";	
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, categoryId);
 			}
@@ -80,7 +81,7 @@ public class AdminDAOImpl implements AdminDAO {
 		return selectCnt;
 	}
 	
-	// 카테고리 이름 맵
+	// 카테고리 이름 반환 맵
 	@Override
 	public HashMap<Integer, String> getCategoryName() {
 		HashMap<Integer, String> categoryMap = null;
@@ -100,7 +101,7 @@ public class AdminDAOImpl implements AdminDAO {
 				categoryMap = new HashMap<Integer,String>();
 				
 				do {
-					categoryMap.put(rs.getInt("category_id"), rs.getString("category_name"));
+					categoryMap.put(rs.getInt("cg_id"), rs.getString("cg_name"));
 				} while (rs.next());
 				
 			}
@@ -130,7 +131,7 @@ public class AdminDAOImpl implements AdminDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM item_v\r\n";
+			String sql = "SELECT * FROM it_v\r\n";
 			
 			if (categoryId==0) {
 				sql +=	"WHERE rNum >= ? AND rNum <=?";
@@ -140,7 +141,7 @@ public class AdminDAOImpl implements AdminDAO {
 				pstmt.setInt(2, end);
 			} else {
 			
-				sql +=	"WHERE rNum >= ? AND rNum <=? AND category_id = ?";
+				sql +=	"WHERE rNum >= ? AND rNum <=? AND cg_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);		
 			pstmt.setInt(1, start);
@@ -162,20 +163,20 @@ public class AdminDAOImpl implements AdminDAO {
 					ItemVO vo = new ItemVO();
 					
 					// 4. 한 건을 읽어서 rs결과를 setter로 작은 바구니에 담음
-					vo.setItemId(rs.getInt("item_id"));
-					vo.setCategoryId(rs.getInt("category_id"));
-					vo.setCategoryName(rs.getString("category_name"));
-					vo.setItemName(rs.getString("item_name"));
-					vo.setCompany(rs.getString("item_company"));
-					vo.setSmallImg(rs.getString("item_small_img"));
-					vo.setLargeImg(rs.getString("item_large_img"));
-					vo.setDetailImg(rs.getString("item_detail_img"));
-					vo.setRegDate(rs.getTimestamp("item_regdate"));
-					vo.setInfo(rs.getString("item_info"));
-					vo.setQuantity(rs.getInt("item_quantity"));
-					vo.setCost(rs.getInt("item_cost"));
-					vo.setPrice(rs.getInt("item_price"));
-					vo.setGrade(rs.getInt("item_grade"));
+					vo.setItemId(rs.getInt("it_id"));
+					vo.setCategoryId(rs.getInt("cg_id"));
+					vo.setCategoryName(rs.getString("cg_name"));
+					vo.setItemName(rs.getString("it_name"));
+					vo.setCompany(rs.getString("it_company"));
+					vo.setSmallImg(rs.getString("it_small_img"));
+					vo.setLargeImg(rs.getString("it_large_img"));
+					vo.setDetailImg(rs.getString("it_detail_img"));
+					vo.setRegDate(rs.getTimestamp("it_regdate"));
+					vo.setInfo(rs.getString("it_info"));
+					vo.setStock(rs.getInt("it_stock"));
+					vo.setCost(rs.getInt("it_cost"));
+					vo.setPrice(rs.getInt("it_price"));
+					vo.setGrade(rs.getInt("it_grade"));
 					
 					// 5. 큰 바구니에 작은 바구니를 담음
 					list.add(vo);
@@ -208,7 +209,7 @@ public class AdminDAOImpl implements AdminDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM item_v WHERE item_id = ?";
+			String sql = "SELECT * FROM item_v WHERE it_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, itemId);
 			
@@ -217,20 +218,20 @@ public class AdminDAOImpl implements AdminDAO {
 			if(rs.next()) {
 				vo = new ItemVO();
 				
-				vo.setItemId(rs.getInt("item_id"));
-				vo.setCategoryId(rs.getInt("category_id"));
-				vo.setCategoryName(rs.getString("category_name"));
-				vo.setItemName(rs.getString("item_name"));
-				vo.setCompany(rs.getString("item_company"));
-				vo.setSmallImg(rs.getString("item_small_img"));
-				vo.setLargeImg(rs.getString("item_large_img"));
-				vo.setDetailImg(rs.getString("item_detail_img"));
-				vo.setRegDate(rs.getTimestamp("item_regdate"));
-				vo.setInfo(rs.getString("item_info"));
-				vo.setQuantity(rs.getInt("item_quantity"));
-				vo.setCost(rs.getInt("item_cost"));
-				vo.setPrice(rs.getInt("item_price"));
-				vo.setGrade(rs.getInt("item_grade"));
+				vo.setItemId(rs.getInt("it_id"));
+				vo.setCategoryId(rs.getInt("cg_id"));
+				vo.setCategoryName(rs.getString("cg_name"));
+				vo.setItemName(rs.getString("it_name"));
+				vo.setCompany(rs.getString("it_company"));
+				vo.setSmallImg(rs.getString("it_small_img"));
+				vo.setLargeImg(rs.getString("it_large_img"));
+				vo.setDetailImg(rs.getString("it_detail_img"));
+				vo.setRegDate(rs.getTimestamp("it_regdate"));
+				vo.setInfo(rs.getString("it_info"));
+				vo.setStock(rs.getInt("it_stock"));
+				vo.setCost(rs.getInt("it_cost"));
+				vo.setPrice(rs.getInt("it_price"));
+				vo.setGrade(rs.getInt("it_grade"));
 			}
 			
 		} catch (SQLException e) {
@@ -261,32 +262,32 @@ public class AdminDAOImpl implements AdminDAO {
 			String sql = "INSERT INTO item VALUES (";
 			
 			switch (vo.getCategoryId()) {
-				case 1 :
+				case Code.CPU :
 					sql += "cpu";
 					break;
-				case 2 :
+				case Code.RAM :
 					sql += "ram";
 					break;
-				case 3 :
-					sql += "mb";
+				case Code.MBD :
+					sql += "mbd";
 					break;
-				case 4 :
+				case Code.GPU :
 					sql += "gpu";
 					break;
-				case 5 :
-					sql += "powsup";
+				case Code.PWS :
+					sql += "pws";
 					break;
-				case 6 :
+				case Code.SSD :
 					sql += "ssd";
 					break;
-				case 7 :
+				case Code.HDD :
 					sql += "hdd";
 					break;
-				case 8 :
-					sql += "case";
+				case Code.CSE :
+					sql += "cse";
 					break;
-				case 9 :
-					sql += "mon";
+				case Code.MNT :
+					sql += "mnt";
 					break;					
 			}
 			sql += "_num_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
@@ -300,7 +301,7 @@ public class AdminDAOImpl implements AdminDAO {
 			pstmt.setString(6, vo.getDetailImg());
 			pstmt.setTimestamp(7, vo.getRegDate());
 			pstmt.setString(8, vo.getInfo());
-			pstmt.setInt(9, vo.getQuantity());
+			pstmt.setInt(9, vo.getStock());
 			pstmt.setInt(10, vo.getCost());
 			pstmt.setInt(11, vo.getPrice());
 			
@@ -332,19 +333,19 @@ public class AdminDAOImpl implements AdminDAO {
 			conn = dataSource.getConnection();
 			
 			String sql="UPDATE item SET "
-					+ "category_id = ?, "
-					+ "item_name = ?, "
-					+ "item_company = ?, "
-					+ "item_small_img = ?, "
-					+ "item_large_img = ?, "
-					+ "item_detail_img = ?, "
-					+ "item_regdate = ?, "
-					+ "item_info = ?, "
-					+ "item_quantity = ?, "
-					+ "item_cost = ?, "
-					+ "item_price = ?, "
-					+ "item_grade = ? "
-					+ "WHERE item_id = ?";
+					+ "cg_id = ?, "
+					+ "it_name = ?, "
+					+ "it_company = ?, "
+					+ "it_small_img = ?, "
+					+ "it_large_img = ?, "
+					+ "it_detail_img = ?, "
+					+ "it_regdate = ?, "
+					+ "it_info = ?, "
+					+ "it_stock = ?, "
+					+ "it_cost = ?, "
+					+ "it_price = ?, "
+					+ "it_grade = ? "
+					+ "WHERE it_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, vo.getCategoryId());
@@ -355,7 +356,7 @@ public class AdminDAOImpl implements AdminDAO {
 			pstmt.setString(6, vo.getDetailImg());
 			pstmt.setTimestamp(7, vo.getRegDate());
 			pstmt.setString(8, vo.getInfo());
-			pstmt.setInt(9, vo.getQuantity());
+			pstmt.setInt(9, vo.getStock());
 			pstmt.setInt(10, vo.getCost());
 			pstmt.setInt(11, vo.getPrice());
 			pstmt.setDouble(12, vo.getGrade());
@@ -387,7 +388,7 @@ public class AdminDAOImpl implements AdminDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "DELETE FROM item WHERE item_id = ?";
+			String sql = "DELETE FROM item WHERE it_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, itemId);
 			

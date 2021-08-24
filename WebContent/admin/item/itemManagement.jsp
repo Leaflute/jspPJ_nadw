@@ -47,7 +47,7 @@
 								<td>${itemDto.categoryName}</td>
 								<td><a href="itemDetail.ad?itemId=${itemDto.itemId}&categoryId=${itemDto.categoryId}&pageNum=${pageNum}&number=${number}">${itemDto.itemName}</a></td>
 								<td>￦<fmt:formatNumber value="${itemDto.price}" pattern="#,###"/></td>
-								<td>${itemDto.quantity}</td>
+								<td>${itemDto.stock}</td>
 								<td>
 									<input type="button" value="수정하기" class="little_btn"
 										onclick="window.location='updateItem.ad?itemId=${itemDto.itemId}&categoryId=${itemDto.categoryId}&pageNum=${pageNum}'">

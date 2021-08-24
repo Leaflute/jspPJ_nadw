@@ -44,8 +44,23 @@ public class CustomerController extends HttpServlet {
 		String uri = req.getRequestURI();	// /jsp_pj_nadw/*.co
 		String contextPath = req.getContextPath();	// jsp_pj_nadw
 		String url = uri.substring(contextPath.length()); // /?.co
-			
+		
+		
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 		dispatcher.forward(req, res);
+		
+		// 상품 카테고리 
+		if(url.equals("/itemList.cu")) {
+			System.out.println("[cu][cnt][url ==> /itemList.cu]");
+			
+			viewPage = "/common/item/list.jsp";
+		
+		// 상품 상세
+		} else if(url.equals("/itemDetail.cu")) {
+			System.out.println("[cu][cnt][url ==> /itemDetail.cu]");
+			
+			viewPage = "/common/item/detail.jsp";
+		}
+		
 	}
 }

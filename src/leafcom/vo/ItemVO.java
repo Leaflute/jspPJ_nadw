@@ -16,7 +16,7 @@ public class ItemVO implements Cloneable {
 	private String detailImg;
 	private Timestamp regDate;
 	private String info;
-	private int quantity;
+	private int stock;
 	private int cost;
 	private int price;
 	private double grade;
@@ -100,13 +100,13 @@ public class ItemVO implements Cloneable {
 	public void setInfo(String info) {
 		this.info = info;
 	}
-
-	public int getQuantity() {
-		return quantity;
+	
+	public int getStock() {
+		return stock;
 	}
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+	public void setStock(int stock) {
+		this.stock = stock;
 	}
 
 	public int getCost() {

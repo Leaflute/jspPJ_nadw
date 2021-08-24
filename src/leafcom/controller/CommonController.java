@@ -96,6 +96,14 @@ public class CommonController extends HttpServlet {
 			
 			viewPage = "/common/signIn/signInAction.jsp";
 		
+		// 이메일 인증 - 처리
+		} else if(url.equals("/emailChk.co")) {
+			System.out.println("[co][cnt][url ==> /emailChk.co]");
+			
+			service.activateID(req, res);
+			
+			viewPage = "/common/signIn/emailChk.jsp";
+		
 		// 마이페이지 이동
 		} else if(url.equals("/myPageMain.co")) {
 			System.out.println("[co][cnt][url ==> /myPageMain.co]");
@@ -134,20 +142,7 @@ public class CommonController extends HttpServlet {
 			service.updateMemInfoAction(req, res);
 			
 			viewPage = "/customer/myInfo/updateMemInfoAction.jsp";
-		
-		// 상품 카테고리 
-		} else if(url.equals("/itemList.co")) {
-			System.out.println("[co][cnt][url ==> /itemList.co]");
-			
-			viewPage = "/common/item/list.jsp";
-		
-		// 상품 상세
-		} else if(url.equals("/itemDetail.co")) {
-			System.out.println("[co][cnt][url ==> /itemDetail.co]");
-			
-			viewPage = "/common/item/detail.jsp";
-		}
-			
+		}	
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 		dispatcher.forward(req, res);
 	}

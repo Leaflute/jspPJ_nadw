@@ -53,15 +53,15 @@ public class CommonDAOImpl implements CommonDAO {
 		
 		try {
 			conn = dataSource.getConnection();
-			String sql = "SELECT * FROM members WHERE mem_id = ?";
+			String sql = "SELECT * FROM members WHERE me_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, strId);
 			
 			rs = pstmt.executeQuery();
 			
 			if (rs.next()) {
-				if (strPw.equals(rs.getString("mem_pw"))) {
-					if(rs.getBoolean("mem_role")) {
+				if (strPw.equals(rs.getString("me_pw"))) {
+					if(rs.getBoolean("me_role")) {
 						// 관리자 로그인 성공
 						selectCnt = 2;
 					} else {
@@ -102,7 +102,7 @@ public class CommonDAOImpl implements CommonDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM members WHERE mem_id = ?";
+			String sql = "SELECT * FROM members WHERE me_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, strId);
 			
@@ -138,17 +138,17 @@ public class CommonDAOImpl implements CommonDAO {
 		
 		try {	
 			conn = dataSource.getConnection();
-			String sql = "SELECT * FROM members WHERE mem_id = ?";
+			String sql = "SELECT * FROM members WHERE me_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, strId);
 			
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				vo.setId(rs.getString("mem_id"));
-				vo.setEmail(rs.getString("mem_email"));
-				vo.setName(rs.getString("mem_name"));
-				vo.setPhone(rs.getString("mem_phone"));
-				vo.setRegDate(rs.getTimestamp("mem_regdate"));
+				vo.setId(rs.getString("me_id"));
+				vo.setEmail(rs.getString("me_email"));
+				vo.setName(rs.getString("me_name"));
+				vo.setPhone(rs.getString("me_phone"));
+				vo.setRegDate(rs.getTimestamp("me_regdate"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -201,7 +201,7 @@ public class CommonDAOImpl implements CommonDAO {
 		return insertCnt;
 	}
 	
-
+	// 키값이 포함된 인증메일 보냄
 	@Override
 	public void sendActivationEmail(String email, String key) {
 		final String username = Code.ACTIVATION_HELPER;
@@ -261,7 +261,7 @@ public class CommonDAOImpl implements CommonDAO {
 		
 		try {
 			conn = dataSource.getConnection();
-			String sql = "DELETE members WHERE mem_id = ?";
+			String sql = "DELETE members WHERE me_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, strId);
 			
@@ -291,7 +291,7 @@ public class CommonDAOImpl implements CommonDAO {
 		
 		try {
 			conn = dataSource.getConnection();
-			String sql = "UPDATE members SET mem_pw = ?, mem_name = ?, mem_email = ?, mem_phone = ? WHERE mem_id = ?";
+			String sql = "UPDATE members SET me_pw = ?, me_name = ?, me_email = ?, me_phone = ? WHERE me_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getPw());
 			pstmt.setString(2, vo.getName());
@@ -301,6 +301,78 @@ public class CommonDAOImpl implements CommonDAO {
 			
 			updateCnt = pstmt.executeUpdate();
 			System.out.println("[co][DAO] withrawMember() updateCnt => " + updateCnt);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return updateCnt;
+	}
+	
+	// 키값 비교
+	@Override
+	public int idKeyChk(String id, String key) {
+		int selectCnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT * FROM members WHERE me_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			
+			if(rs.next()) {
+				if(key.equals(rs.getString("key"))) {
+					selectCnt = 1;
+				} else {
+					selectCnt = 0;
+				}
+			} else {
+				selectCnt = -1;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs!=null) rs.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				
+			}
+		}
+		
+		return selectCnt;
+	}
+
+	// 권한 활성화
+	@Override
+	public int updateCondition(String id, int condition) {
+		int updateCnt = 0;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "UPDATE members SET me_condition = ? WHERE me_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, condition);
+			pstmt.setString(2, id);
+			
+			updateCnt = pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

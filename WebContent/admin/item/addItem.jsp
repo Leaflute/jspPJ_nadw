@@ -63,8 +63,8 @@
 								<td><textarea id="info" name="info" rows="10" cols="50"></textarea></td>	
 							</tr>
 							<tr>
-								<th><label for="quantity">재고 수량 *</label></th>
-								<td><input type="number" min=1 max="1000" id="quantity" name="quantity" placeholder="수량"></td>	
+								<th><label for="stock">재고 수량 *</label></th>
+								<td><input type="number" min=1 max="1000" id="stock" name="stock" placeholder="수량"></td>	
 							</tr>
 							<tr>
 								<th><label for="cost">상품 원가 *</label></th>

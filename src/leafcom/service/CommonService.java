@@ -11,6 +11,9 @@ public interface CommonService {
 	// 아이디 중복확인
 	public void idDupChk(HttpServletRequest req, HttpServletResponse res);
 	
+	// 이메일 키값체크 비교후 권한 변경
+	public void activateID(HttpServletRequest req, HttpServletResponse res);
+	
 	// 회원가입 처리
 	public void signInAction(HttpServletRequest req, HttpServletResponse res);
 	
@@ -22,11 +25,6 @@ public interface CommonService {
 	
 	// 회원정보 수정
 	public void updateMemInfoAction(HttpServletRequest req, HttpServletResponse res);
-	
-	// 상품 리스트 조회
-	public void itemList(HttpServletRequest req, HttpServletResponse res);
-	
-	// 상품 상세 페이지 조회
-	public void itemDetail(HttpServletRequest req, HttpServletResponse res);
+
 
 }

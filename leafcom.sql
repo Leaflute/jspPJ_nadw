@@ -1,210 +1,189 @@
-/* Create, Grant Account */
-
-create user leafcom identified by tiger default tablespace users;
-grant connect, resource, create view to leafcom;
-grant create view to leafcom;
-alter user jsp_88 account unlock;
-
-/* COMMIT */
-SAVEPOINT s1;
-COMMIT;
-
-/* Recyclebean */
-PURGE RECYCLEBIN;
 
 /* Drop Tables */
 
-DROP TABLE item CASCADE CONSTRAINTS;
-DROP TABLE members CASCADE CONSTRAINTS;
-DROP TABLE post CASCADE CONSTRAINTS;
-DROP TABLE categories CASCADE CONSTRAINTS;
+DROP TABLE ORDERS CASCADE CONSTRAINTS;
+DROP TABLE ADDRESS CASCADE CONSTRAINTS;
+DROP TABLE POST CASCADE CONSTRAINTS;
+DROP TABLE BOARD CASCADE CONSTRAINTS;
+DROP TABLE CART CASCADE CONSTRAINTS;
+DROP TABLE ITEM CASCADE CONSTRAINTS;
+DROP TABLE CATEGORIES CASCADE CONSTRAINTS;
+DROP TABLE MEMBERS CASCADE CONSTRAINTS;
+
+
+
 
 /* Create Tables */
-CREATE TABLE categories
+
+CREATE TABLE ADDRESS
 (
-    category_id number(1),
-    category_name varchar2(50),
-    PRIMARY KEY (category_id)
-);
-truncate table categories;
-
-INSERT INTO categories
-VALUES(1, 'CPU');
-
-INSERT INTO categories
-VALUES(2, 'RAM');
-
-INSERT INTO categories
-VALUES(3, '메인보드');
-
-INSERT INTO categories
-VALUES(4, '그래픽카드');
-
-INSERT INTO categories
-VALUES(5, '파워서플라이');
-
-INSERT INTO categories
-VALUES(6, 'SSD');
-
-INSERT INTO categories
-VALUES(7, 'HDD');
-
-INSERT INTO categories
-VALUES(8, '케이스');
-
-INSERT INTO categories
-VALUES(9, '모니터');
-COMMIT;
-
-CREATE TABLE item
-(
-	item_id number(5) NOT NULL,
-	category_id number(1) NOT NULL,
-	item_name varchar2(100) NOT NULL,
-	item_company varchar2(50) NOT NULL,
-	item_small_img varchar2(100) NOT NULL,
-	item_large_img varchar2(100) NOT NULL,
-	item_detail_img varchar2(100) NOT NULL,
-	item_regdate timestamp DEFAULT SYSDATE NOT NULL,
-	item_info varchar2(4000) NOT NULL,
-	item_quantity number(3) NOT NULL,
-	item_cost number(8) NOT NULL,
-	item_price number(8) NOT NULL,
-	item_grade number(3,2) DEFAULT 0,
-	PRIMARY KEY (item_id),
-    FOREIGN KEY (category_id) REFERENCES categories(category_id)
+	AD_ID NUMBER(5) NOT NULL,
+	ME_ID VARCHAR2(20) NOT NULL,
+	ADD_RECIPIENT VARCHAR2(40) NOT NULL,
+	AD_TEL VARCHAR2(11) NOT NULL,
+	AD_ZIPCODE NUMBER(5) NOT NULL,
+	AD_MAIN VARCHAR2(500) NOT NULL,
+	AD_DETAIL VARCHAR2(500) NOT NULL,
+	AD_CONDITION NUMBER(1) NOT NULL,
+	PRIMARY KEY (AD_ID)
 );
 
-DELETE FROM item WHERE item_id = 10001;
 
-CREATE OR REPLACE VIEW item_v
-AS
-SELECT i.item_id, c.category_id, c.category_name, i.item_name, i.item_company, i.item_small_img, i.item_large_img, 
-    i.item_detail_img, i.item_regdate, i.item_info, i.item_quantity, i.item_cost, i.item_price, i.item_grade, ROWNUM rNum
-FROM item i JOIN categories c
-ON i.category_id = c.category_id;
-
-WHERE rNum >= ? AND rNum <=?;
-ORDER BY i.item_regdate DESC;
-
-DROP SEQUENCE cpu_num_seq;
-CREATE SEQUENCE cpu_num_seq
- START WITH 10000
- INCREMENT BY 1
- MAXVALUE 19999;
-
-DROP SEQUENCE ram_num_seq;
-CREATE SEQUENCE ram_num_seq
- START WITH 20000
- INCREMENT BY 1
- MAXVALUE 29999;
-
-DROP SEQUENCE mb_num_seq;
-CREATE SEQUENCE mb_num_seq
- START WITH 30000
- INCREMENT BY 1
- MAXVALUE 39999;
- 
-DROP SEQUENCE gpu_num_seq;
-CREATE SEQUENCE gpu_num_seq
- START WITH 40000
- INCREMENT BY 1
- MAXVALUE 49999;
-
-DROP SEQUENCE powsup_num_seq;
-CREATE SEQUENCE powsup_num_seq
- START WITH 50000
- INCREMENT BY 1
- MAXVALUE 59999;
-
-DROP SEQUENCE ssd_num_seq;
-CREATE SEQUENCE ssd_num_seq
- START WITH 60000
- INCREMENT BY 1
- MAXVALUE 69999;
-
-DROP SEQUENCE hdd_num_seq;
-CREATE SEQUENCE hdd_num_seq
- START WITH 70000
- INCREMENT BY 1
- MAXVALUE 79999;
-
-DROP SEQUENCE case_num_seq;
-CREATE SEQUENCE case_num_seq
- START WITH 80000
- INCREMENT BY 1
- MAXVALUE 89999;
-
-DROP SEQUENCE mon_num_seq;
-CREATE SEQUENCE mon_num_seq
- START WITH 90000
- INCREMENT BY 1
- MAXVALUE 99999;
- 
- 
-
-CREATE TABLE members
+CREATE TABLE BOARD
 (
-	mem_id varchar2(20) NOT NULL,
-	mem_pw varchar2(20) NOT NULL,
-	mem_name varchar2(40) NOT NULL,
-	mem_email varchar2(60) NOT NULL,
-	mem_phone varchar2(11) NOT NULL,
-	mem_regdate timestamp NOT NULL,
-	mem_role number(1) DEFAULT 0 NOT NULL,
-	mem_condition number(1) DEFAULT 0 NOT NULL,
-	PRIMARY KEY (mem_id)
+	BO_ID NUMBER(5) NOT NULL,
+	IT_ID NUMBER(5) NOT NULL,
+	BO_NAME VARCHAR2(100),
+	PRIMARY KEY (BO_ID)
 );
 
-INSERT INTO members VALUES('admin','admin','관리자','leafcom@gmail.com','01000000000',sysdate,1,0);
-commit;
 
-CREATE TABLE post
+CREATE TABLE CART
 (
-	post_num number(6) NOT NULL,
-	board_id number(5) NOT NULL,
-	post_writer varchar2(60) NOT NULL,
-	post_title varchar2(80) NOT NULL,
-	post_content varchar2(4000) NOT NULL,
-	post_regdate timestamp NOT NULL,
-	post_hit number(6) DEFAULT 0 NOT NULL,
-	post_ref number(2) DEFAULT 0,
-	post_ref_level number(3) DEFAULT 0,
-	post_ref_step number(3) DEFAULT 0,
-	writer_ip varchar2(15) NOT NULL,
-	post_condition number(1) DEFAULT 0 NOT NULL,
-	PRIMARY KEY (post_num)
+	CA_ID NUMBER(6) NOT NULL,
+	ME_ID VARCHAR2(20) NOT NULL,
+	IT_ID NUMBER(5) NOT NULL,
+	CA_AMOUNT NUMBER(3) NOT NULL,
+	CA_REGDATE TIMESTAMP NOT NULL,
+	CA_CONDITION NUMBER(1) DEFAULT 0 NOT NULL,
+	PRIMARY KEY (CA_ID)
 );
 
-DROP SEQUENCE post_num_seq;
-CREATE SEQUENCE post_num_seq;
- START WITH 1
- INCREMENT BY 1
- MAXVALUE 999999;
 
-SELECT * FROM
-    (SELECT rownum rNum, p.* 
-       FROM (SELECT * 
-               FROM post 
-              WHERE board_id = 1 
-                AND post_ref IN (SELECT post_ref 
-                                  FROM post 
-                                 WHERE post_writer = 'test1234') 
-              ORDER BY post_ref DESC, post_ref_step ASC) p) 
-      WHERE rNum >= 1 AND rNum <= 4;
-
-SELECT * FROM
-    (SELECT rownum rNum, p.* 
-       FROM (SELECT * 
-               FROM post 
-              WHERE board_id = 1 
-              ORDER BY post_ref DESC, post_ref_step ASC) p) 
-      WHERE rNum >= 1 AND rNum <= 5;      
+CREATE TABLE CATEGORIES
+(
+	CG_ID NUMBER(1) NOT NULL,
+	CG_NAME VARCHAR2(100) NOT NULL,
+	PRIMARY KEY (CG_ID)
+);
 
 
-SELECT * FROM members;
-SELECT * FROM post;
-SELECT * FROM item;
-SELECT * FROM categories;
-SELECT * FROM item_v;
-SELECT COUNT(*) cnt FROM item WHERE category_id = 1;
+CREATE TABLE ITEM
+(
+	IT_ID NUMBER(5) NOT NULL,
+	CG_ID NUMBER(1) NOT NULL,
+	IT_NAME VARCHAR2(100) NOT NULL,
+	IT_COMPANY VARCHAR2(50) NOT NULL,
+	IT_SMALL_IMG VARCHAR2(100) NOT NULL,
+	IT_LARGE_IMG VARCHAR2(100) NOT NULL,
+	IT_DETAIL_IMG VARCHAR2(100) NOT NULL,
+	IT_REGDATE TIMESTAMP DEFAULT SYSDATE NOT NULL,
+	IT_CONTENT VARCHAR2(4000) NOT NULL,
+	IT_STOCK NUMBER(3) NOT NULL,
+	IT_COST NUMBER(8) NOT NULL,
+	IT_PRICE NUMBER(8) NOT NULL,
+	IT_GRADE NUMBER(1,2),
+	PRIMARY KEY (IT_ID)
+);
+
+
+CREATE TABLE MEMBERS
+(
+	ME_ID VARCHAR2(20) NOT NULL,
+	ME_PW VARCHAR2(20) NOT NULL,
+	ME_NAME VARCHAR2(40) NOT NULL,
+	ME_EMAIL VARCHAR2(60) NOT NULL,
+	ME_PHONE VARCHAR2(11) NOT NULL,
+	ME_REGDATE TIMESTAMP NOT NULL,
+	ME_ROLE NUMBER(1) DEFAULT 0 NOT NULL,
+	ME_CONDITION NUMBER(1) DEFAULT 0 NOT NULL,
+	ME_KEY VARCHAR2(30) UNIQUE,
+	PRIMARY KEY (ME_ID)
+);
+
+
+CREATE TABLE ORDERS
+(
+	OD_ID NUMBER(7) NOT NULL,
+	AD_ID NUMBER(5) NOT NULL,
+	ME_ID VARCHAR2(20) NOT NULL,
+	IT_ID NUMBER(5) NOT NULL,
+	OD_CONDITION NUMBER(1) DEFAULT 1 NOT NULL,
+	OD_QUANTITY NUMBER(3) NOT NULL,
+	PRIMARY KEY (OD_ID)
+);
+
+
+CREATE TABLE POST
+(
+	PO_NUM NUMBER(6) NOT NULL,
+	ME_ID VARCHAR2(20) NOT NULL,
+	BO_ID NUMBER(5) NOT NULL,
+	PO_WRITER VARCHAR2(60) NOT NULL,
+	PO_TITLE VARCHAR2(80) NOT NULL,
+	PO_CONTENT VARCHAR2(4000) NOT NULL,
+	PO_REGDATE TIMESTAMP NOT NULL,
+	PO_HIT NUMBER(6) DEFAULT 0 NOT NULL,
+	PO_REF NUMBER(2) DEFAULT 0,
+	PO_REF_LEVEL NUMBER(3) DEFAULT 0,
+	PO_REF_STEP NUMBER(3) DEFAULT 0,
+	WRITER_IP VARCHAR2(15) NOT NULL,
+	PO_CONDITION NUMBER(1) DEFAULT 0 NOT NULL,
+	PRIMARY KEY (PO_NUM)
+);
+
+
+
+/* Create Foreign Keys */
+
+ALTER TABLE ORDERS
+	ADD FOREIGN KEY (AD_ID)
+	REFERENCES ADDRESS (AD_ID)
+;
+
+
+ALTER TABLE POST
+	ADD FOREIGN KEY (BO_ID)
+	REFERENCES BOARD (BO_ID)
+;
+
+
+ALTER TABLE ITEM
+	ADD FOREIGN KEY (CG_ID)
+	REFERENCES CATEGORIES (CG_ID)
+;
+
+
+ALTER TABLE BOARD
+	ADD FOREIGN KEY (IT_ID)
+	REFERENCES ITEM (IT_ID)
+;
+
+
+ALTER TABLE CART
+	ADD FOREIGN KEY (IT_ID)
+	REFERENCES ITEM (IT_ID)
+;
+
+
+ALTER TABLE ORDERS
+	ADD FOREIGN KEY (IT_ID)
+	REFERENCES ITEM (IT_ID)
+;
+
+
+ALTER TABLE ADDRESS
+	ADD FOREIGN KEY (ME_ID)
+	REFERENCES MEMBERS (ME_ID)
+;
+
+
+ALTER TABLE CART
+	ADD FOREIGN KEY (ME_ID)
+	REFERENCES MEMBERS (ME_ID)
+;
+
+
+ALTER TABLE ORDERS
+	ADD FOREIGN KEY (ME_ID)
+	REFERENCES MEMBERS (ME_ID)
+;
+
+
+ALTER TABLE POST
+	ADD FOREIGN KEY (ME_ID)
+	REFERENCES MEMBERS (ME_ID)
+;
+
+
+

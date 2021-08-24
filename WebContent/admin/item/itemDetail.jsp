@@ -65,6 +65,7 @@
 								<th>판매가격</th><td>￦<fmt:formatNumber value="${dto.price}" pattern="#,###"/></td>
 							</tr>
 							<tr>
+								<th>재고</th><td>${dto.stock}</td>
 								<th>평점</th>
 								<td colspan="3">${dto.grade}</td>
 							<tr>

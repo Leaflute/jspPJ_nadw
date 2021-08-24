@@ -19,13 +19,17 @@ public interface CommonDAO {
 	// 인증 이메일
 	public void sendActivationEmail(String email, String key);
 	
+	// 이메일 인증 키값 비교
+	public int idKeyChk(String id, String key);
+	
+	// 회원 상태 변경
+	int updateCondition(String id, int condition);
+	
 	// 회원정보 DB로부터 삭제
 	public int withrawMember(String strId);
 	
 	// 회원정보 DB에서 수정
 	public int updateMember(MemberVO vo);
+
 	
-	// 상품 리스트 조회
-	
-	// 상품 상세정보 조회
 }

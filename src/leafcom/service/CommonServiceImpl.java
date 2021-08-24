@@ -5,7 +5,6 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import leafcom.dao.CommonDAO;
 import leafcom.dao.CommonDAOImpl;
@@ -93,7 +92,7 @@ public class CommonServiceImpl implements CommonService {
 		
 		req.setAttribute("insertCnt", insertCnt);
 	}
-
+	
 	// 회원탈퇴 -> 비밀번호 재확인
 	@Override
 	public void withdrawMemAction(HttpServletRequest req, HttpServletResponse res) {
@@ -146,17 +145,24 @@ public class CommonServiceImpl implements CommonService {
 		
 		req.setAttribute("updateCnt", updateCnt);
 	}
-
+	
+	// 아이디 권한 활성화
 	@Override
-	public void itemList(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
+	public void activateID(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("[co][service][ActivateID()]");
 		
-	}
-
-	@Override
-	public void itemDetail(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
+		MemberVO vo = (MemberVO) req.getSession().getAttribute("member");
+		String key = req.getParameter("key");
+		String id = vo.getId();
 		
+		int selectCnt = dao.idKeyChk(id, key);
+		int updateCnt = 0;
+		if(selectCnt==1) {
+			updateCnt = dao.updateCondition(id, Code.NORMAL);
+		}
+		
+		req.setAttribute("selectCnt", selectCnt);
+		req.setAttribute("updateCnt", updateCnt);
 	}
 
 }

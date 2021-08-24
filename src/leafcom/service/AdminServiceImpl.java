@@ -146,7 +146,7 @@ public class AdminServiceImpl implements AdminService {
 		String largeImg = "/jsp_pj_ndw/asset/uploaded/" + (String) req.getAttribute("fileName");
 		String detailImg = "/jsp_pj_ndw/asset/uploaded/" + (String) req.getAttribute("fileName");
 		String info = req.getParameter("info");
-		int quantity = Integer.parseInt(req.getParameter("quantity"));
+		int stock = Integer.parseInt(req.getParameter("stock"));
 		int cost = Integer.parseInt(req.getParameter("cost"));
 		int price = Integer.parseInt(req.getParameter("price"));
 		
@@ -160,7 +160,7 @@ public class AdminServiceImpl implements AdminService {
 		vo.setDetailImg(detailImg);
 		vo.setRegDate(new Timestamp(System.currentTimeMillis()));
 		vo.setInfo(info);
-		vo.setQuantity(quantity);
+		vo.setStock(stock);
 		vo.setCost(cost);
 		vo.setPrice(price);
 		vo.setGrade(0);
@@ -207,7 +207,7 @@ public class AdminServiceImpl implements AdminService {
 		}
 		
 		String info = req.getParameter("info");
-		int quantity = Integer.parseInt(req.getParameter("quantity"));
+		int stock = Integer.parseInt(req.getParameter("stock"));
 		int cost = Integer.parseInt(req.getParameter("cost"));
 		int price = Integer.parseInt(req.getParameter("price"));
 		double grade = Double.parseDouble(req.getParameter("grade"));
@@ -224,7 +224,7 @@ public class AdminServiceImpl implements AdminService {
 		vo.setDetailImg(detailImg);
 		vo.setRegDate(regdate);
 		vo.setInfo(info);
-		vo.setQuantity(quantity);
+		vo.setStock(stock);
 		vo.setCost(cost);
 		vo.setPrice(price);
 		vo.setGrade(grade);

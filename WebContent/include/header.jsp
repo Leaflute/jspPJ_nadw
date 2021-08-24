@@ -10,15 +10,6 @@
 <script src="https://kit.fontawesome.com/ef75f47104.js" crossorigin="anonymous"></script>
 <style type="text/css">
 
-/* .dropbtn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-} */
-
 .dropdown {
     position: relative;
     display: inline-block;

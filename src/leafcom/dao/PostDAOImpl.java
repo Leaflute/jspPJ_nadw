@@ -48,10 +48,10 @@ public class PostDAOImpl implements PostDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT COUNT(*) cnt FROM Post WHERE board_id = ?";
+			String sql = "SELECT COUNT(*) cnt FROM Post WHERE bo_id = ?";
 			
 			if (!fullList) {
-				sql += "AND post_writer = ?";
+				sql += "AND po_writer = ?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, boardId);
 				pstmt.setString(2, writer);
@@ -98,13 +98,13 @@ public class PostDAOImpl implements PostDAO {
 					"    (SELECT rownum rNum, p.* \r\n" + 
 					"       FROM (SELECT * \r\n" + 
 					"               FROM post \r\n" + 
-					"              WHERE board_id = ?\r\n";
+					"              WHERE bo_id = ?\r\n";
 									
 			if(!fullList) {
-				sql += "AND post_ref IN (SELECT post_ref \r\n" + 
+				sql += "AND po_ref IN (SELECT po_ref \r\n" + 
 						"                 FROM post \r\n" + 
-						"                WHERE post_writer = ?) \r\n" + 
-						"          ORDER BY post_ref DESC, post_ref_step ASC) p) \r\n" + 
+						"                WHERE po_writer = ?) \r\n" + 
+						"          ORDER BY po_ref DESC, po_ref_step ASC) p) \r\n" + 
 						"      WHERE rNum >= ? AND rNum <= ?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, boardId);
@@ -114,7 +114,7 @@ public class PostDAOImpl implements PostDAO {
 				System.out.println("고객문의 - 고객");
 				
 			} else {
-				sql += "           ORDER BY post_ref DESC, post_ref_step ASC) p) \r\n" + 
+				sql += "           ORDER BY po_ref DESC, po_ref_step ASC) p) \r\n" + 
 					   "       WHERE rNum >= ? AND rNum <= ?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, boardId);
@@ -136,18 +136,18 @@ public class PostDAOImpl implements PostDAO {
 					PostVO vo = new PostVO();
 					
 					// 4. 한 건을 읽어서 rs결과를 setter로 작은 바구니에 담음
-					vo.setPostNum(rs.getInt("post_num"));
-					vo.setBoardId(rs.getInt("board_id"));
-					vo.setWriter(rs.getString("post_writer"));
-					vo.setTitle(rs.getString("post_title"));
-					vo.setContent(rs.getString("post_content"));
-					vo.setHit(rs.getInt("post_hit"));
-					vo.setRegDate(rs.getTimestamp("post_regdate"));
-					vo.setRef(rs.getInt("post_ref"));
-					vo.setRefStep(rs.getInt("post_ref_step"));
-					vo.setRefLevel(rs.getInt("post_ref_level"));
+					vo.setPostNum(rs.getInt("po_num"));
+					vo.setBoardId(rs.getInt("bo_id"));
+					vo.setWriter(rs.getString("po_writer"));
+					vo.setTitle(rs.getString("po_title"));
+					vo.setContent(rs.getString("po_content"));
+					vo.setHit(rs.getInt("po_hit"));
+					vo.setRegDate(rs.getTimestamp("po_regdate"));
+					vo.setRef(rs.getInt("po_ref"));
+					vo.setRefStep(rs.getInt("po_ref_step"));
+					vo.setRefLevel(rs.getInt("po_ref_level"));
 					vo.setIp(rs.getString("writer_ip"));
-					vo.setCondition(rs.getInt("post_condition"));
+					vo.setCondition(rs.getInt("po_condition"));
 					
 					// 5. 큰 바구니에 작은 바구니를 담음
 					list.add(vo);
@@ -178,7 +178,7 @@ public class PostDAOImpl implements PostDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "UPDATE post SET post_hit = post_hit+1 WHERE post_num = ?";
+			String sql = "UPDATE post SET po_hit = po_hit+1 WHERE po_num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			
@@ -207,7 +207,7 @@ public class PostDAOImpl implements PostDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM post WHERE post_num = ?";
+			String sql = "SELECT * FROM post WHERE po_num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			
@@ -216,18 +216,18 @@ public class PostDAOImpl implements PostDAO {
 			if(rs.next()) {
 				vo = new PostVO();
 				
-				vo.setPostNum(rs.getInt("post_num"));
-				vo.setBoardId(rs.getInt("board_id"));
-				vo.setWriter(rs.getString("post_writer"));
-				vo.setTitle(rs.getString("post_title"));
-				vo.setContent(rs.getString("post_content"));
-				vo.setHit(rs.getInt("post_hit"));
-				vo.setRegDate(rs.getTimestamp("post_regdate"));
-				vo.setRef(rs.getInt("post_ref"));
-				vo.setRefStep(rs.getInt("post_ref_step"));
-				vo.setRefLevel(rs.getInt("post_ref_level"));
+				vo.setPostNum(rs.getInt("po_num"));
+				vo.setBoardId(rs.getInt("bo_id"));
+				vo.setWriter(rs.getString("po_writer"));
+				vo.setTitle(rs.getString("po_title"));
+				vo.setContent(rs.getString("po_content"));
+				vo.setHit(rs.getInt("po_hit"));
+				vo.setRegDate(rs.getTimestamp("po_regdate"));
+				vo.setRef(rs.getInt("po_ref"));
+				vo.setRefStep(rs.getInt("po_ref_step"));
+				vo.setRefLevel(rs.getInt("po_ref_level"));
 				vo.setIp(rs.getString("writer_ip"));
-				vo.setCondition(rs.getInt("post_condition"));
+				vo.setCondition(rs.getInt("po_condition"));
 			}
 		
 		} catch (SQLException e) {
@@ -255,7 +255,7 @@ public class PostDAOImpl implements PostDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM post WHERE post_num = ? AND post_writer = ?";
+			String sql = "SELECT * FROM post WHERE po_num = ? AND po_writer = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			pstmt.setString(2, writer);
@@ -289,7 +289,7 @@ public class PostDAOImpl implements PostDAO {
 		
 		try {
 			conn = dataSource.getConnection();
-			String sql = "UPDATE post SET post_title=?, post_content=? WHERE post_num=?";
+			String sql = "UPDATE post SET po_title=?, po_content=? WHERE po_num=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getTitle());
 			pstmt.setString(2, vo.getContent());
@@ -331,7 +331,7 @@ public class PostDAOImpl implements PostDAO {
 			// 답글인 경우
 			if(num!=0) {
 				// 삽입할 글보다 아래쪽 글들이 한 줄씩 밀려남
-				sql = "UPDATE post SET post_ref_step = post_ref_step+1 WHERE post_ref=? AND post_ref_step > ?";
+				sql = "UPDATE post SET po_ref_step = po_ref_step+1 WHERE po_ref=? AND po_ref_step > ?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, ref);
 				pstmt.setInt(2, refStep);
@@ -343,9 +343,9 @@ public class PostDAOImpl implements PostDAO {
 				refLevel++;
 				
 				// 답 글인 경우
-				sql="INSERT INTO post (post_num, board_id, post_writer, post_title, post_content, post_regdate, "
-						+ "post_hit, post_ref, post_ref_step, post_ref_level, writer_ip, post_condition)"
-						+ "VALUES (post_num_seq.nextval, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?)";
+				sql="INSERT INTO post (po_num, bo_id, po_writer, po_title, po_content, po_regdate, "
+						+ "po_hit, po_ref, po_ref_step, po_ref_level, writer_ip, po_condition)"
+						+ "VALUES (po_num_seq.nextval, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?)";
 				
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, vo.getBoardId());
@@ -365,9 +365,9 @@ public class PostDAOImpl implements PostDAO {
 				refLevel = 0;
 				
 				// 새 글인 경우
-				sql="INSERT INTO post (post_num, board_id, post_writer, post_title, post_content, post_regdate, "
-						+ "post_hit, post_ref, post_ref_step, post_ref_level, writer_ip, post_condition)"
-						+ "VALUES (post_num_seq.nextval, ?, ?, ?, ?, ?, 0, post_num_seq.currval, ?, ?, ?, ?)";
+				sql="INSERT INTO post (po_num, bo_id, po_writer, po_title, po_content, po_regdate, "
+						+ "po_hit, po_ref, po_ref_step, po_ref_level, writer_ip, po_condition)"
+						+ "VALUES (po_num_seq.nextval, ?, ?, ?, ?, ?, 0, po_num_seq.currval, ?, ?, ?, ?)";
 				
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, vo.getBoardId());
@@ -409,7 +409,7 @@ public class PostDAOImpl implements PostDAO {
 		
 		try {
 			conn = dataSource.getConnection();
-			sql = "SELECT * FROM post WHERE post_num = ?";
+			sql = "SELECT * FROM post WHERE po_num = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
@@ -417,12 +417,12 @@ public class PostDAOImpl implements PostDAO {
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				int ref = rs.getInt("post_ref");
-				int refStep = rs.getInt("post_ref_step");
-				int refLevel = rs.getInt("post_ref_level");
+				int ref = rs.getInt("po_ref");
+				int refStep = rs.getInt("po_ref_step");
+				int refLevel = rs.getInt("po_ref_level");
 				
 				// 답글이 존재하는지 여부
-				sql = "SELECT * FROM post WHERE post_ref=? AND post_ref_step=?+1 AND post_ref_level > ?";
+				sql = "SELECT * FROM post WHERE po_ref=? AND po_ref_step=?+1 AND po_ref_level > ?";
 				
 				pstmt.close();
 				pstmt = conn.prepareStatement(sql);
@@ -435,7 +435,7 @@ public class PostDAOImpl implements PostDAO {
 				
 				if(rs.next()) {
 					// 답글이 존재하는 경우
-					sql = "DELETE FROM post WHERE post_num = ? OR (post_ref=? AND post_ref_level>?)";
+					sql = "DELETE FROM post WHERE po_num = ? OR (po_ref=? AND po_ref_level>?)";
 					// pstmt.close();
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setInt(1, num);
@@ -449,7 +449,7 @@ public class PostDAOImpl implements PostDAO {
 					}
 				} else {
 					// 답글이 존재하지 않는 경우
-					sql = "DELETE FROM post WHERE post_num = ?";
+					sql = "DELETE FROM post WHERE po_num = ?";
 					// pstmt.close();
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setInt(1, num);

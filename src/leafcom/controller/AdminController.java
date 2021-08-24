@@ -135,11 +135,11 @@ public class AdminController extends HttpServlet {
 		} else if (url.equals("/deleteItem.ad")) {
 			System.out.println("[ad][cnt][url ==> /deleteItem.ad]");
 			
-			service.itemDetail(req, res);
-			
-			req.setAttribute("itemId", Integer.parseInt(req.getParameter("categoryId")));
+			req.setAttribute("itemId", Integer.parseInt(req.getParameter("itemId")));
 			req.setAttribute("pageNum", Integer.parseInt(req.getParameter("pageNum")));
-			req.setAttribute("categoryId", Integer.parseInt(req.getParameter("itemId")));
+			req.setAttribute("categoryId", Integer.parseInt(req.getParameter("categoryId")));
+			
+			service.itemDetail(req, res);
 			
 			viewPage = "/admin/item/deleteItem.jsp";
 		
