@@ -28,8 +28,8 @@ CREATE TABLE categories
 );
 truncate table categories;
 
-ALTER TABLE 
-MODIFY
+ALTER TABLE address
+RENAME COLUMN add_recipient to ad_recipient; 
 
 CREATE OR REPLACE VIEW item_v
 AS

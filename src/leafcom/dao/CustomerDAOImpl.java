@@ -12,6 +12,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import leafcom.vo.CartVO;
 import leafcom.vo.ItemVO;
 
 public class CustomerDAOImpl implements CustomerDAO{
@@ -280,11 +281,80 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return vo;
 	}
 
-	
 	@Override
-	public void addCart(List<ItemVO> vo) {
-		// TODO Auto-generated method stub
+	public int addCart(List<CartVO> list) {
+		int addCnt = 0;
 		
+		
+		return addCnt;
+		
+	}
+	
+	// 장바구니 리스트
+	@Override
+	public List<CartVO> cartList(String meId) {
+		List<CartVO> list = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "";
+					
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			if(rs!=null) rs.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}			
+		return list;
+	}
+	
+	// 상품 번호 구하기
+	@Override
+	public int getItemId(String meId) {
+		int itId = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "";
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			if(rs!=null) rs.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return 0;
+	}
+	
+	// 수량 조정
+	@Override
+	public void updateCart(int caId) {
+		
+	}
+	
+	// 상품 삭제
+	@Override
+	public List<CartVO> deleteCart(String caId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -62,6 +62,12 @@ public class CustomerController extends HttpServlet {
 			viewPage = "/customer/item/detail.jsp";
 		}
 		
+		// 장바구니 추가 후 페이지 로드 여부 확인
+		
+		// 장바구니 리스트
+		
+		// 
+		
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 		dispatcher.forward(req, res);
 		

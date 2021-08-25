@@ -1,5 +1,6 @@
 package leafcom.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import leafcom.dao.CustomerDAO;
 import leafcom.dao.CustomerDAOImpl;
 import leafcom.vo.CartVO;
 import leafcom.vo.ItemVO;
+import leafcom.vo.MemberVO;
 
 public class CustomerServiceImpl implements CustomerService {
 	
@@ -135,27 +137,89 @@ public class CustomerServiceImpl implements CustomerService {
 		req.setAttribute("categoryId", categoryId);
 		
 	}
-
+	
+	// 장바구니 리스트 호출
 	@Override
 	public void cartList(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
+		String meId = req.getParameter("meId");
+		List<CartVO> cartList = dao.cartList(meId);
 		
+		req.setAttribute("cartList", cartList);
 	}
 	
 	// 카트에 상품 추가
 	@Override
 	public void addCart(HttpServletRequest req, HttpServletResponse res) {
+		int itId = Integer.parseInt(req.getParameter("itemId"));
+		int amount = Integer.parseInt(req.getParameter("amount"));
 		
 		List<CartVO> sessionCartList = null;
 		List<CartVO> memberCartList = null;
-		// 세션에 멤버 정보가 존재하면 그대로 장바구니에 추가
-		// 세션에 멤버정보가 존재하지 않으면 장바구니 세션을 추가
-		if(req.getSession().getAttribute("cartList")==null) {
-			sessionCartList = new ArrayList<CartVO>();
+		
+		// 세션에 멤버 정보가 존재할때 
+		if(req.getSession().getAttribute("member")!=null) {
+			MemberVO me = (MemberVO)req.getSession().getAttribute("member");
+			String meId = me.getId();
+			
+			// 최초 로그인시 장바구니 세션이 존재했을 때 해당 리스트를 가지고 와서 DB에 추가 -> 장바구니 세션 삭제
+			if(req.getSession().getAttribute("cartList")!=null) {
+				sessionCartList = (List<CartVO>)req.getSession().getAttribute("cartList");
+				memberCartList = sessionCartList;
+		
+				req.getSession().removeAttribute("cartList");
+			
+			// 이미 로그인 중이면 DB에 회원의 장바구니 리스트 추가(장바구니 세션이 존재하지 않음)
+			} else {
+				memberCartList = new ArrayList<CartVO>();
+				for (CartVO vo : memberCartList) {
+					vo.setAmount(amount);
+					vo.setItId(itId);
+					vo.setMeId(meId);
+					vo.setRegDate(new Timestamp(System.currentTimeMillis()));
+					vo.setCondition(0);
+					memberCartList.add(vo);
+				}	
+			}
+			int addInsert = dao.addCart(memberCartList);
+			
+		// 세션에 멤버 정보가 존재하지 않을 때(세션에 장바구니 리스트 저장)	
+		} else {
+			// 장바구니 세션이 없으면 장바구니 세션을 추가
+			if(req.getSession().getAttribute("cartList")==null) {
+				sessionCartList = new ArrayList<CartVO>();
+				
+				// 세션 장바구니 리스트에 CartVO 정보 를 누적
+				for (CartVO vo : sessionCartList) {
+					vo.setRegDate(new Timestamp(System.currentTimeMillis()));
+					vo.setItId(itId);
+					vo.setAmount(amount);
+					vo.setCondition(0);
+					sessionCartList.add(vo);
+				}
+			
+			// 장바구니 세션이 존재할 때
+			} else {
+				sessionCartList = (List<CartVO>)req.getSession().getAttribute("cartList");
+				for (CartVO vo:sessionCartList) {
+					// itemId가 동일한 것이 있으면 수량 누적
+					if (vo.getItId()==itId) {
+						vo.setAmount(amount+vo.getAmount());
+					// 없으면 들어온 수량값을 장바구니 VO에 설정
+					} else {
+						vo.setAmount(amount);
+					}
+					vo.setRegDate(new Timestamp(System.currentTimeMillis()));
+					vo.setItId(itId);
+					vo.setCondition(0);
+					sessionCartList.add(vo);
+				}
+			}
+			req.getSession().setAttribute("cartList", sessionCartList);
 		}
 		
 	}
-
+	
+	// 수량 조정
 	@Override
 	public void updateCart(HttpServletRequest req, HttpServletResponse res) {
 		// TODO Auto-generated method stub
@@ -179,21 +243,25 @@ public class CustomerServiceImpl implements CustomerService {
 		// TODO Auto-generated method stub
 		
 	}
-
 	@Override
-	public void addDestination(HttpServletRequest req, HttpServletResponse res) {
+	public void AddressList(HttpServletRequest req, HttpServletResponse res) {
+	
+	}
+		
+	@Override
+	public void addAddress(HttpServletRequest req, HttpServletResponse res) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void updateDestination(HttpServletRequest req, HttpServletResponse res) {
+	public void updateAddress(HttpServletRequest req, HttpServletResponse res) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void deleteDestination(HttpServletRequest req, HttpServletResponse res) {
+	public void deleteAddress(HttpServletRequest req, HttpServletResponse res) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -206,12 +274,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public void updateOrder(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void refundList(HttpServletRequest req, HttpServletResponse res) {
 		// TODO Auto-generated method stub
 		
 	}
