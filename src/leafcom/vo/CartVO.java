@@ -10,7 +10,28 @@ public class CartVO {
 	private int amount;
 	private Timestamp regDate;
 	private int condition;
+	private int price;
+	private String itName;
+	private String Smallimg;
 	
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
+	public String getItName() {
+		return itName;
+	}
+	public void setItName(String itName) {
+		this.itName = itName;
+	}
+	public String getSmallimg() {
+		return Smallimg;
+	}
+	public void setSmallimg(String smallimg) {
+		Smallimg = smallimg;
+	}
 	public int getCaId() {
 		return caId;
 	}

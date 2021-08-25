@@ -34,7 +34,7 @@ public interface CustomerDAO {
 	public int addCart(List<CartVO> list);
 	
 	// 장바구니 수량 업데이트
-	public void updateCart(int caId);
+	public int updateCart(int caId, int amount);
 	
 	// 장바구니 삭제
 	public List<CartVO> deleteCart(String caId);

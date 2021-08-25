@@ -73,6 +73,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			if(rs!=null) rs.close();
 				if(pstmt!=null) pstmt.close();
 				if(conn!=null) conn.close();
+				if(rs!=null) rs.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -113,6 +114,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			if(rs!=null) rs.close();
 				if(pstmt!=null) pstmt.close();
 				if(conn!=null) conn.close();
+				if(rs!=null) rs.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -223,6 +225,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			if(rs!=null) rs.close();
 				if(pstmt!=null) pstmt.close();
 				if(conn!=null) conn.close();
+				if(rs!=null) rs.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -273,6 +276,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			try {
 			if(pstmt!=null) pstmt.close();
 			if(conn!=null) conn.close();
+			if(rs!=null) rs.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -280,12 +284,39 @@ public class CustomerDAOImpl implements CustomerDAO{
 			
 		return vo;
 	}
-
+	
+	// 장바구니 상품추가
 	@Override
 	public int addCart(List<CartVO> list) {
 		int addCnt = 0;
+		int sitID = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		
-		
+		try {
+			conn = dataSource.getConnection();
+			
+			for (CartVO vo:list) {
+				if (vo.getItId()==itId ) {
+				vo.getItId().equals
+				}
+			}
+			
+			String sql = "";
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			if(rs!=null) rs.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+				if(rs!=null) rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
 		return addCnt;
 		
 	}
@@ -301,8 +332,46 @@ public class CustomerDAOImpl implements CustomerDAO{
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "";
+			String sql = "SELECT c.ca_id ca_id,"
+					+ "			c.me_id me_id,"
+					+ "			c.it_id it_id,"
+					+ "			c.ca_amount ca_amount,"
+					+ "			c.ca_regDate ca_regDate,"
+					+ "			c.ca_condition ca_condition,"
+					+ "			i.it_price it_price,"
+					+ "			i.it_name it_name,"
+					+ "			i.it_small_img it_small_img"
+					+ "		FROM cart c, item i "
+					+ "	   WHERE c.it_id = i.it_id"
+					+ "	 	 AND c.me_id = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, meId);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				
+				list = new ArrayList<CartVO>();
+				
+				do {
+					CartVO vo = new CartVO();
 					
+					vo.setCaId(rs.getInt("ca_id"));
+					vo.setMeId(meId);
+					vo.setItId(rs.getInt("it_id"));
+					vo.setAmount(rs.getInt("ca_amount"));
+					vo.setRegDate(rs.getTimestamp("ca_regDate"));
+					vo.setCondition(rs.getInt("ca_condition"));
+					vo.setPrice(rs.getInt("it_price"));
+					vo.setItName(rs.getString("it_name"));
+					vo.setSmallimg(rs.getString("it_small_img"));
+					
+					list.add(vo);
+					
+				} while(rs.next());
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -310,6 +379,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			if(rs!=null) rs.close();
 				if(pstmt!=null) pstmt.close();
 				if(conn!=null) conn.close();
+				if(rs!=null) rs.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -328,7 +398,13 @@ public class CustomerDAOImpl implements CustomerDAO{
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "";
+			String sql = "SELECT it_Id FROM cart WHERE me_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, meId);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				itId = rs.getInt("it_id");
+			}
 		
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -337,23 +413,62 @@ public class CustomerDAOImpl implements CustomerDAO{
 			if(rs!=null) rs.close();
 				if(pstmt!=null) pstmt.close();
 				if(conn!=null) conn.close();
+				if(rs!=null) rs.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}		
-		return 0;
+		return itId;
 	}
 	
 	// 수량 조정
 	@Override
-	public void updateCart(int caId) {
+	public int updateCart(int caId, int amount) {
+		int updateCnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "UPDATE cart SET ca_amount ca_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, caId);
+			updateCnt = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		
+		return updateCnt;
 	}
 	
-	// 상품 삭제
+	// 장바구니 상품 삭제
 	@Override
 	public List<CartVO> deleteCart(String caId) {
-		// TODO Auto-generated method stub
+		int deleteCnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "";
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
 		return null;
 	}
 
