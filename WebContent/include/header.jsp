@@ -110,15 +110,15 @@
 			<div class="dropdown" id="bar_toggleBtn">
 				<i class="fas fa-bars"></i>
 				<div class="dropdown_content">
-					<a href="itemList.co?categoryId=1">CPU</a>
-					<a href="itemList.co?categoryId=2">RAM</a>
-					<a href="itemList.co?categoryId=3">메인보드</a>
-					<a href="itemList.co?categoryId=4">그래픽카드</a>
-					<a href="itemList.co?categoryId=5">파워서플라이</a>
-					<a href="itemList.co?categoryId=6">SSD</a>
-					<a href="itemList.co?categoryId=7">HDD</a>
-					<a href="itemList.co?categoryId=8">케이스</a>
-					<a href="itemList.co?categoryId=9">모니터</a>
+					<a href="itemList.cu?categoryId=1">CPU</a>
+					<a href="itemList.cu?categoryId=2">RAM</a>
+					<a href="itemList.cu?categoryId=3">메인보드</a>
+					<a href="itemList.cu?categoryId=4">그래픽카드</a>
+					<a href="itemList.cu?categoryId=5">파워서플라이</a>
+					<a href="itemList.cu?categoryId=6">SSD</a>
+					<a href="itemList.cu?categoryId=7">HDD</a>
+					<a href="itemList.cu?categoryId=8">케이스</a>
+					<a href="itemList.cu?categoryId=9">모니터</a>
 				 </div>
 			</div>
 			<div id="bar_general">

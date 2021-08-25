@@ -19,11 +19,11 @@
 		<div id="my_page_box">
 			<!-- 좌측 메뉴바 -->
 			<nav class="nav_bar">
-				<c:forEach var="category" items="categoryMap">
 				<ul>
-					<li>${category.name}</li>
-				</ul>
+				<c:forEach var="categoryMap" items="${categoryMap}">
+					<li><a href="itemList.cu?categoryId=${categoryMap.key}">${categoryMap.value}</a></li>
 				</c:forEach>
+				</ul>
 			</nav>
 			
 			<!-- section -->
@@ -31,7 +31,7 @@
 				<div class="outer_content">
 					<div class="inner_content">
 						<div class="category_name">
-						<span>CPU</span>
+						<span>${categoryName}</span>
 						</div>
 						<div class="product_tap_area">
 							<ul>
@@ -44,23 +44,28 @@
 						</div>
 						<div class="product_table">
 							<ul class="product_list">
-								<c:forEach var="dto" items="dtos">
+								<c:forEach var="dto" items="${itemDtos}">
 								<li>
 									<div class="box a">
 										<img src="${dto.smallImg}">
 									</div>
 									<div class="box b">
-									<a href="itemDetail.co?itemId=${dto.itemId}"></a>
+										<ul>
+									<li><a href="itemDetail.cu?itemId=${dto.itemId}&categoryId=${dto.categoryId}&pageNum=${pageNum}">${dto.itemName}</a></li>
+									<li><a href="itemDetail.cu?itemId=${dto.itemId}&categoryId=${dto.categoryId}&pageNum=${pageNum}">${dto.info}</a></li>
+										</ul>
 									</div>
 									<div class="box c">
 										<ul>
-											<li>${dto.price}</li>
-											<li>${dto.grade}점</li>
+											<li>￦<fmt:formatNumber value="${dto.price}" pattern="#,###"/></li>
+											<li>																																											
+											${dto.grade}점
+											</li>
 											<li>
 												<input type="button" class="little_btn" value="장바구니"
-													onclick="window.location='${not empty sessionScope.member ? addCart.cu?itemId : login.co}'">
+													onclick="window.location=''">
 												<input type="button" class="little_btn" value="구매하기"
-													onclick="window.location='${not empty sessionScope.member ? buy.cu?dto : login.co'">
+													onclick="window.location=''">
 											</li>
 										</ul>
 									</div>

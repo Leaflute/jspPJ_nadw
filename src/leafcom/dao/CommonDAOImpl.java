@@ -91,7 +91,7 @@ public class CommonDAOImpl implements CommonDAO {
 		return selectCnt;
 	}
 	
-	// 회원가입 - 이메일 중복 확인
+	// 회원가입 - 아이디 중복 확인
 	@Override
 	public int idDupChk(String strId) {
 		int selectCnt = 0;
@@ -146,9 +146,13 @@ public class CommonDAOImpl implements CommonDAO {
 			if (rs.next()) {
 				vo.setId(rs.getString("me_id"));
 				vo.setEmail(rs.getString("me_email"));
+				vo.setPw("");
 				vo.setName(rs.getString("me_name"));
 				vo.setPhone(rs.getString("me_phone"));
 				vo.setRegDate(rs.getTimestamp("me_regdate"));
+				vo.setRole(rs.getInt("me_role"));
+				vo.setCondition(rs.getInt("me_condition"));
+				vo.setKey(rs.getString("me_key"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -174,7 +178,7 @@ public class CommonDAOImpl implements CommonDAO {
 		
 		try {
 			conn = dataSource.getConnection();
-			String sql = "INSERT INTO members VALUES(?,?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO members VALUES(?,?,?,?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getId());
 			pstmt.setString(2, vo.getPw());
@@ -184,6 +188,7 @@ public class CommonDAOImpl implements CommonDAO {
 			pstmt.setTimestamp(6, vo.getRegDate());
 			pstmt.setInt(7, vo.getRole());
 			pstmt.setInt(8, vo.getCondition());
+			pstmt.setString(9, vo.getKey());
 			
 			insertCnt = pstmt.executeUpdate();
 			System.out.println("[co][DAO] insertMember() insertCnt => " + insertCnt);
@@ -201,7 +206,7 @@ public class CommonDAOImpl implements CommonDAO {
 		return insertCnt;
 	}
 	
-	// 키값이 포함된 인증메일 보냄
+	// 키 인증메일 보냄
 	@Override
 	public void sendActivationEmail(String email, String key) {
 		final String username = Code.ACTIVATION_HELPER;
@@ -251,6 +256,10 @@ public class CommonDAOImpl implements CommonDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	// 아이디 확인메일 보냄
+	
+	// 비밀번호 확인메일 보냄
 	
 	// 회원 탈퇴 처리
 	@Override

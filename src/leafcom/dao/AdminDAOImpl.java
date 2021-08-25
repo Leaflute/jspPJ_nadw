@@ -131,7 +131,7 @@ public class AdminDAOImpl implements AdminDAO {
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "SELECT * FROM it_v\r\n";
+			String sql = "SELECT * FROM item_v\r\n";
 			
 			if (categoryId==0) {
 				sql +=	"WHERE rNum >= ? AND rNum <=?";
@@ -248,7 +248,6 @@ public class AdminDAOImpl implements AdminDAO {
 		return vo;
 	}
 
-	
 	@Override
 	public int insertItem(ItemVO vo) {
 		int insertCnt = 0;

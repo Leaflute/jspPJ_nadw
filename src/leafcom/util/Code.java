@@ -5,6 +5,10 @@ public interface Code {
 	public final static String ACTIVATION_HELPER = "leafcom.activation.helper@gmail.com";
 	public final static String PW = "!Q@W#E$R1";
 	
+	// 회원 롤 상수코드
+	public final static int GUEST = 0;	// 일반 회원 
+	public final static int HOST = 1;	// 관리자
+	
 	// 회원상태 상수코드
 	public final static int NOT_ACTIVATED = 0;	// 이메일 미인증
 	public final static int NORMAL = 1;		// 정상 회원

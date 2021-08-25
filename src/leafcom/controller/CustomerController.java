@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import leafcom.service.CommonService;
-import leafcom.service.CommonServiceImpl;
+import leafcom.service.CustomerService;
+import leafcom.service.CustomerServiceImpl;
 
 //http://localhost/jsp_pj_ndw/*.co
 @WebServlet("*.cu")
@@ -21,7 +21,7 @@ public class CustomerController extends HttpServlet {
         super();
     }
     
-    CommonService service = new CommonServiceImpl();
+    CustomerService service = new CustomerServiceImpl();
     
     // 1단계. HTTP로부터 요청 받음
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) 
@@ -45,22 +45,25 @@ public class CustomerController extends HttpServlet {
 		String contextPath = req.getContextPath();	// jsp_pj_nadw
 		String url = uri.substring(contextPath.length()); // /?.co
 		
-		
-		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
-		dispatcher.forward(req, res);
-		
 		// 상품 카테고리 
 		if(url.equals("/itemList.cu")) {
 			System.out.println("[cu][cnt][url ==> /itemList.cu]");
 			
-			viewPage = "/common/item/list.jsp";
+			service.itemList(req, res);
+			
+			viewPage = "/customer/item/list.jsp";
 		
 		// 상품 상세
 		} else if(url.equals("/itemDetail.cu")) {
 			System.out.println("[cu][cnt][url ==> /itemDetail.cu]");
 			
-			viewPage = "/common/item/detail.jsp";
+			service.itemDetail(req, res);
+			
+			viewPage = "/customer/item/detail.jsp";
 		}
+		
+		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
+		dispatcher.forward(req, res);
 		
 	}
 }

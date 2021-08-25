@@ -30,6 +30,7 @@ public class CommonServiceImpl implements CommonService {
 		if(selectCnt>0) {
 			vo = dao.getMemberInfo(strId);
 			req.getSession().setAttribute("member", vo);
+			System.out.println("role: " + vo.getRole());
 		} 
 		
 		req.setAttribute("selectCnt", selectCnt);
@@ -81,8 +82,8 @@ public class CommonServiceImpl implements CommonService {
 		vo.setEmail(email);
 		vo.setPhone(req.getParameter("phone"));
 		vo.setRegDate(new Timestamp(System.currentTimeMillis()));
-		vo.setRole(0);
-		vo.setCondition(1);
+		vo.setRole(Code.GUEST);
+		vo.setCondition(Code.NOT_ACTIVATED);
 		vo.setKey(key);
 		
 		int insertCnt = dao.insertMember(vo);
@@ -154,6 +155,7 @@ public class CommonServiceImpl implements CommonService {
 		MemberVO vo = (MemberVO) req.getSession().getAttribute("member");
 		String key = req.getParameter("key");
 		String id = vo.getId();
+		System.out.println("id:" + id);
 		
 		int selectCnt = dao.idKeyChk(id, key);
 		int updateCnt = 0;

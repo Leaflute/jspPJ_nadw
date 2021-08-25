@@ -52,8 +52,8 @@ CREATE SEQUENCE mnt_num_seq
  INCREMENT BY 1
  MAXVALUE 99999;
 
-DROP SEQUENCE post_num_seq;
-CREATE SEQUENCE po_num_seq;
+DROP SEQUENCE po_num_seq;
+CREATE SEQUENCE post_num_seq
  START WITH 1
  INCREMENT BY 1
  MAXVALUE 999999;
@@ -87,5 +87,6 @@ INSERT INTO categories
 VALUES(9, '모니터');
 COMMIT;
 
-INSERT INTO members VALUES('admin','admin','관리자','leafcom@gmail.com','01000000000',sysdate,1,0,'0');
+delete from members where me_id = 'admin';
+INSERT INTO members VALUES('admin','admin','관리자','leafcom@gmail.com','01000000000',sysdate,1,1,'0');
 commit; 

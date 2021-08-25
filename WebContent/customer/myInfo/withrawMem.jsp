@@ -17,9 +17,9 @@
 <!-- article 시작 -->
 <article class="container">
 	<!-- 컨테이너 -->
-	<div class="wrap_inner">
+	<div class="wrapper">
 		<div id="my_page_box">
-			<%@ include file="../myPageNav.jsp" %>
+			<%@ include file="../../include/nav.jsp" %>
 
 			<!-- section -->
 			<section class="mem_content">

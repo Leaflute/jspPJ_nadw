@@ -99,10 +99,12 @@ public class CommonController extends HttpServlet {
 		// 이메일 인증 - 처리
 		} else if(url.equals("/emailChk.co")) {
 			System.out.println("[co][cnt][url ==> /emailChk.co]");
-			
-			service.activateID(req, res);
-			
-			viewPage = "/common/signIn/emailChk.jsp";
+			if (req.getSession().getAttribute("member")==null) {
+				viewPage = "/common/login/login.jsp";
+			} else {
+				service.activateID(req, res);
+				viewPage = "/customer/myInfo/emailChk.jsp";
+			}	
 		
 		// 마이페이지 이동
 		} else if(url.equals("/myPageMain.co")) {

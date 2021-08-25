@@ -23,7 +23,6 @@
 <%@ include file="../../include/header.jsp" %>
 <!-- article 시작 -->
 <article class="container">
-	<!-- 컨테이너 -->
 	<div class="wrapper">
 		<div id="my_page_box">
 			<!-- 좌측 메뉴바 -->
@@ -83,9 +82,9 @@
 								<td><textarea id="info" name="info" rows="10" cols="50">${dto.info}</textarea></td>	
 							</tr>
 							<tr>
-								<th><label for="quantity">재고 수량 *</label></th>
-								<td><input type="number" min=1 max="1000" id="quantity" name="quantity" 
-										value="${dto.quantity}"></td>	
+								<th><label for="stock">재고 수량 *</label></th>
+								<td><input type="number" min=1 max="1000" id="stock" name="stock" 
+										value="${dto.stock}"></td>	
 							</tr>
 							<tr>
 								<th><label for="cost">상품 원가 *</label></th>

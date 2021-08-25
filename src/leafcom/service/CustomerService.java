@@ -6,14 +6,17 @@ import javax.servlet.http.HttpServletResponse;
 public interface CustomerService {
 	
 	// 상품 리스트 조회
-	public void getItemList(HttpServletRequest req, HttpServletResponse res);
+	public void itemList(HttpServletRequest req, HttpServletResponse res);
 	
+	// 카테고리 맵
+	public void categoryMap(HttpServletRequest req, HttpServletResponse res);
+		
 	// 상품 상세 페이지 조회
-	public void getItemDetail(HttpServletRequest req, HttpServletResponse res);
+	public void itemDetail(HttpServletRequest req, HttpServletResponse res);
 	
 	// 장바구니 리스트
 	public void cartList(HttpServletRequest req, HttpServletResponse res);
-	
+
 	// 장바구니 추가
 	public void addCart(HttpServletRequest req, HttpServletResponse res);
 	
@@ -23,12 +26,6 @@ public interface CustomerService {
 	// 장바구니 삭제
 	public void deleteCart(HttpServletRequest req, HttpServletResponse res);
 	
-	// 장바구니 구매
-	public void buyInCart(HttpServletRequest req, HttpServletResponse res);
-	
-	// 바로 구매
-	public void buyNow(HttpServletRequest req, HttpServletResponse res); 
-	
 	// 배송지 추가
 	public void addDestination(HttpServletRequest req, HttpServletResponse res); 
 	
@@ -37,6 +34,12 @@ public interface CustomerService {
 	
 	// 배송지 삭제
 	public void deleteDestination(HttpServletRequest req, HttpServletResponse res); 
+
+	// 장바구니 구매
+	public void buyInCart(HttpServletRequest req, HttpServletResponse res);
+	
+	// 바로 구매
+	public void buyNow(HttpServletRequest req, HttpServletResponse res); 
 	
 	// 주문 리스트
 	public void orderList(HttpServletRequest req, HttpServletResponse res); 
