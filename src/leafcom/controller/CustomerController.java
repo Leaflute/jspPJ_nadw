@@ -60,14 +60,58 @@ public class CustomerController extends HttpServlet {
 			service.itemDetail(req, res);
 			
 			viewPage = "/customer/item/detail.jsp";
-		}
 		
-		// 장바구니 추가 후 페이지 로드 여부 확인
+		// 장바구니 추가 후 리스트 페이지 로드 여부 확인 팝업창
+		} else if(url.equals("/cartPop.cu")) {
+			System.out.println("[cu][cnt][url ==> /addcart.cu]");
+			
+			service.addCart(req, res);
+			
+			viewPage = "/customer/item/cartPop.jsp";
 		
 		// 장바구니 리스트
+		} else if(url.equals("/addcart.cu")) {
+			System.out.println("[cu][cnt][url ==> /addcart.cu]");
+			
+			service.cartList(req, res);
+			
+			viewPage = "/customer/item/cartList.jsp";
+			
+		// 장바구니 추가
+		} else if(url.equals("/addcart.cu")) {
+			System.out.println("[cu][cnt][url ==> /addcart.cu]");
+			
+			service.itemDetail(req, res);
+			
+			viewPage = "/customer/item/cartList.jsp";
 		
-		// 
+		// 장바구니 수량 변경
+		} else if(url.equals("/addcart.cu")) {
+			System.out.println("[cu][cnt][url ==> /addcart.cu]");
+			
+			service.updateCart(req, res);
+			
+			viewPage = "/customer/item/cartList.jsp";
+			
+		// 장바구니 삭제	
+		} else if(url.equals("/deleteCart.cu")) {
+			System.out.println("[cu][cnt][url ==> /addcart.cu]");
+			
+			service.deleteCart(req, res);
+			
+			viewPage = "/customer/item/cartList.jsp";
 		
+		// 구매 페이지 로드
+		} else if(url.equals("/buyNow.cu")) {
+			System.out.println("[cu][cnt][url ==> /buyNow.cu]");
+			
+			if(req.getSession().getAttribute("member")==null) {
+				viewPage = "/common/login/login.jsp";
+			} else {
+				viewPage = "/customer/item/buyNow.jsp";
+			}
+		}
+			
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 		dispatcher.forward(req, res);
 		

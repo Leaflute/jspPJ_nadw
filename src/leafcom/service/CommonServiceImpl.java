@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import leafcom.dao.CommonDAO;
 import leafcom.dao.CommonDAOImpl;
 import leafcom.util.Code;
+import leafcom.util.MailSendHandler;
 import leafcom.vo.MemberVO;
 
 public class CommonServiceImpl implements CommonService {
@@ -76,7 +77,8 @@ public class CommonServiceImpl implements CommonService {
 		
 		MemberVO vo = new MemberVO();
 		String email = req.getParameter("email");
-		vo.setId(req.getParameter("id"));
+		String id = req.getParameter("id");
+		vo.setId(id);
 		vo.setPw(req.getParameter("pw"));
 		vo.setName(req.getParameter("name"));
 		vo.setEmail(email);
@@ -88,7 +90,8 @@ public class CommonServiceImpl implements CommonService {
 		
 		int insertCnt = dao.insertMember(vo);
 		if(insertCnt==1) {
-			dao.sendActivationEmail(email, key);
+			MailSendHandler msh = new MailSendHandler();
+			msh.sendActivationEmail(id, email, key);
 		}
 		
 		req.setAttribute("insertCnt", insertCnt);
@@ -152,9 +155,8 @@ public class CommonServiceImpl implements CommonService {
 	public void activateID(HttpServletRequest req, HttpServletResponse res) {
 		System.out.println("[co][service][ActivateID()]");
 		
-		MemberVO vo = (MemberVO) req.getSession().getAttribute("member");
 		String key = req.getParameter("key");
-		String id = vo.getId();
+		String id = req.getParameter("id");
 		System.out.println("id:" + id);
 		
 		int selectCnt = dao.idKeyChk(id, key);

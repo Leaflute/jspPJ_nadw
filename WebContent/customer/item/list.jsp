@@ -8,9 +8,11 @@
 <link rel="stylesheet" type="text/css" href="${cssPath}article.css">
 <link rel="stylesheet" type="text/css" href="${cssPath}dashboard.css">
 <link rel="stylesheet" type="text/css" href="${cssPath}item_category.css">
+<script type="text/javascript" src="${jsPath}item.js"></script>
 <title>상품 리스트</title>
 </head>
 <body>
+<form action="buyNow.cu" method="post" name="itemform">
 <%@ include file="../../include/header.jsp" %>
 <!-- article 시작 -->
 <article class="container">
@@ -45,6 +47,7 @@
 						<div class="product_table">
 							<ul class="product_list">
 								<c:forEach var="dto" items="${itemDtos}">
+								<input type="hidden" id="itemId" value="${dto.itemId}">
 								<li>
 									<div class="box a">
 										<img src="${dto.smallImg}">
@@ -59,13 +62,16 @@
 										<ul>
 											<li>￦<fmt:formatNumber value="${dto.price}" pattern="#,###"/></li>
 											<li>																																											
-											${dto.grade}점
+												${dto.grade}점
+											</li>
+											<li>
+												<input type="number" value="1" min="1" max="${dto.stock}" id="amount">
 											</li>
 											<li>
 												<input type="button" class="little_btn" value="장바구니"
-													onclick="window.location=''">
-												<input type="button" class="little_btn" value="구매하기"
-													onclick="window.location=''">
+													onclick="cartPop()">
+												<input type="submit" class="little_btn" value="구매하기"
+													onclick="">
 											</li>
 										</ul>
 									</div>
@@ -82,5 +88,6 @@
 </article>
 <!-- article 끝 -->
 <%@ include file="../../include/footer.jsp" %>
+</form>
 </body>
 </html>

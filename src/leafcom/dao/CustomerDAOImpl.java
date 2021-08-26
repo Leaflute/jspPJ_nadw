@@ -225,7 +225,6 @@ public class CustomerDAOImpl implements CustomerDAO{
 			if(rs!=null) rs.close();
 				if(pstmt!=null) pstmt.close();
 				if(conn!=null) conn.close();
-				if(rs!=null) rs.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -287,37 +286,50 @@ public class CustomerDAOImpl implements CustomerDAO{
 	
 	// 장바구니 상품추가
 	@Override
-	public int addCart(List<CartVO> list) {
+	public int addCart(List<CartVO> list, int itId) {
 		int addCnt = 0;
-		int sitID = 0;
+		int updateCnt = 0;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 		
 		try {
 			conn = dataSource.getConnection();
+			String sql = "";
 			
 			for (CartVO vo:list) {
-				if (vo.getItId()==itId ) {
-				vo.getItId().equals
+				List<Integer> itIdList= getItemId(vo.getMeId());
+				
+				if (itIdList.contains(vo.getItId())) {
+					updateCnt += updateCart(vo.getCaId(),vo.getAmount());
+					
+				} else {
+					sql = "INSERT INTO cart VALUES (cart_num_seq.nextval, ?, ?, ?, ?, ?)";
+					
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, vo.getMeId());
+					pstmt.setInt(2, vo.getItId());
+					pstmt.setInt(3, vo.getAmount());
+					pstmt.setTimestamp(4, vo.getRegDate());
+					pstmt.setInt(5, vo.getCondition());
+					
+					addCnt += pstmt.executeUpdate();
+					System.out.println("새 품목 추가");
 				}
 			}
-			
-			String sql = "";
+			System.out.println("수정된 상품 수: " + addCnt);
+			System.out.println("추가된 상품 수: " + updateCnt);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-			if(rs!=null) rs.close();
 				if(pstmt!=null) pstmt.close();
 				if(conn!=null) conn.close();
-				if(rs!=null) rs.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}		
-		return addCnt;
+		return addCnt+updateCnt;
 		
 	}
 	
@@ -387,10 +399,11 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return list;
 	}
 	
-	// 상품 번호 구하기
+	// 회원이 주문한 상품 번호 리스트 구하기
 	@Override
-	public int getItemId(String meId) {
+	public List<Integer> getItemId(String meId) {
 		int itId = 0;
+		List<Integer> list = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -402,8 +415,9 @@ public class CustomerDAOImpl implements CustomerDAO{
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, meId);
 			rs = pstmt.executeQuery();
+			
 			if(rs.next()) {
-				itId = rs.getInt("it_id");
+				list.add(rs.getInt("it_id"));
 			}
 		
 		} catch (SQLException e) {
@@ -418,47 +432,41 @@ public class CustomerDAOImpl implements CustomerDAO{
 				e.printStackTrace();
 			}
 		}		
-		return itId;
+		return list;
 	}
 	
 	// 수량 조정
 	@Override
 	public int updateCart(int caId, int amount) {
 		int updateCnt = 0;
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		try {
-			conn = dataSource.getConnection();
-			
-			String sql = "UPDATE cart SET ca_amount ca_id = ?";
-			pstmt = conn.prepareStatement(sql);
+		String sql = "UPDATE cart SET ca_amount ca_id = ?";
+		try (	
+			Connection conn = dataSource.getConnection();
+			PreparedStatement pstmt =  conn.prepareStatement(sql);
+			) {
 			pstmt.setInt(1, caId);
 			updateCnt = pstmt.executeUpdate();
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if(pstmt!=null) pstmt.close();
-				if(conn!=null) conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
-		
 		return updateCnt;
 	}
 	
 	// 장바구니 상품 삭제
 	@Override
-	public List<CartVO> deleteCart(String caId) {
+	public int deleteCart(List<Integer> caIdList) {
 		int deleteCnt = 0;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			conn = dataSource.getConnection();
 			
-			String sql = "";
+			for (int caId:caIdList) {
+				String sql = "DELETE FROM cart WHERE ca_id = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, caId);
+				deleteCnt = pstmt.executeUpdate();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -469,7 +477,8 @@ public class CustomerDAOImpl implements CustomerDAO{
 				e.printStackTrace();
 			}
 		}		
-		return null;
+		return deleteCnt;
 	}
-
+	
+	// 
 }

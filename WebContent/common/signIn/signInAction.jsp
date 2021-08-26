@@ -18,7 +18,7 @@
 
 <c:if test="${insertCnt==1}">
 	<script type="text/javascript">
-		alert("회원가입을 축하합니다! 로그인 해주세요.");
+		alert("회원가입을 축하합니다! 이메일 인증완료 하세요.");
 		window.location="index.co";
 	</script>
 </c:if>

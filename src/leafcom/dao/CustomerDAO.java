@@ -25,17 +25,17 @@ public interface CustomerDAO {
 	public ItemVO getItemDetail(int itemId, int categoryId);
 
 	// 상품 중복 확인용 
-	public int getItemId(String meId);
+	public List<Integer> getItemId(String meId);
 
 	// 회원 장바구니 리스트
 	public List<CartVO> cartList(String meId);
 	
 	// 장바구니 상품 추가
-	public int addCart(List<CartVO> list);
+	public int addCart(List<CartVO> list, int itId);
 	
 	// 장바구니 수량 업데이트
 	public int updateCart(int caId, int amount);
 	
-	// 장바구니 삭제
-	public List<CartVO> deleteCart(String caId);
+	// 삭제
+	int deleteCart(List<Integer> caIdList);
 }

@@ -141,6 +141,7 @@ public class CustomerServiceImpl implements CustomerService {
 	// 장바구니 리스트 호출
 	@Override
 	public void cartList(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("[cu][service][cartList()]");
 		String meId = req.getParameter("meId");
 		List<CartVO> cartList = dao.cartList(meId);
 		
@@ -150,6 +151,7 @@ public class CustomerServiceImpl implements CustomerService {
 	// 카트에 상품 추가
 	@Override
 	public void addCart(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("[cu][service][addCart()]");
 		int itId = Integer.parseInt(req.getParameter("itemId"));
 		int amount = Integer.parseInt(req.getParameter("amount"));
 		
@@ -180,7 +182,7 @@ public class CustomerServiceImpl implements CustomerService {
 					memberCartList.add(vo);
 				}	
 			}
-			int addInsert = dao.addCart(memberCartList);
+			int addCnt = dao.addCart(memberCartList,itId);
 			
 		// 세션에 멤버 정보가 존재하지 않을 때(세션에 장바구니 리스트 저장)	
 		} else {
@@ -199,7 +201,7 @@ public class CustomerServiceImpl implements CustomerService {
 			
 			// 장바구니 세션이 존재할 때
 			} else {
-				sessionCartList = (List<CartVO>)req.getSession().getAttribute("cartList");
+				sessionCartList = (ArrayList<CartVO>)req.getSession().getAttribute("cartList");
 				for (CartVO vo:sessionCartList) {
 					// itemId가 동일한 것이 있으면 수량 누적
 					if (vo.getItId()==itId) {
@@ -222,59 +224,64 @@ public class CustomerServiceImpl implements CustomerService {
 	// 수량 조정
 	@Override
 	public void updateCart(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
+		int caId = Integer.parseInt(req.getParameter("caId"));
+		int amount = Integer.parseInt(req.getParameter("amount"));
 		
+		dao.updateCart(caId, amount);
 	}
-
+	
+	// 삭제 요청
 	@Override
 	public void deleteCart(HttpServletRequest req, HttpServletResponse res) {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	// 장바구니 구매
 	@Override
 	public void buyInCart(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
 		
 	}
-
+	
+	// 바로구매
 	@Override
 	public void buyNow(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
 		
 	}
+	
+	// 주소록
 	@Override
 	public void AddressList(HttpServletRequest req, HttpServletResponse res) {
 	
 	}
-		
+	
+	// 주소록 추가
 	@Override
 	public void addAddress(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
 		
 	}
-
+	
+	// 주소록 수정
 	@Override
 	public void updateAddress(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
 		
 	}
-
+	
+	// 주소록 삭제
 	@Override
 	public void deleteAddress(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
 		
 	}
-
+	
+	// 주문목록
 	@Override
 	public void orderList(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
 		
 	}
-
+	
+	// 주문상태 변경(구매확인, 환불요청, 구매확정)
 	@Override
 	public void updateOrder(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
 		
 	}
 

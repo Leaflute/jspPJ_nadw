@@ -16,9 +16,6 @@ public interface CommonDAO {
 	// 회원정보 DB에 삽입
 	public int insertMember(MemberVO vo);
 	
-	// 인증 이메일
-	public void sendActivationEmail(String email, String key);
-	
 	// 이메일 인증 키값 비교
 	public int idKeyChk(String id, String key);
 	

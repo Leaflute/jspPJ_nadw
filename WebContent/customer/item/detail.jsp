@@ -7,14 +7,13 @@
 <link rel="stylesheet" type="text/css" href="${cssPath}article.css">
 <link rel="stylesheet" type="text/css" href="${cssPath}dashboard.css">
 <link rel="stylesheet" type="text/css" href="${cssPath}item_detail.css">
-
+<script type="text/javascript" src="${jsPath}item.js"></script>
 <meta charset="UTF-8">
 <title>상세 페이지</title>
-<script type="text/javascript">
-</script>
 </head>
 <body>
-<form action="" method="Post">
+<form action="" method="Post" name="itemform">
+<input type="hidden" name="itemId" id="itemId" value="${dto.itemId}">
 <%@ include file="../../include/header.jsp" %>
 <!-- article 시작 -->
 <article class="container">
@@ -53,9 +52,10 @@
 							</td>
 						</table>
 						<div class="item_content_btn">
-							<input type="button" id="addCart" value="장바구니" class="little_btn">
+							<input type="button" id="addCart" value="장바구니" class="little_btn"
+								onclick="cartPop()">
 							<input type="button" id="buyNow" value="바로구매" class="little_btn"
-								onclick="window.location=''">
+								onclick="window.location='buyNow.cu'">
 							<input type="button" value="목록" class="little_btn"
 								onclick="window.location=''">		
 						</div>

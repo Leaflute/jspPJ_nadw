@@ -63,22 +63,10 @@ function displayByCategory() {
 	window.location="itemManagement.ad?categoryId="+categoryId.value;
 }
 
-function confirmId() {
-	var iId = document.signInForm.id.value;
-	var chkId = idRule.test(iId);
-	
-	if(!iId) {
-		alert("아이디를 입력하세요.");
-		document.signInForm.id.focus();
-	} else if(!chkId) {
-		alert("올바른 아이디 형식이 아닙니다.");
-		document.signInForm.id.focus();
-	} else {
-		var url = "idDupChk.co?id=" + document.signInForm.id.value;
-		window.open(url, "confirmId", "menubar=no, width=500, height=300");
-	}
+// 카트 추가후 장바구니 확인창 로드
+function cartPop() {
+	var iItemId = document.getElementById("itemId").value;
+	var iAmount = document.getElementById("amount").value;
+	var url = "cartPop.cu?amount=" + iAmount + "&itemId=" + iItemId;
+	window.open(url, "cartPop", "menubar=no, width=500, height=300");	
 }
-
-$("#addCart").click(function(){
-	location.href='addCart.cu?itemID=${}&amount=${}';
-});

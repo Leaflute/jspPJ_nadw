@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import leafcom.service.CommonService;
 import leafcom.service.CommonServiceImpl;
+import leafcom.service.CustomerService;
+import leafcom.service.CustomerServiceImpl;
 
 //http://localhost/jsp_pj_ndw/*.co
 @WebServlet("*.co")
@@ -56,15 +58,24 @@ public class CommonController extends HttpServlet {
 		} else if(url.equals("/login.co")) {
 			System.out.println("[co][cnt][url ==> /logIn.co]");
 			
+			String redirectUrl = req.getHeader("referer");
+			req.setAttribute("redirectUrl", redirectUrl);
+			
 			viewPage = "/common/login/login.jsp";
 		
 		// 로그인 - 처리
 		} else if(url.equals("/loginAction.co")) {
 			System.out.println("[co][cnt][url ==> /loginAction.co]");
+				
 			service.loginAction(req, res);
 			
-			viewPage = "/common/login/loginAction.jsp";
+			// 로그인 시 장바구니에 세션이 존재하면 장바구니 추가
+			if(req.getSession().getAttribute("cartList")!=null) {
+				CustomerService cuService = new CustomerServiceImpl();
+				cuService.addCart(req, res);
+			}	
 			
+			viewPage = "/common/login/loginAction.jsp";
 			
 		// 로그아웃
 		} else if(url.equals("/logout.co")) {
@@ -74,7 +85,6 @@ public class CommonController extends HttpServlet {
 			req.getSession().invalidate();
 			
 			viewPage = "/index.jsp";
-		
 			
 		// 회원가입 - 입력
 		} else if(url.equals("/signIn.co")) {
@@ -96,15 +106,20 @@ public class CommonController extends HttpServlet {
 			
 			viewPage = "/common/signIn/signInAction.jsp";
 		
+		// 이메일 인증 페이지 로드	
+		} else if(url.equals("/signInAction.co")) {
+			System.out.println("[co][cnt][url ==> /signInAction.co]");
+			
+			viewPage = "/customer/myInfo/emailChk.jsp";
+			
 		// 이메일 인증 - 처리
-		} else if(url.equals("/emailChk.co")) {
-			System.out.println("[co][cnt][url ==> /emailChk.co]");
-			if (req.getSession().getAttribute("member")==null) {
-				viewPage = "/common/login/login.jsp";
-			} else {
-				service.activateID(req, res);
-				viewPage = "/customer/myInfo/emailChk.jsp";
-			}	
+		} else if(url.equals("/emailChkAction.co")) {
+			System.out.println("[co][cnt][url ==> /emailChkAction.co]");
+
+			service.activateID(req, res);
+			
+			viewPage = "/customer/myInfo/emailChkAction.jsp";
+				
 		
 		// 마이페이지 이동
 		} else if(url.equals("/myPageMain.co")) {

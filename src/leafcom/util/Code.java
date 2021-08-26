@@ -36,12 +36,14 @@ public interface Code {
 	public final static int NOTICE = 2;		// 공지사항
 	
 	// 주문상태 상수코드
-	public final static int PURCHASE_REQUEST = 1;	// 구매 요청
-	public final static int PURCHASE_APPROVAL = 2;	// 구매 승인
+	public final static int PURCHASE_REQUEST = 1;	// 구매 요청(결제 완료)
+	public final static int PURCHASE_CANCEL = 2;	// 결제 취소 
+	public final static int PURCHASE_APPROVAL = 3;	// 구매 승인
 	public final static int SHIPPING = 4;			// 배송중
 	public final static int EXCHANGE_REQUEST = 5;	// 교환 요청
 	public final static int REFUND_REQUEST = 6;	 	// 환불 요청
 	public final static int REFUND_COMPLETE = 7;	// 환불 완료
 	public final static int PURCHASE_COMPLETE = 8;	// 구매 확정
+	
 	
 }
