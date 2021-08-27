@@ -70,12 +70,12 @@ public class CustomerController extends HttpServlet {
 			viewPage = "/customer/item/cartPop.jsp";
 		
 		// 장바구니 리스트
-		} else if(url.equals("/addcart.cu")) {
-			System.out.println("[cu][cnt][url ==> /addcart.cu]");
+		} else if(url.equals("/cartList.cu")) {
+			System.out.println("[cu][cnt][url ==> /cartList.cu]");
 			
 			service.cartList(req, res);
 			
-			viewPage = "/customer/item/cartList.jsp";
+			viewPage = "/customer/cart/list.jsp";
 			
 		// 장바구니 추가
 		} else if(url.equals("/addcart.cu")) {
@@ -83,7 +83,7 @@ public class CustomerController extends HttpServlet {
 			
 			service.itemDetail(req, res);
 			
-			viewPage = "/customer/item/cartList.jsp";
+			viewPage = "/customer/cart/list.jsp";
 		
 		// 장바구니 수량 변경
 		} else if(url.equals("/addcart.cu")) {
@@ -91,7 +91,7 @@ public class CustomerController extends HttpServlet {
 			
 			service.updateCart(req, res);
 			
-			viewPage = "/customer/item/cartList.jsp";
+			viewPage = "/customer/cart/list.jsp";
 			
 		// 장바구니 삭제	
 		} else if(url.equals("/deleteCart.cu")) {

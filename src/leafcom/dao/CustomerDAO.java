@@ -22,7 +22,7 @@ public interface CustomerDAO {
 	public ArrayList<ItemVO> getItemList(int start, int end, int categoryId);
 	
 	// 상품 상세 페이지
-	public ItemVO getItemDetail(int itemId, int categoryId);
+	public ItemVO getItemDetail(int itemId);
 
 	// 상품 중복 확인용 
 	public List<Integer> getItemId(String meId);

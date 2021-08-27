@@ -1,8 +1,10 @@
 package leafcom.service;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +16,7 @@ import leafcom.vo.CartVO;
 import leafcom.vo.ItemVO;
 import leafcom.vo.MemberVO;
 
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerServiceImpl implements CustomerService, Serializable {
 	
 	CustomerDAO dao = CustomerDAOImpl.getInstance();
 
@@ -130,7 +132,7 @@ public class CustomerServiceImpl implements CustomerService {
 		int itemId = Integer.parseInt(req.getParameter("itemId"));
 		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
 		
-		ItemVO vo = dao.getItemDetail(itemId,categoryId);
+		ItemVO vo = dao.getItemDetail(itemId);
 		
 		req.setAttribute("dto", vo);
 		req.setAttribute("pageNum", pageNum);
@@ -151,7 +153,7 @@ public class CustomerServiceImpl implements CustomerService {
 			cartList = dao.cartList(meId);
 		// 없으면 세션에 저장된 카트를 가져온다
 		} else {
-			cartList = (ArrayList)req.getSession().getAttribute("cartList");
+			cartList = (ArrayList<CartVO>)req.getSession().getAttribute("cartList");
 		}
 		
 		req.setAttribute("cartList", cartList);
@@ -169,6 +171,12 @@ public class CustomerServiceImpl implements CustomerService {
 		List<CartVO> sessionCartList = null;
 		List<CartVO> memberCartList = null;
 		
+		// id를 매개변수로 cVo.set에 필요한 상품 정보 가져옴(iVo)
+		ItemVO iVo = dao.getItemDetail(itId);
+		int price = iVo.getPrice();
+		String itName = iVo.getItemName();
+		String smallImg = iVo.getSmallImg();
+		
 		// 세션에 멤버 정보가 존재할때 
 		if(req.getSession().getAttribute("member")!=null) {
 			System.out.println("로그인 중 DB로감");
@@ -178,20 +186,24 @@ public class CustomerServiceImpl implements CustomerService {
 			// 최초 로그인시 장바구니 세션이 존재했을 때 해당 리스트를 가지고 와서 DB에 추가 -> 장바구니 세션 삭제
 			if(req.getSession().getAttribute("cartList")!=null) {
 				System.out.println("최초 로그인 장바구니 리스트가 존재");
-				sessionCartList = (ArrayList)req.getSession().getAttribute("cartList");
+				sessionCartList = (ArrayList<CartVO>)req.getSession().getAttribute("cartList");
 				memberCartList = sessionCartList;
-
+			
 			// 이미 로그인 중이면 DB에 회원의 장바구니 리스트 추가(장바구니 세션이 존재하지 않음)
 			} else {
 				System.out.println("로그인 중 DB에 장바구니 리스트");
+				
 				memberCartList = dao.cartList(meId);
-				CartVO vo = new CartVO();
-				vo.setAmount(amount);
-				vo.setItId(itId);
-				vo.setMeId(meId);
-				vo.setRegDate(new Timestamp(System.currentTimeMillis()));
-				vo.setCondition(0);	// 견적서가 아닌 일반 장바구니
-				memberCartList.add(vo);
+				CartVO cVo = new CartVO();
+				cVo.setAmount(amount);
+				cVo.setItId(itId);
+				cVo.setMeId(meId);
+				cVo.setPrice(price);
+				cVo.setItName(itName);
+				cVo.setSmallimg(smallImg);
+				cVo.setRegDate(new Timestamp(System.currentTimeMillis()));
+				cVo.setCondition(0);	// 견적서가 아닌 일반 장바구니
+				memberCartList.add(cVo);
 			}
 			int addCnt = dao.addCart(memberCartList,itId);
 			req.getSession().removeAttribute("cartList");
@@ -204,35 +216,41 @@ public class CustomerServiceImpl implements CustomerService {
 				sessionCartList = new ArrayList<CartVO>();
 				
 				// 세션 장바구니 리스트에 CartVO 정보 를 누적
-				CartVO vo = new CartVO();
-				vo.setRegDate(new Timestamp(System.currentTimeMillis()));
-				vo.setItId(itId);
-				vo.setAmount(amount);
-				vo.setCondition(0);
-				sessionCartList.add(vo);
+				CartVO cVo = new CartVO();
+				cVo.setCaId(0);	// 세션에 들어갔기 때문에 PK일 필요가 없음 전부 0으로 처리
+				cVo.setRegDate(new Timestamp(System.currentTimeMillis()));
+				cVo.setPrice(price);
+				cVo.setItName(itName);
+				cVo.setSmallimg(smallImg);
+				cVo.setItId(itId);
+				cVo.setAmount(amount);
+				cVo.setCondition(0);
+				sessionCartList.add(cVo);
 			
 			// 장바구니 세션이 존재할 때
 			} else {
 				System.out.println("비회원 장바구니 누적");
-				sessionCartList = (ArrayList)req.getSession().getAttribute("cartList");
-				System.out.println(sessionCartList);
-				for (CartVO vo : sessionCartList) {
+				sessionCartList = (ArrayList<CartVO>)req.getSession().getAttribute("cartList");
+				Iterator<CartVO> itr = sessionCartList.iterator();
+				while (itr.hasNext()){
+					CartVO cVo = itr.next();
 					// itemId가 동일한 것이 있으면 수량 누적
-					if (vo.getItId()==itId) {
-						vo.setAmount(amount+vo.getAmount());
+					if (cVo.getItId()==itId) {
+						cVo.setAmount(amount+cVo.getAmount());
+						System.out.println("세션-상품수량바꿈");
 					// 없으면 들어온 수량값을 장바구니 VO에 설정
 					} else {
-						vo = new CartVO();
-						vo.setAmount(amount);
+						cVo = new CartVO();
+						cVo.setAmount(amount);
+						cVo.setRegDate(new Timestamp(System.currentTimeMillis()));
+						cVo.setItId(itId);
+						cVo.setCondition(0);
+						sessionCartList.add(cVo);
+						System.out.println("세션-새 상품추가");
 					}
-					vo.setRegDate(new Timestamp(System.currentTimeMillis()));
-					vo.setItId(itId);
-					vo.setCondition(0);
-					sessionCartList.add(vo);
 				}
 			}
 			req.getSession().setAttribute("cartList", sessionCartList);
-			System.out.println(req.getSession().getAttribute("cartList"));
 		}
 		
 	}

@@ -235,7 +235,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 	
 	// 상품 상세 정보 호출
 	@Override
-	public ItemVO getItemDetail(int itemId, int categoryId) {
+	public ItemVO getItemDetail(int itemId) {
 		ItemVO vo = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -297,6 +297,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			String sql = "";
 			
 			for (CartVO vo:list) {
+				
 				List<Integer> itIdList= getItemId(vo.getMeId());
 				
 				if (itIdList.contains(vo.getItId())) {
@@ -388,10 +389,9 @@ public class CustomerDAOImpl implements CustomerDAO{
 			e.printStackTrace();
 		} finally {
 			try {
-			if(rs!=null) rs.close();
+				if(rs!=null) rs.close();
 				if(pstmt!=null) pstmt.close();
 				if(conn!=null) conn.close();
-				if(rs!=null) rs.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -439,7 +439,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 	@Override
 	public int updateCart(int caId, int amount) {
 		int updateCnt = 0;
-		String sql = "UPDATE cart SET ca_amount ca_id = ?";
+		String sql = "UPDATE cart SET ca_amount WHERE ca_id = ?";
 		try (	
 			Connection conn = dataSource.getConnection();
 			PreparedStatement pstmt =  conn.prepareStatement(sql);

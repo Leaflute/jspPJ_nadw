@@ -11,7 +11,7 @@
 <title>장바구니 이동 확인</title>
 </head>
 <body>
-<form action="cartList.cu" method="post">
+<form action="cartList.cu" method="post" onsubmit="opener.location.href='cartList.cu'">
 <table>
 	<tr><th>장바구니로 이동하시겠습니까?</th></tr>
 	<tr>

@@ -4,15 +4,18 @@ import java.sql.Timestamp;
 
 public class CartVO {
 	
+	// 파라미터나 세션에서 가져오는 항목들
 	private int caId;
 	private String meId;
 	private int itId;
 	private int amount;
+	// service에서 자동 입력되는 항목들
 	private Timestamp regDate;
 	private int condition;
+	// itemVO에서 가져와야 할 상목들
 	private int price;
 	private String itName;
-	private String Smallimg;
+	private String smallimg;
 	
 	public int getPrice() {
 		return price;
@@ -27,10 +30,10 @@ public class CartVO {
 		this.itName = itName;
 	}
 	public String getSmallimg() {
-		return Smallimg;
+		return smallimg;
 	}
 	public void setSmallimg(String smallimg) {
-		Smallimg = smallimg;
+		smallimg = smallimg;
 	}
 	public int getCaId() {
 		return caId;
