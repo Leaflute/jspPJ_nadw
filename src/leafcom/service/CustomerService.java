@@ -44,6 +44,8 @@ public interface CustomerService {
 
 	void updateAddress(HttpServletRequest req, HttpServletResponse res);
 
-	void deleteAddress(HttpServletRequest req, HttpServletResponse res); 
+	void deleteAddress(HttpServletRequest req, HttpServletResponse res);
+
+	void loginAddCart(HttpServletRequest req, HttpServletResponse res); 
 	
 }

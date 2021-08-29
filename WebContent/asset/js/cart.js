@@ -9,6 +9,6 @@ var deleteError = "장바구니 삭제를 실패하였습니다. \n확인 후 �
 $(function(){
 	$("#chkAll").change(function(){
 		var isChecked = $("#chkAll").is(":checked");
-		$("#cartcol :checkbox").prop("checked", isChecked);
+		$(".cartcol :checkbox").prop("checked", isChecked);
 	});
 });

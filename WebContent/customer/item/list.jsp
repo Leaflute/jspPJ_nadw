@@ -70,8 +70,7 @@
 											<li>
 												<input type="button" class="little_btn" value="장바구니"
 													onclick="cartPop()">
-												<input type="submit" class="little_btn" value="구매하기"
-													onclick="">
+												<input type="submit" class="little_btn" value="구매하기">
 											</li>
 										</ul>
 									</div>

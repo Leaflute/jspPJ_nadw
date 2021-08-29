@@ -1,8 +1,14 @@
 package leafcom.vo;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class CartVO {
+public class CartVO implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	// 파라미터나 세션에서 가져오는 항목들
 	private int caId;
@@ -15,7 +21,7 @@ public class CartVO {
 	// itemVO에서 가져와야 할 상목들
 	private int price;
 	private String itName;
-	private String smallimg;
+	private String smallImg;
 	
 	public int getPrice() {
 		return price;
@@ -29,11 +35,11 @@ public class CartVO {
 	public void setItName(String itName) {
 		this.itName = itName;
 	}
-	public String getSmallimg() {
-		return smallimg;
+	public String getSmallImg() {
+		return smallImg;
 	}
-	public void setSmallimg(String smallimg) {
-		smallimg = smallimg;
+	public void setSmallImg(String smallImg) {
+		this.smallImg = smallImg;
 	}
 	public int getCaId() {
 		return caId;
@@ -70,6 +76,12 @@ public class CartVO {
 	}
 	public void setCondition(int condition) {
 		this.condition = condition;
+	}
+	@Override
+	public String toString() {
+		return "CartVO [caId=" + caId + ", meId=" + meId + ", itId=" + itId + ", amount=" + amount + ", regDate="
+				+ regDate + ", condition=" + condition + ", price=" + price + ", itName=" + itName + ", smallimg="
+				+ smallImg + "]";
 	}
 	
 	

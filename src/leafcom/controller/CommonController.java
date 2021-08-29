@@ -72,7 +72,7 @@ public class CommonController extends HttpServlet {
 			// 로그인 시 장바구니에 세션이 존재하면 장바구니 추가
 			if(req.getSession().getAttribute("cartList")!=null) {
 				CustomerService cuService = new CustomerServiceImpl();
-				cuService.addCart(req, res);
+				cuService.loginAddCart(req, res);
 			}	
 			
 			viewPage = "/common/login/loginAction.jsp";

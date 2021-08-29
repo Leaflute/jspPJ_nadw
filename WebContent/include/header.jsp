@@ -99,7 +99,7 @@
 						</a>
 					</c:if>
 				</li>
-				<li><a href="customer/mycart.html"><i class="xi-cart-o"></i></a></li>
+				<li><a href="cartList.cu"><i class="xi-cart-o"></i></a></li>
 			</ul>
 		</div>
 	</div>

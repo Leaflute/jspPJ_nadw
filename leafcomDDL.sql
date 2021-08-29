@@ -55,9 +55,13 @@ SELECT * FROM
                FROM post 
               WHERE bo_id = 1 
               ORDER BY po_ref DESC, po_ref_step ASC) p) 
-      WHERE rNum >= 1 AND rNum <= 5;      
+      WHERE rNum >= 1 AND rNum <= 5;   
 
 
+      
+SELECT * FROM user_sequences; 
+SELECT * FROM cart;
+SELECT * FROM orders;
 SELECT * FROM members;
 SELECT * FROM post;
 SELECT * FROM item;

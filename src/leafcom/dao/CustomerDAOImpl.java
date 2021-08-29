@@ -42,7 +42,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 	// 카테고리별 상품 숫자 구하기
 	@Override
 	public int getItemCnt(int categoryId) {
-		int selectCnt = 0;
+		int cnt = 0;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -63,7 +63,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			rs = pstmt.executeQuery();
 			
 			if (rs.next()) {
-				selectCnt = rs.getInt("cnt");
+				cnt = rs.getInt("cnt");
 			}
 			
 		} catch (SQLException e) {
@@ -79,7 +79,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 			}
 		}
 		
-		return selectCnt;
+		return cnt;
 	}
 	
 	// 카테고리 이름 반환 맵
@@ -233,7 +233,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return list;
 	}
 	
-	// 상품 상세 정보 호출
+	// 상품 상세 정보
 	@Override
 	public ItemVO getItemDetail(int itemId) {
 		ItemVO vo = null;
@@ -284,41 +284,58 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return vo;
 	}
 	
-	// 장바구니 상품추가
+	// 장바구니에 담긴 상품 리스트 숫자 확인
 	@Override
-	public int addCart(List<CartVO> list, int itId) {
-		int addCnt = 0;
-		int updateCnt = 0;
+	public int getCartCnt(String meId) {
+		int cnt = 0;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		
 		try {
 			conn = dataSource.getConnection();
-			String sql = "";
+			String sql = "SELECT COUNT(*) cnt FROM cart WHERE me_id = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, meId);
 			
-			for (CartVO vo:list) {
-				
-				List<Integer> itIdList= getItemId(vo.getMeId());
-				
-				if (itIdList.contains(vo.getItId())) {
-					updateCnt += updateCart(vo.getCaId(),vo.getAmount());
-					
-				} else {
-					sql = "INSERT INTO cart VALUES (cart_num_seq.nextval, ?, ?, ?, ?, ?)";
-					
-					pstmt = conn.prepareStatement(sql);
-					pstmt.setString(1, vo.getMeId());
-					pstmt.setInt(2, vo.getItId());
-					pstmt.setInt(3, vo.getAmount());
-					pstmt.setTimestamp(4, vo.getRegDate());
-					pstmt.setInt(5, vo.getCondition());
-					
-					addCnt += pstmt.executeUpdate();
-					System.out.println("새 품목 추가");
-				}
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				cnt = rs.getInt("cnt");
 			}
-			System.out.println("수정된 상품 수: " + addCnt);
-			System.out.println("추가된 상품 수: " + updateCnt);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			if(rs!=null) rs.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+				if(rs!=null) rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return cnt;
+	}
+	
+	// 장바구니 시퀀스 반환
+	@Override
+	public int cartSeq() {
+		int csq = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			String sql = "SELECT cart_num_seq.nextval csq FROM dual";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				csq = rs.getInt("csq");
+			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -329,12 +346,47 @@ public class CustomerDAOImpl implements CustomerDAO{
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}		
-		return addCnt+updateCnt;
-		
+		}	
+		return csq;
+				
 	}
+ 	
+	// 장바구니 상품추가
+	@Override
+	public int insertCart(CartVO vo) {
+		int insertCnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			String sql = "";	
+			
+			sql = "INSERT INTO cart (ca_id, me_id, it_id, ca_amount, ca_regdate, ca_condition) "
+				+ "VALUES (?, ?, ?, ?, ?, ?)";	
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, vo.getCaId());
+			pstmt.setString(2, vo.getMeId());
+			pstmt.setInt(3, vo.getItId());
+			pstmt.setInt(4, vo.getAmount());
+			pstmt.setTimestamp(5, vo.getRegDate());
+			pstmt.setInt(6, vo.getCondition()); 
+			insertCnt = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return insertCnt;
+	}	
 	
-	// 장바구니 리스트
+	// 장바구니 리스트 반환
 	@Override
 	public List<CartVO> cartList(String meId) {
 		List<CartVO> list = null;
@@ -346,14 +398,14 @@ public class CustomerDAOImpl implements CustomerDAO{
 			conn = dataSource.getConnection();
 			
 			String sql = "SELECT c.ca_id ca_id,"
-					+ "			c.me_id me_id,"
-					+ "			c.it_id it_id,"
-					+ "			c.ca_amount ca_amount,"
-					+ "			c.ca_regDate ca_regDate,"
-					+ "			c.ca_condition ca_condition,"
-					+ "			i.it_price it_price,"
-					+ "			i.it_name it_name,"
-					+ "			i.it_small_img it_small_img"
+					+ "			 c.me_id me_id,"
+					+ "			 c.it_id it_id,"
+					+ "			 c.ca_amount ca_amount,"
+					+ "			 c.ca_regDate ca_regDate,"
+					+ "			 c.ca_condition ca_condition,"
+					+ "			 i.it_price it_price,"
+					+ "		 	 i.it_name it_name,"
+					+ "			 i.it_small_img it_small_img"
 					+ "		FROM cart c, item i "
 					+ "	   WHERE c.it_id = i.it_id"
 					+ "	 	 AND c.me_id = ?";
@@ -378,7 +430,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 					vo.setCondition(rs.getInt("ca_condition"));
 					vo.setPrice(rs.getInt("it_price"));
 					vo.setItName(rs.getString("it_name"));
-					vo.setSmallimg(rs.getString("it_small_img"));
+					vo.setSmallImg(rs.getString("it_small_img"));
 					
 					list.add(vo);
 					
@@ -399,10 +451,50 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return list;
 	}
 	
+	// 장바구니 상세 정보 가져오기(상품 id)
+	@Override
+	public CartVO getCartInfo(int caId) {
+		CartVO cVo = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT * FROM cart WHERE ca_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, caId);
+			
+			rs = pstmt.executeQuery();
+		
+			if(rs.next()) {
+				cVo = new CartVO();
+				cVo.setCaId(rs.getInt("ca_id"));
+				cVo.setMeId(rs.getString("me_id"));
+				cVo.setItId(rs.getInt("it_id"));
+				cVo.setAmount(rs.getInt("ca_amount"));
+				cVo.setCondition(rs.getInt("ca_condition"));
+				cVo.setRegDate(rs.getTimestamp("ca_regdate"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+			if(rs!=null) rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return cVo;
+	}
+	
 	// 회원이 주문한 상품 번호 리스트 구하기
 	@Override
-	public List<Integer> getItemId(String meId) {
-		int itId = 0;
+	public List<Integer> getItIdList(String meId) {
 		List<Integer> list = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -417,7 +509,10 @@ public class CustomerDAOImpl implements CustomerDAO{
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				list.add(rs.getInt("it_id"));
+				list = new ArrayList<Integer>();
+				do {
+					list.add(rs.getInt("it_id"));
+				} while (rs.next());
 			}
 		
 		} catch (SQLException e) {
@@ -439,12 +534,13 @@ public class CustomerDAOImpl implements CustomerDAO{
 	@Override
 	public int updateCart(int caId, int amount) {
 		int updateCnt = 0;
-		String sql = "UPDATE cart SET ca_amount WHERE ca_id = ?";
+		String sql = "UPDATE cart SET ca_amount = ? WHERE ca_id = ?";
 		try (	
 			Connection conn = dataSource.getConnection();
 			PreparedStatement pstmt =  conn.prepareStatement(sql);
 			) {
-			pstmt.setInt(1, caId);
+			pstmt.setInt(1, amount);
+			pstmt.setInt(2, caId);
 			updateCnt = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -454,19 +550,18 @@ public class CustomerDAOImpl implements CustomerDAO{
 	
 	// 장바구니 상품 삭제
 	@Override
-	public int deleteCart(List<Integer> caIdList) {
+	public int deleteCart(int caId) {
 		int deleteCnt = 0;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			conn = dataSource.getConnection();
 			
-			for (int caId:caIdList) {
-				String sql = "DELETE FROM cart WHERE ca_id = ?";
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, caId);
-				deleteCnt = pstmt.executeUpdate();
-			}
+			String sql = "DELETE FROM cart WHERE ca_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, caId);
+			deleteCnt = pstmt.executeUpdate();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -480,5 +575,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return deleteCnt;
 	}
 	
-	// 
+	
+	
+
 }

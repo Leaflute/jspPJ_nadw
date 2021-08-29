@@ -9,6 +9,8 @@ import leafcom.vo.ItemVO;
 
 public interface CustomerDAO {
 	
+	// ------------ 상품 --------------
+	
 	// 전체 상품 리스트 개수 구하기
 	public int getItemCnt(int categoryId);
 	
@@ -24,18 +26,36 @@ public interface CustomerDAO {
 	// 상품 상세 페이지
 	public ItemVO getItemDetail(int itemId);
 
-	// 상품 중복 확인용 
-	public List<Integer> getItemId(String meId);
-
+	// ------------ 장바구니 ------------
+	
 	// 회원 장바구니 리스트
 	public List<CartVO> cartList(String meId);
+
+	// 장바구니 상품 id 리스트
+	List<Integer> getItIdList(String meId);
 	
-	// 장바구니 상품 추가
-	public int addCart(List<CartVO> list, int itId);
+	// 장바구니 상세 정보
+	CartVO getCartInfo(int caId);
 	
 	// 장바구니 수량 업데이트
-	public int updateCart(int caId, int amount);
+	int updateCart(int caId, int amount);
 	
-	// 삭제
-	int deleteCart(List<Integer> caIdList);
+	// 장바구니 리스트 삭제
+	int deleteCart(int caId);
+	
+	// 장바구니 존재 여부
+	int getCartCnt(String meId);
+	
+	// 장바구니 시퀀스 반환
+	int cartSeq();
+
+	int insertCart(CartVO vo);
+
+
+
+
+	
+
+
+	
 }
