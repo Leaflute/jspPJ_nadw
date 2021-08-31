@@ -29,9 +29,6 @@ public interface AdminService {
 	// 주문 상태 변경(주문승인, 주문취소, 취소승인, 배송중, 환불승인) 
 	public void updateOrder(HttpServletRequest req, HttpServletResponse res);
 	
-	// 환불 리스트
-	public void refundList(HttpServletRequest req, HttpServletResponse res);
-	
 	// 결산
 	public void accountReport(HttpServletRequest req, HttpServletResponse res);
 	

@@ -3,13 +3,16 @@ package leafcom.service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import leafcom.dao.AdminDAO;
 import leafcom.dao.AdminDAOImpl;
+import leafcom.util.Code;
 import leafcom.vo.ItemVO;
+import leafcom.vo.OrderVO;
 
 public class AdminServiceImpl implements AdminService {
 	
@@ -249,28 +252,102 @@ public class AdminServiceImpl implements AdminService {
 		req.setAttribute("pageNum", pageNum);
 		req.setAttribute("categoryId", categoryId);
 	}
-
+	
+	// 주문 목록
 	@Override
 	public void orderList(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
+		int pageSize = 5; 		// 한 페이지당 출력할 글 개수
+		int pageBlock = 5;		// 한 블럭당 페이지 개수
 		
+		int cnt = 0;			// 게시글 개수
+		int start = 0;			// 현재 페이지 시작 게시글
+		int end = 0;			// 현제 페이지 마지막 게시글
+		int number = 0; 		// 출력용 글 번호
+		String pageNum = ""; 	// 페이지 번호
+		int currentPage = 0;	// 현재 페이지
+ 
+		int pageCount = 0;		// 페이지 개수
+		int startPage = 0; 		// 시작페이지
+		int endPage = 0;		// 마지막 페이지
+		
+		cnt = dao.getOrderCnt();
+		
+		pageNum = req.getParameter("pageNum");
+		
+		if(pageNum == null) {
+			pageNum = "1";		// 첫 페이지를 1페이지로 지정
+		}
+		
+		// 상품 30건 기준
+		currentPage = Integer.parseInt(pageNum);
+		System.out.println("currentPage: " + currentPage);
+		
+		// 페이지 개수 6 = (30 / 5) + (0) : 나머지가 있으면 1페이지 추가
+		pageCount = (cnt / pageSize) + (cnt % pageSize > 0 ? 1 : 0);
+		
+		// 현재 페이지의 시작 글 번호(페이지별)
+		// start = (currentPage - 1) * pageSize + 1;
+		start = (currentPage - 1) * pageSize + 1;
+		
+		// 현재 페이지의 마지막 글 번호(페이지별)
+		// end = start + pageSize - 1;
+		end = start + pageSize - 1;
+		System.out.println("start: " + start);
+		System.out.println("end: " + end);
+		
+		// 출력용 글 번호
+		// number = cnt - (currentPage - 1) * pageSize;
+		number = cnt - (currentPage - 1) * pageSize;
+		
+		System.out.println("number:" + number);
+		
+		// 시작 페이지
+		// startPage = (currentPage / pageBlock) * pageBlock + 1;
+		startPage = (currentPage / pageBlock) * pageBlock + 1;
+		if (currentPage % pageBlock == 0) startPage -= pageBlock;
+		System.out.println("startPage: " + startPage);
+		
+		// 마지막 페이지
+		endPage = startPage + pageBlock - 1;
+		if (endPage > pageCount) endPage = pageCount;
+		
+		System.out.println("endPage: " + endPage);
+		System.out.println("===================");
+		
+		List<OrderVO> orderList = dao.orderList(start, end);
+		
+		req.setAttribute("orderList", orderList);
+		req.setAttribute("cnt", cnt);		
+		req.setAttribute("number", number);
+		req.setAttribute("pageNum", pageNum);
+		
+		if (cnt > 0) {
+			req.setAttribute("startPage", startPage);
+			req.setAttribute("endPage", endPage);
+			req.setAttribute("pageBlock", pageBlock);
+			req.setAttribute("pageCount", pageCount);
+			req.setAttribute("currentPage", currentPage);
+		}
 	}
-
+	
+	// 주문 상태 변경(구매 승인, 배송중, 배송완료, 환불 승인)
 	@Override
 	public void updateOrder(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
+		int odId = Integer.parseInt(req.getParameter("odId"));
+		int condition = Integer.parseInt(req.getParameter("condition"));
+		
+		if (condition==Code.PURCHASE_APPROVAL) {
+			// 프로시저로 재고 감소, 매출액 추가
+		} else if (condition==Code.REFUND_COMPLETE) {
+			// 프로시저로 재고 증가, 매출액 감소
+		}
+		int updateCnt = dao.updateOrder(odId, condition);
 		
 	}
-
-	@Override
-	public void refundList(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
+	// 결산 항목 호출
 	@Override
 	public void accountReport(HttpServletRequest req, HttpServletResponse res) {
-		// TODO Auto-generated method stub
 		
 	}
 	

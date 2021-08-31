@@ -7,9 +7,9 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="${cssPath}article.css">
 <link rel="stylesheet" type="text/css" href="${cssPath}dashboard.css">
-<script src="./asset/js/jquery-3.6.0.min.js" type="text/javascript"></script>
+<script src="./asset/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="${jsPath}cart.js"></script>
-<title>상품관리</title>
+<title>MY주소록</title>
 </head>
 <body>
 <form action="" method="post">
@@ -35,35 +35,49 @@
 								</tr>
 							</thead>
 							<tbody>
-							<c:forEach var="dto" items="${cartList}">
-							<tr class="cartcol">
-								<td><input type="checkbox" name="caIdArray" value="${dto.caId}" checked></td>
-								<td><img src="${dto.smallImg}"></td>
-								<td><a href="itemDetail.cu?itemId=${dto.itId}">${dto.itName}</a></td>
-								<td>￦<fmt:formatNumber value="${dto.price}" pattern="#,###"/></td>
-								<td><input type="number" value="${dto.amount}" min="1" max="" onchange="delCart()"></td>
-								<td>
-									<input type="submit" value="X" class="little_btn" formaction="deleteCart.cu">
-								</td>		
-							</tr>
-							 </c:forEach>
+							<c:forEach var="dto" items="${cartList}" varStatus="status">
+								<tr class="cartcol">
+									<td>
+										<input type="checkbox" class="chkBox" name="caIdArray" value="${dto.caId}" onchange="changePrice()" checked>
+										<input type="hidden" class="price" name="price" value="${dto.price}">
+										<input type="hidden" class="rowPrice" name="rowPrice" value="${dto.price * dto.amount}">
+										<input type="hidden" class="caId" name="caId" value="${dto.caId}">
+									</td>
+									<td><img src="${dto.smallImg}"></td>
+									<td><a href="itemDetail.cu?itemId=${dto.itId}">${dto.itName}</a></td>
+									<td>￦<fmt:formatNumber value="${dto.price}" pattern="#,###"/></td>
+									<td><input type="number" name="amount" class="amount" min="1" max=""  value="${dto.amount}" readonly></td>
+									<td>
+										<input type="button" value="X" class="little_btn" onclick="location.href='deleteCart.cu?caId=${dto.caId}'">
+									</td>
+								</tr>
+								<tr>
+									<th colspan="7" style="font-size:20px;text-align:right;">
+										구매가 : <input type="text" style="font-size:20px" name="rowPrice" class="rowPrice"
+											value="<fmt:formatNumber value='${dto.amount * dto.price}' pattern='￦#.###'/>" readonly="readonly">	
+									</th>
+								</tr>
+							</c:forEach>
 							</tbody>
 						</table>
 						<!-- 페이지 컨트롤 -->
 						<!-- 장바구니 존재 여부 -->
 						<c:if test="${empty cartList}">
 							장바구니 리스트가 존재하지 않습니다.
-						</c:if>
+						</c:if>	
 						<br>
+						<c:if test="${not empty cartList}">
 						<div class="outer_content">
-							상품금액 = <span><fmt:formatNumber value="0" pattern="#.###"/></span>
+							<div class="title_letter">총 결제금액 :<input type="text" id="totalPrice" name="totalPrice" value="<fmt:formatNumber value="0" pattern="￦#.###"/>" style="font-size:20px;"></div>
 						</div>
+						
 						<br>
 						<div class="outer_content">
-							<input type="submit" value="구매하기" class="little_btn" formaction="">
+							<input type="submit" value="구매하기" class="little_btn" formaction="buyInCart.cu">
 							<br>
-							<input type="submit" value="선택삭제" class="little_btn" formaction="">
+							<input type="submit" value="선택삭제" class="little_btn" formaction="deleteCartList.cu?caIdArray=${dto.caId}">
 						</div>
+						</c:if>
 					</div>
 				</div>
 			</div>

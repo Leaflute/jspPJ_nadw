@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import leafcom.dao.CustomerDAO;
 import leafcom.dao.CustomerDAOImpl;
 import leafcom.util.Code;
+import leafcom.vo.AddressVO;
 import leafcom.vo.CartVO;
 import leafcom.vo.ItemVO;
 import leafcom.vo.MemberVO;
@@ -248,6 +249,29 @@ public class CustomerServiceImpl implements CustomerService {
 			String meId = mVo.getId();
 			cVo.setMeId(meId);
 			
+			// 장바구니 리스트가 있을 때
+			if (dao.cartList(meId)!=null) {
+				List<CartVO> memberCartList = dao.cartList(meId);
+				Iterator<CartVO> itr = memberCartList.iterator();
+				while (itr.hasNext()) {
+					CartVO icVo = itr.next();
+					// itemId가 동일한 것이 있으면 수량 누적
+					if (icVo.getItId()==itId) {
+						dao.updateCart(icVo.getCaId(), icVo.getAmount());
+						System.out.println("DB-상품수량바꿈");
+						break;
+					// 없으면 들어온 DB에 새 상품 추가
+					} else {
+						dao.insertCart(cVo);
+						System.out.println("DB-새 상품추가");
+						break;
+					}
+				}
+			// 없을 때
+			} else {
+				dao.insertCart(cVo);
+				System.out.println("DB-새 상품추가");
+			}
 			int addCnt = dao.insertCart(cVo);
 			
 		// 세션에 멤버 정보가 존재하지 않을 때(세션에 장바구니 리스트 저장)	
@@ -273,7 +297,7 @@ public class CustomerServiceImpl implements CustomerService {
 						icVo.setAmount(amount+icVo.getAmount());
 						System.out.println("세션-상품수량바꿈");
 						break;
-						// 없으면 들어온 수량값을 장바구니 VO에 설정
+					// 없으면 들어온 수량값을 장바구니 VO에 설정
 					} else {
 						sessionCartList.add(cVo);
 						System.out.println("세션-새 상품추가");
@@ -285,7 +309,7 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 	}
 	
-	// 수량 조정 버튼 클릭시
+	// 수량 변경시
 	@Override
 	public void updateCart(HttpServletRequest req, HttpServletResponse res) {
 		int caId = Integer.parseInt(req.getParameter("caId"));
@@ -300,27 +324,58 @@ public class CustomerServiceImpl implements CustomerService {
 		} else {
 			List<CartVO> sessionCartList = (List<CartVO>)req.getSession().getAttribute("cartList");
 			Iterator<CartVO> itr = sessionCartList.iterator();
+			int index = 0;
 			while (itr.hasNext()) {
 				CartVO cVo = itr.next();
-				if (cVo.getItId()==caId) {
+				if (cVo.getCaId()==caId) {
 					cVo.setAmount(amount+cVo.getAmount());
+					sessionCartList.set(index, cVo);
 					break;
 				}
+				index++;
 			}
+		req.getSession().setAttribute("cartList", sessionCartList);	
 		}
 	}
 	
-	// 장바구니 삭제
-	@Override
+	// 장바구니 삭제(개별 삭제)
 	public void deleteCart(HttpServletRequest req, HttpServletResponse res) {
+		int caId = Integer.parseInt(req.getParameter("caId"));
+		
+		if (req.getSession().getAttribute("member")!=null) {
+			dao.deleteCart(caId);
+		} else {
+			List<CartVO> sessionCartList = (List<CartVO>)req.getSession().getAttribute("cartList");
+			Iterator<CartVO> itr = sessionCartList.iterator();
+			while (itr.hasNext()) {
+				CartVO cVo = itr.next();
+				if(cVo.getCaId()==caId) {
+					sessionCartList.remove(cVo);
+					break;
+				}
+			}
+		
+			// 장바구니가 비었을 때 세션 삭제처리
+			if (sessionCartList.isEmpty()) {
+				req.getSession().removeAttribute("cartList");
+			} else {
+				req.getSession().setAttribute("cartList", sessionCartList);
+			}
+		
+		}
+	}
+	
+	// 장바구니 삭제(리스트 삭제)
+	@Override
+	public void deleteCartList(HttpServletRequest req, HttpServletResponse res) {
 		String[] strArrCaId = req.getParameterValues("caIdArray");
 		// String CaId 배열을 int형으로 변환하는 스트림
-		int[] arrCaId = Arrays.stream(strArrCaId).mapToInt(Integer::parseInt).toArray(); 
+		int[] intArrCaId = Arrays.stream(strArrCaId).mapToInt(Integer::parseInt).toArray(); 
+		Integer[] arrCaId = Arrays.stream(intArrCaId).boxed().toArray(Integer[]::new);
+		System.out.println("arrCaId: " + arrCaId);
 		
 		// 로그인 했을 때
 		if (req.getSession().getAttribute("member")!=null) {
-			MemberVO mVo = (MemberVO)req.getSession().getAttribute("member");
-			String meId = mVo.getId();
 			
 			for(int caId : arrCaId) {
 				dao.deleteCart(caId);
@@ -328,27 +383,44 @@ public class CustomerServiceImpl implements CustomerService {
 			
 		// 로그인 안 했을 때
 		} else {
+			System.out.println("세션 상품 삭제");
 			List<CartVO> sessionCartList = (List<CartVO>)req.getSession().getAttribute("cartList");
 			Iterator<CartVO> itr = sessionCartList.iterator();
 			while (itr.hasNext()) {
 				CartVO cVo = itr.next();
+				System.out.println(cVo);
 				if (Arrays.asList(arrCaId).contains(cVo.getCaId())) {
 					sessionCartList.remove(cVo);
 				}
 			}
+			
+			if (sessionCartList.isEmpty()) {
+				req.getSession().setAttribute("cartList", sessionCartList);
+			} else {
+				req.getSession().removeAttribute("cartList");
+			}
 		}
+		
 	}
 	
-	// 장바구니 구매 리스트
+	// 장바구니 구매 페이지 리스트 요청
+	public void buyInCartinfo (HttpServletRequest req, HttpServletResponse res) {
+		String[] strArrCaId = req.getParameterValues("caIdArray");
+		// String CaId 배열을 int형으로 변환하는 스트림
+		int[] arrCaId = Arrays.stream(strArrCaId).mapToInt(Integer::parseInt).toArray(); 
 	
+	}
 	
 	// 장바구니 구매 처리
 	@Override
 	public void buyInCart(HttpServletRequest req, HttpServletResponse res) {
 		String[] strArrCaId = req.getParameterValues("caIdArray");
 		// String CaId 배열을 int형으로 변환하는 스트림
-		int[] arrCaId = Arrays.stream(strArrCaId).mapToInt(Integer::parseInt).toArray(); 
+		int[] intArrCaId = Arrays.stream(strArrCaId).mapToInt(Integer::parseInt).toArray(); 
+		Integer[] arrCaId = Arrays.stream(intArrCaId).boxed().toArray(Integer[]::new);
 		int adId = Integer.parseInt(req.getParameter("adId"));
+		int insertCnt = 0;
+		int deleteCnt = 0;
 		
 		for (Integer caId: arrCaId) {
 			// 각각의 ca_id에 해당하는 장바구니 정보를 가져옴
@@ -362,15 +434,18 @@ public class CustomerServiceImpl implements CustomerService {
 			oVo.setAdId(adId);
 			oVo.setRegDate(new Timestamp(System.currentTimeMillis()));
 			oVo.setQuantity(cVo.getAmount());
-			oVo.setPrice(cVo.getPrice());
-			oVo.setItName(cVo.getItName());
-			oVo.setSmallImg(cVo.getSmallImg());
 			oVo.setCondition(Code.PURCHASE_REQUEST);
+			insertCnt += dao.insertOrder(oVo);
+			deleteCnt += dao.deleteCart(caId);
 		}
+		
+		req.setAttribute("insertCnt", insertCnt);
 	}
 	
 	// 바로구매 항목 호출
 	public void buyNowInfo(HttpServletRequest req, HttpServletResponse res) {
+		MemberVO mVo = (MemberVO)req.getSession().getAttribute("member");
+		String meId = mVo.getId();
 		int itId = Integer.parseInt(req.getParameter("itemid"));
 		int quantity = Integer.parseInt(req.getParameter("quantity"));
 		
@@ -383,42 +458,161 @@ public class CustomerServiceImpl implements CustomerService {
 	// 바로구매 처리
 	@Override
 	public void buyNow(HttpServletRequest req, HttpServletResponse res) {
+		MemberVO mVo = (MemberVO)req.getSession().getAttribute("member");
+		String meId = mVo.getId();
+		int adId = Integer.parseInt(req.getParameter("adId"));
+		int amount = Integer.parseInt(req.getParameter("amount"));
+		int itId = Integer.parseInt(req.getParameter("itId"));
+		ItemVO iVo = dao.getItemDetail(itId);
+		int insertCnt = 0;
 		
+		// 주문VO에 대한 새 인스턴스 생성, 장바구니 정보 이식
+		OrderVO oVo = new OrderVO();
+		// oVo.setOdId(dao.OrderSeq());
+		oVo.setItId(iVo.getItemId());
+		oVo.setMeId(meId);
+		oVo.setAdId(adId);
+		oVo.setRegDate(new Timestamp(System.currentTimeMillis()));
+		oVo.setQuantity(amount);
+		oVo.setCondition(Code.PURCHASE_REQUEST);
+		insertCnt = dao.insertOrder(oVo);
+		
+		req.setAttribute("insertCnt", insertCnt);
 	}
 	
-	// 주소록
+	// 주소록 가져오기
 	@Override
-	public void AddressList(HttpServletRequest req, HttpServletResponse res) {
-	
+	public void addressList(HttpServletRequest req, HttpServletResponse res) {
+		MemberVO mVo = (MemberVO)req.getSession().getAttribute("member");
+		String meId = mVo.getId();
+		
+	 	List<AddressVO> addressList = dao.addressList(meId);
+	 	req.setAttribute("addressList", addressList);
 	}
 	
 	// 주소록 추가
+	// 주소록 추가
 	@Override
 	public void addAddress(HttpServletRequest req, HttpServletResponse res) {
+		MemberVO mVo = (MemberVO)req.getSession().getAttribute("member");
+		String meId = mVo.getId();
+		String recipient = req.getParameter("recipient");
+		String tel = req.getParameter("tel");
+		int zipcode = Integer.parseInt(req.getParameter("zipcode"));
+		String main = req.getParameter("main");
+		String detail = req.getParameter("detail");
+		int condition = Integer.parseInt(req.getParameter("condition"));
 		
+		AddressVO aVo = new AddressVO();
+		aVo.setAdId(dao.addressSeq());
+		aVo.setMeId(meId);
+		aVo.setRecipient(recipient);
+		aVo.setTel(tel);
+		aVo.setZipcode(zipcode);
+		aVo.setMain(main);
+		aVo.setDetail(detail);
+		aVo.setCondition(condition);
+		
+		int updateCnt = 0;
+		
+		int insertCnt = dao.insertAddress(aVo);
+		 
+		if (dao.addressList(meId)!=null) {
+			// 입력한 상태가 메인 주소일 경우 나머지 주소들 일반 주소로 변경
+			if (condition==Code.MAIN_ADDRESS) {
+	
+				List<AddressVO> addressList = dao.addressList(meId);
+				Iterator<AddressVO> itr = addressList.iterator();
+				while (itr.hasNext()) {
+					AddressVO iaVo = itr.next();
+					if (iaVo.getAdId()!=aVo.getAdId())
+					iaVo.setCondition(Code.NORMAL_ADDRESS);
+					updateCnt += dao.updateAddress(iaVo);
+				}
+			}
+		}
+		System.out.println("갱신된 항목: " + updateCnt);
+		req.setAttribute("insertCnt", insertCnt);
 	}
 	
+	// 배송지 상세정보
+	@Override
+	public void addressInfo(HttpServletRequest req, HttpServletResponse res) {
+		int adId = Integer.parseInt(req.getParameter("adId"));
+		
+		AddressVO aVo = dao.getAddressInfo(adId);
+		
+		req.setAttribute("dto", aVo);
+	}
+	
+	// 배송지 수정
 	// 주소록 수정
 	@Override
 	public void updateAddress(HttpServletRequest req, HttpServletResponse res) {
+		MemberVO mVo = (MemberVO)req.getSession().getAttribute("member");
+		String meId = mVo.getId();
+		int adId = Integer.parseInt(req.getParameter("adId"));
+		String recipient = req.getParameter("recipient");
+		String tel = req.getParameter("tel");
+		int zipcode = Integer.parseInt(req.getParameter("zipcode"));
+		String main = req.getParameter("main");
+		String detail = req.getParameter("detail");
+		int condition = Integer.parseInt(req.getParameter("condition"));
 		
+		AddressVO aVo = new AddressVO();
+		aVo.setAdId(adId);
+		aVo.setMeId(meId);
+		aVo.setRecipient(recipient);
+		aVo.setTel(tel);
+		aVo.setZipcode(zipcode);
+		aVo.setMain(main);
+		aVo.setDetail(detail);
+		aVo.setCondition(condition);
+		
+		int conCnt = 0;
+		
+		int updateCnt = dao.updateAddress(aVo);
+		
+		if (dao.addressList(meId)!=null) {
+			if (condition==Code.MAIN_ADDRESS) {
+				List<AddressVO> addressList = dao.addressList(meId);
+				Iterator<AddressVO> itr = addressList.iterator();
+				while (itr.hasNext()) {
+					AddressVO iaVo = itr.next();
+					if (iaVo.getAdId()!=adId)
+					iaVo.setCondition(Code.NORMAL_ADDRESS);
+					conCnt += dao.updateAddress(iaVo);
+				}
+			}
+		}	
+		System.out.println("상태 변경된 주소 수: " + conCnt);
+		req.setAttribute("updateCnt", updateCnt);
 	}
 	
 	// 주소록 삭제
 	@Override
 	public void deleteAddress(HttpServletRequest req, HttpServletResponse res) {
+		int adId = Integer.parseInt(req.getParameter("adId"));
+		int deleteCnt = dao.deleteAddress(adId);
 		
+		req.setAttribute("deleteCnt", deleteCnt);
 	}
 	
 	// 주문목록
 	@Override
 	public void orderList(HttpServletRequest req, HttpServletResponse res) {
+		MemberVO mVo = (MemberVO)req.getSession().getAttribute("member");
+		String meId = mVo.getId();
 		
+		List<OrderVO> orderList = dao.orderList(meId);
+		req.setAttribute("orderList", orderList);
 	}
 	
-	// 주문상태 변경(구매확인, 환불요청, 구매확정)
+	// 주문상태 변경(결제완료, 환불요청, 구매확정)
 	@Override
 	public void updateOrder(HttpServletRequest req, HttpServletResponse res) {
+		MemberVO mVo = (MemberVO)req.getSession().getAttribute("member");
+		String meId = mVo.getId();
 		
 	}
 

@@ -59,7 +59,8 @@ public class CommonController extends HttpServlet {
 			System.out.println("[co][cnt][url ==> /logIn.co]");
 			
 			String redirectUrl = req.getHeader("referer");
-			req.setAttribute("redirectUrl", redirectUrl);
+			System.out.println("이전 페이지 정보: " + redirectUrl );
+			req.getSession().setAttribute("redirectUrl", redirectUrl);
 			
 			viewPage = "/common/login/login.jsp";
 		

@@ -38,14 +38,18 @@ public interface CustomerService {
 	// 주문 수정(구매요청, 반품요청, 구매확정, 환불요청)
 	public void updateOrder(HttpServletRequest req, HttpServletResponse res);
 
-	void AddressList(HttpServletRequest req, HttpServletResponse res);
-
 	void addAddress(HttpServletRequest req, HttpServletResponse res);
 
 	void updateAddress(HttpServletRequest req, HttpServletResponse res);
 
 	void deleteAddress(HttpServletRequest req, HttpServletResponse res);
 
-	void loginAddCart(HttpServletRequest req, HttpServletResponse res); 
+	void loginAddCart(HttpServletRequest req, HttpServletResponse res);
+
+	void addressList(HttpServletRequest req, HttpServletResponse res);
+
+	void deleteCartList(HttpServletRequest req, HttpServletResponse res);
+
+	void addressInfo(HttpServletRequest req, HttpServletResponse res); 
 	
 }

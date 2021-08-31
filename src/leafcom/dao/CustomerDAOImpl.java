@@ -12,11 +12,13 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import leafcom.vo.AddressVO;
 import leafcom.vo.CartVO;
 import leafcom.vo.ItemVO;
+import leafcom.vo.OrderVO;
 
 public class CustomerDAOImpl implements CustomerDAO{
-	// 싱글톤 방식으로 객체 생성
+	
 	private static CustomerDAOImpl instance = new CustomerDAOImpl();
 	
 	public static CustomerDAOImpl getInstance() {
@@ -451,7 +453,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return list;
 	}
 	
-	// 장바구니 상세 정보 가져오기(상품 id)
+	// 장바구니 상세 정보 반환
 	@Override
 	public CartVO getCartInfo(int caId) {
 		CartVO cVo = null;
@@ -492,7 +494,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return cVo;
 	}
 	
-	// 회원이 주문한 상품 번호 리스트 구하기
+	// 장바구니에 담긴 상품 번호 리스트 반환
 	@Override
 	public List<Integer> getItIdList(String meId) {
 		List<Integer> list = null;
@@ -530,7 +532,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return list;
 	}
 	
-	// 수량 조정
+	// 장바구니 수량 조정
 	@Override
 	public int updateCart(int caId, int amount) {
 		int updateCnt = 0;
@@ -575,7 +577,380 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return deleteCnt;
 	}
 	
+	// 배송지 리스트
+	@Override
+	public List<AddressVO> addressList(String meId) {
+		List<AddressVO> list = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT *"
+					+ "		FROM address"
+					+ "	   WHERE me_id = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, meId);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				
+				list = new ArrayList<AddressVO>();
+				
+				do {
+					AddressVO aVo = new AddressVO();
+					
+					aVo.setAdId(rs.getInt("ad_id"));
+					aVo.setMeId(rs.getString("me_id"));
+					aVo.setRecipient(rs.getString("ad_recipient"));
+					aVo.setTel(rs.getString("ad_tel"));
+					aVo.setZipcode(rs.getInt("ad_zipcode"));
+					aVo.setMain(rs.getString("ad_main"));
+					aVo.setDetail(rs.getString("ad_detail"));
+					aVo.setCondition(rs.getInt("ad_condition"));
+					
+					list.add(aVo);
+					
+				} while(rs.next());
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs!=null) rs.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}			
+		return list;
+	}
 	
+	// 배송지 추가
+	@Override
+	public int insertAddress(AddressVO aVo) {
+		int insertCnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "INSERT INTO address "
+					+ "		(ad_id, me_id, ad_recipient, ad_tel, ad_zipcode, "
+					+ "		ad_main, ad_detail, ad_condition)"
+					+ "	  VALUES (?, ?, ?, ?, ?, ?, ?, ? )";
+		
+			pstmt = conn.prepareCall(sql);
+			pstmt.setInt(1, aVo.getAdId());
+			pstmt.setString(2, aVo.getMeId());
+			pstmt.setString(3, aVo.getRecipient());
+			pstmt.setString(4, aVo.getTel());
+			pstmt.setInt(5, aVo.getZipcode());
+			pstmt.setString(6, aVo.getMain());
+			pstmt.setString(7, aVo.getDetail());
+			pstmt.setInt(8, aVo.getCondition());
+			
+			insertCnt = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return insertCnt;	
+	}	
+	
+	// 배송지 시퀀스 반환
+	@Override
+	public int addressSeq() {
+		int asq = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			String sql = "SELECT address_num_seq.nextval asq FROM dual";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				asq = rs.getInt("asq");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}	
+		return asq;
+				
+	}
+	
+	// 배송지 상세 정보
+	@Override
+	public AddressVO getAddressInfo(int adId) {
+		AddressVO aVo = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT * FROM address WHERE ad_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, adId);
+			
+			rs = pstmt.executeQuery();
+		
+			if(rs.next()) {
+				aVo = new AddressVO();
+				aVo.setAdId(rs.getInt("ad_id"));
+				aVo.setMeId(rs.getString("me_id"));
+				aVo.setRecipient(rs.getString("ad_recipient"));
+				aVo.setTel(rs.getString("ad_tel"));
+				aVo.setZipcode(rs.getInt("ad_zipcode"));
+				aVo.setMain(rs.getString("ad_main"));
+				aVo.setDetail(rs.getString("ad_detail"));
+				aVo.setCondition(rs.getInt("ca_condition"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+			if(rs!=null) rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return aVo;
+	}
+	
+	// 배송지 수정
+	@Override
+	public int updateAddress(AddressVO aVo) {
+		int updateCnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "UPDATE address "
+					+ "		 SET ad_recipient = ?,"
+					+ "			 ad_tel = ?,"
+					+ "			 ad_zipcode = ?,"
+					+ "			 ad_main = ?,"
+					+ "			 ad_detail = ?,"
+					+ "			 ad_condition = ?"
+					+ "	   WHERE ad_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, aVo.getRecipient());
+			pstmt.setString(2, aVo.getTel());
+			pstmt.setInt(3, aVo.getZipcode());
+			pstmt.setString(4, aVo.getMain());
+			pstmt.setString(5, aVo.getDetail());
+			pstmt.setInt(6, aVo.getCondition());
+			pstmt.setInt(7, aVo.getAdId());
+			
+			updateCnt = pstmt.executeUpdate();
+					
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return updateCnt;
+	}
+	
+	// 배송지 삭제
+	@Override
+	public int deleteAddress(int adId) {
+		int deleteCnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "DELETE FROM address WHERE ad_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, adId);
+			
+			deleteCnt = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return deleteCnt;
+	}
+	
+	// 주문 리스트
+	@Override
+	public List<OrderVO> orderList(String meId) {
+		List<OrderVO> list = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT o.od_id od_id,"
+					+ "			 o.me_id me_id,"
+					+ "			 o.it_id it_id,"
+					+ "			 o.ad_id ad_id,"
+					+ "			 o.od_quantity od_quantity,"
+					+ "			 o.od_regDate od_regDate,"
+					+ "			 o.od_condition od_condition,"
+					+ "			 i.it_price it_price,"
+					+ "		 	 i.it_name it_name,"
+					+ "			 i.it_small_img it_small_img"
+					+ "		FROM orders o, item i"
+					+ "	   WHERE c.it_id = i.it_id"
+					+ "	 	 AND c.me_id = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, meId);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				
+				list = new ArrayList<OrderVO>();
+				
+				do {
+					OrderVO oVo = new OrderVO();
+					
+					oVo.setOdId(rs.getInt("od_id"));
+					oVo.setMeId(meId);
+					oVo.setItId(rs.getInt("it_id"));
+					oVo.setAdId(rs.getInt("ad_id"));
+					oVo.setQuantity(rs.getInt("od_quantity"));
+					oVo.setRegDate(rs.getTimestamp("od_regDate"));
+					oVo.setCondition(rs.getInt("od_condition"));
+					oVo.setPrice(rs.getInt("it_price"));
+					oVo.setItName(rs.getString("it_name"));
+					oVo.setSmallImg(rs.getString("it_small_img"));
+					
+					list.add(oVo);
+					
+				} while(rs.next());
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs!=null) rs.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}			
+		return list;
+	}
+	
+	// 주문하기
+	@Override
+	public int insertOrder(OrderVO oVo) {
+		int insertCnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "INSERT INTO orders (od_id, ad_id, me_id, it_id, od_condition, od_quantity, od_regdate)"
+					   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, oVo.getOdId());
+			pstmt.setInt(2, oVo.getAdId());
+			pstmt.setString(3, oVo.getMeId());
+			pstmt.setInt(4, oVo.getItId());
+			pstmt.setInt(5, oVo.getCondition());
+			pstmt.setInt(6, oVo.getQuantity());
+			pstmt.setTimestamp(7, oVo.getRegDate());
+			
+			insertCnt = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return insertCnt;	
+	}
+	
+	// 주문정보 수정
+	public int updateOrder(int odId, int condition) {
+		int updateCnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "UPDATE orders "
+					   + "	 SET od_condition = ?"
+					   + " WHERE od_id = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, condition);
+			pstmt.setInt(2, odId);
+			
+			updateCnt = pstmt.executeUpdate();
+					
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return updateCnt;	
+	}
 	
 
 }

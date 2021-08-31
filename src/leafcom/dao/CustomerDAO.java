@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import leafcom.vo.AddressVO;
 import leafcom.vo.CartVO;
 import leafcom.vo.ItemVO;
+import leafcom.vo.OrderVO;
 
 public interface CustomerDAO {
 	
@@ -50,6 +52,24 @@ public interface CustomerDAO {
 	int cartSeq();
 
 	int insertCart(CartVO vo);
+
+	int insertOrder(OrderVO oVo);
+
+	int insertAddress(AddressVO aVo);
+
+	List<AddressVO> addressList(String meId);
+
+	int addressSeq();
+
+	int updateAddress(AddressVO aVo);
+
+	int deleteAddress(int adId);
+
+	List<OrderVO> orderList(String meId);
+
+	AddressVO getAddressInfo(int adId);
+
+
 
 
 

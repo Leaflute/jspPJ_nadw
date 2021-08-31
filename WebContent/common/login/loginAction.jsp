@@ -36,7 +36,7 @@
 					window.location="index.co";
 				</script>
 			</c:if>
-			<c:if test="${empty sessionScope.redirectUrl}"></c:if>
+			<c:if test="${not empty sessionScope.redirectUrl}"></c:if>
 				<script type="text/javascript">
 					alert("회원 로그인에 성공했습니다.")
 					window.location="${sessionScope.redirectUrl}";
