@@ -61,14 +61,12 @@ SELECT i.it_id,
 -- 오늘부터 5일 전 매출액과 영업이익 날짜별로 구하기
 SELECT SUM(i.it_price * o.od_quantity) sales, 
        SUM((i.it_price - i.it_cost) * o.od_quantity) margin,
-       TO_CHAR(o.od_regdate,'yyyy') year,
-       TO_CHAR(o.od_regdate,'mm') month,
-       TO_CHAR(o.od_regdate,'dd') day
+       TO_CHAR(o.od_regdate,'yyyy-fmmm-dd') odate
   FROM orders o, item i
  WHERE o.it_id = i.it_id
    AND o.od_condition = 9
    AND o.od_regdate BETWEEN sysdate-5 AND sysdate
- GROUP BY o.od_regdate(o.od_regdate,'yyyy-mm-dd'); 
+ GROUP BY TO_CHAR(o.od_regdate,'yyyy-fmmm-dd');
 
 SELECT * FROM user_sequences; 
 SELECT * FROM cart;

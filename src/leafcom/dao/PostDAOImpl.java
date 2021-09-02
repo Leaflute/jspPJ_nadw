@@ -314,6 +314,7 @@ public class PostDAOImpl implements PostDAO {
 	// 게시글 작성
 	@Override
 	public int insertPost(PostVO vo) {
+		System.out.println("[bo][dao][insertPost()]게시글 작성");
 		int insertCnt = 0;
 		
 		Connection conn = null;
@@ -343,21 +344,22 @@ public class PostDAOImpl implements PostDAO {
 				refLevel++;
 				
 				// 답 글인 경우
-				sql="INSERT INTO post (po_num, bo_id, po_writer, po_title, po_content, po_regdate, "
+				sql="INSERT INTO post (po_num, me_id, bo_id, po_writer, po_title, po_content, po_regdate, "
 						+ "po_hit, po_ref, po_ref_step, po_ref_level, writer_ip, po_condition)"
-						+ "VALUES (po_num_seq.nextval, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?)";
+						+ "VALUES (po_num_seq.nextval, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?)";
 				
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, vo.getBoardId());
-				pstmt.setString(2, vo.getWriter());
-				pstmt.setString(3, vo.getTitle());
-				pstmt.setString(4, vo.getContent());
-				pstmt.setTimestamp(5, vo.getRegDate());
-				pstmt.setInt(6, ref);
-				pstmt.setInt(7, refStep);
-				pstmt.setInt(8, refLevel);
-				pstmt.setString(9, vo.getIp());
-				pstmt.setInt(10, postCondition);
+				pstmt.setString(1, vo.getMeId());
+				pstmt.setInt(2, vo.getBoardId());
+				pstmt.setString(3, vo.getWriter());
+				pstmt.setString(4, vo.getTitle());
+				pstmt.setString(5, vo.getContent());
+				pstmt.setTimestamp(6, vo.getRegDate());
+				pstmt.setInt(7, ref);
+				pstmt.setInt(8, refStep);
+				pstmt.setInt(9, refLevel);
+				pstmt.setString(10, vo.getIp());
+				pstmt.setInt(11, postCondition);
 				
 			} else {
 				System.out.println("원글 작성");
@@ -365,20 +367,21 @@ public class PostDAOImpl implements PostDAO {
 				refLevel = 0;
 				
 				// 새 글인 경우
-				sql="INSERT INTO post (po_num, bo_id, po_writer, po_title, po_content, po_regdate, "
+				sql="INSERT INTO post (po_num, me_id, bo_id, po_writer, po_title, po_content, po_regdate, "
 						+ "po_hit, po_ref, po_ref_step, po_ref_level, writer_ip, po_condition)"
-						+ "VALUES (po_num_seq.nextval, ?, ?, ?, ?, ?, 0, po_num_seq.currval, ?, ?, ?, ?)";
+						+ "VALUES (po_num_seq.nextval, ?, ?, ?, ?, ?, ?, 0, po_num_seq.currval, ?, ?, ?, ?)";
 				
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, vo.getBoardId());
-				pstmt.setString(2, vo.getWriter());
-				pstmt.setString(3, vo.getTitle());
-				pstmt.setString(4, vo.getContent());
-				pstmt.setTimestamp(5, vo.getRegDate());
-				pstmt.setInt(6, refStep);
-				pstmt.setInt(7, refLevel);
-				pstmt.setString(8, vo.getIp());
-				pstmt.setInt(9, postCondition);
+				pstmt.setString(1, vo.getMeId());
+				pstmt.setInt(2, vo.getBoardId());
+				pstmt.setString(3, vo.getWriter());
+				pstmt.setString(4, vo.getTitle());
+				pstmt.setString(5, vo.getContent());
+				pstmt.setTimestamp(6, vo.getRegDate());
+				pstmt.setInt(7, refStep);
+				pstmt.setInt(8, refLevel);
+				pstmt.setString(9, vo.getIp());
+				pstmt.setInt(10, postCondition);
 			}
 			
 			insertCnt = pstmt.executeUpdate();

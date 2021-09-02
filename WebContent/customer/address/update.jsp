@@ -45,15 +45,15 @@
                         extraAddr = ' (' + extraAddr + ')';
                     }
                     // 조합된 참고항목을 해당 필드에 넣는다.
-                    document.getElementById("extraAddress").value = extraAddr;
+                    document.getElementById("main").value = extraAddr;
                 
                 } else {
-                    document.getElementById("extraAddress").value = '';
+                    document.getElementById("main").value = '';
                 }
 
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
                 document.getElementById('postcode').value = data.zonecode;
-                document.getElementById("address").value = addr;
+                document.getElementById("main").value = addr;
                 // 커서를 상세주소 필드로 이동한다.
                 document.getElementById("detailAddress").focus();
             }
@@ -110,7 +110,7 @@
 							<tr>
 								<th>주소*</th>
 								<td>
-									<input type="text" name="main" id="address" value="${dto.main}" placeholder=" 주소">
+									<input type="text" name="main" id="main" value="${dto.main}" placeholder=" 주소">
 								</td>
 							</tr>
 							<tr>	

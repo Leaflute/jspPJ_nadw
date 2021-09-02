@@ -151,7 +151,9 @@ public class PostServiceImpl implements PostService {
 		vo.setRefStep(Integer.parseInt(req.getParameter("refStep")));
 		vo.setRefLevel(Integer.parseInt(req.getParameter("refLevel")));
 		
-		vo.setWriter((String)req.getSession().getAttribute("sessionID"));
+		MemberVO mVo = (MemberVO)req.getSession().getAttribute("member");
+		vo.setMeId(mVo.getId());
+		vo.setWriter(mVo.getName());
 		vo.setTitle(req.getParameter("title"));
 		vo.setContent(req.getParameter("content"));
 		

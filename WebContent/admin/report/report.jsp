@@ -20,13 +20,6 @@ function drawTitleSubtitle() {
 	var month = document.getElementsByName("month");
 	var sales = document.getElementsByName("sales");
 	var margin = document.getElementsByName("margin");
-	
-	console.log(Number("09"));
-	console.log(day[0].value);
-	console.log(year[0].value);
-	console.log(month[0].value);
-	console.log(sales[0].value);
-	console.log(margin[0].value);
 
 	var rowArr = new Array;
 	

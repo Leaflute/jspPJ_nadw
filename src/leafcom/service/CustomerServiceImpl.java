@@ -190,7 +190,7 @@ public class CustomerServiceImpl implements CustomerService {
 		
 			while (itr.hasNext()) {
 				CartVO cVo = itr.next();
-				System.out.println(cVo);
+				cVo.setMeId(meId);
 				// 해당 상품 id가 있는지 여부 판단
 				if (itemIdList.contains(cVo.getItId())) {
 					// DB에 저장되어있던 itId와 meId에 해당하는 수량
@@ -600,7 +600,7 @@ public class CustomerServiceImpl implements CustomerService {
 		int zipcode = Integer.parseInt(req.getParameter("zipcode"));
 		String main = req.getParameter("main");
 		String detail = req.getParameter("detail");
-		int condition = Integer.parseInt(req.getParameter("condition"));
+		int condition = req.getParameter("condition")==null ? 0 : Integer.parseInt(req.getParameter("condition"));
 		
 		AddressVO aVo = new AddressVO();
 		aVo.setAdId(adId);

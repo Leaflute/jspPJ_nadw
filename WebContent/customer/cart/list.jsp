@@ -38,7 +38,7 @@
 							<c:forEach var="dto" items="${cartList}" varStatus="status">
 								<tr class="cartcol">
 									<td>
-										<input type="checkbox" class="chkBox" name="caIdArray" id="caIdArray" value="${dto.caId}"
+										<input type="checkbox" name="caIdArray" id="caIdArray" value="${dto.caId}"
 											onchange="totalPrice();">
 									</td>
 									<td>
@@ -50,8 +50,6 @@
 									<td>
 										￦<fmt:formatNumber value="${dto.price}" pattern="#,###"/>
 										<input type="hidden" class="price" name="price" value="${dto.price}">
-										<input type="hidden" class="rowPrice" name="rowPrice" value="${dto.price * dto.amount}">
-										<input type="hidden" class="caId" name="caId" value="${dto.caId}">
 									</td>
 									<td>
 										<input type="number" class="amount" name="amount" min="1" max=""  value="${dto.amount}">
@@ -62,7 +60,7 @@
 								</tr>
 								<tr>
 									<th colspan="6" style="font-size:20px;text-align:right;">
-										구매가 : <input type="text" name="rowPrice" class="rowPrice" id="rowPrice"
+										구매가 : <input type="text" name="rowPrice" class="rowPrice"
 											value="${dto.amount * dto.price}" style="font-size:20px" readonly>원
 									</th>
 								</tr>
@@ -77,7 +75,7 @@
 						<br>
 						<c:if test="${not empty cartList}">
 						<div class="outer_content">
-							<div class="title_letter">총 결제금액 :<input type="text" id="purchasePrice" name="purchasePrice" value="0" style="font-size:20px;" readonly></div>
+							<div class="title_letter">총 결제금액 : <input type="text" id="purchasePrice" name="purchasePrice" value="0" style="font-size:25px;text-align:center" readonly> 원</div>
 						</div>
 						
 						<br>

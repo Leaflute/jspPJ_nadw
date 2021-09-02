@@ -30,6 +30,9 @@ INSERT INTO categories
 VALUES(9, '모니터');
 COMMIT;
 
+INsert INTO board
+VALUES(1, '', '고객문의');
+
 INSERT INTO CART VALUES (1, 'test1234', 10000, 1, '2021-08-29 09:59:47.696', 0);
 
 delete from members where me_id = 'admin';

@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 public class PostVO {
 	
 	private int boardId;
+	private String meId;
 	private String boardName;
 	private int postNum;
 	private String writer;
@@ -26,6 +27,14 @@ public class PostVO {
 
 	public void setBoardId(int boardId) {
 		this.boardId = boardId;
+	}
+	
+	public String getMeId() {
+		return meId;
+	}
+
+	public void setMeId(String meId) {
+		this.meId = meId;
 	}
 
 	public String getBoardName() {

@@ -30,7 +30,7 @@
 					<div class="inner_content">
 						<table class="input_table">
 							<tr>
-								<th colspan="2"> 문의작성 </th>
+								<th colspan="2" style="text-align:center"> 문의작성 </th>
 							</tr>
 							<tr>
 								<th>제목 </th>
