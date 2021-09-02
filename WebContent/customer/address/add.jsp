@@ -42,20 +42,20 @@
                     }
                     // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
                     if(extraAddr !== ''){
-                        extraAddr = ' (' + extraAddr + ')';
+                        extraAddr += ' (' + extraAddr + ')';
                     }
                     // 조합된 참고항목을 해당 필드에 넣는다.
-                    document.getElementById("address").value = extraAddr;
+                    document.getElementById("detail").value = extraAddr;
                 
                 } else {
-                    document.getElementById("address").value = '';
+                    document.getElementById("detail").value = '';
                 }
 
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                document.getElementById('postcode').value = data.zonecode;
-                document.getElementById("address").value = addr;
+                document.getElementById('zipcode').value = data.zonecode;
+                document.getElementById("main").value = addr;
                 // 커서를 상세주소 필드로 이동한다.
-                document.getElementById("detailAddress").focus();
+                document.getElementById("detail").focus();
             }
         }).open();
     }
@@ -102,20 +102,20 @@
 							<tr>
 								<th><label id="address">우편번호*</label></th>
 								<td>
-									<input type="text" name="zipcode" id="postcode" placeholder=" 우편번호" size=6>
+									<input type="text" name="zipcode" id="zipcode" placeholder=" 우편번호" size=6>
 									<input type="button" onclick="execDaumPostcode();" value=" 주소찾기">
 								</td>
 							</tr>
 							<tr>
 								<th>주소*</th>
 								<td>
-									<input type="text" name="main" id="address" placeholder=" 주소">
+									<input type="text" name="main" id="main" placeholder=" 주소">
 								</td>
 							</tr>
 							<tr>	
 								<th>상세주소*</th>
 								<td>
-									<input type="text" name="detail" id="detailAddress" placeholder=" 상세주소" size=30>
+									<input type="text" name="detail" id="detail" placeholder=" 상세주소" size=30>
 								</td>
 							</tr>
 							<tr>
