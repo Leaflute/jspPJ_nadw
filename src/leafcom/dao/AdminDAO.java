@@ -2,8 +2,11 @@ package leafcom.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import leafcom.vo.ReportVO;
 import leafcom.vo.ItemVO;
+import leafcom.vo.OrderVO;
 
 public interface AdminDAO {
 	
@@ -27,4 +30,18 @@ public interface AdminDAO {
 	
 	// 상품 삭제
 	public int deleteItem(int itemId);
+
+	int getOrderCnt(int condition);
+
+	List<OrderVO> orderList(int start, int end, int condition);
+
+	int updateOrder(int odId, int condition);
+
+	int stockReduce(int itId, int quantity);
+
+	int stockIncrease(int itId, int quantity);
+
+	OrderVO orderInfo(int odId);
+
+	public List<ReportVO> fiveDayReport();
 }

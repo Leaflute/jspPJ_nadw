@@ -1,11 +1,13 @@
 package leafcom.dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -13,6 +15,8 @@ import javax.sql.DataSource;
 
 import leafcom.util.Code;
 import leafcom.vo.ItemVO;
+import leafcom.vo.OrderVO;
+import leafcom.vo.ReportVO;
 
 public class AdminDAOImpl implements AdminDAO {
 
@@ -247,7 +251,8 @@ public class AdminDAOImpl implements AdminDAO {
 			
 		return vo;
 	}
-
+	
+	// 상품 추가
 	@Override
 	public int insertItem(ItemVO vo) {
 		int insertCnt = 0;
@@ -320,7 +325,8 @@ public class AdminDAOImpl implements AdminDAO {
 		}
 		return insertCnt;
 	}
-
+	
+	// 상품 수정
 	@Override
 	public int updateItem(ItemVO vo) {
 		int updateCnt = 0;
@@ -376,7 +382,8 @@ public class AdminDAOImpl implements AdminDAO {
 		
 		return updateCnt;
 	}
-
+	
+	// 상품 삭제
 	@Override
 	public int deleteItem(int itemId) {
 		int deleteCnt = 0;
@@ -406,5 +413,302 @@ public class AdminDAOImpl implements AdminDAO {
 		
 		return deleteCnt;
 	}
+	
+	
+	// 주문상태별 주문목록 개수 구하기
+	@Override
+	public int getOrderCnt(int condition) {
+		int cnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			String sql = "SELECT COUNT(*) cnt FROM orders ";
+			
+			if (condition==0) {
+				pstmt = conn.prepareStatement(sql);
+				
+			} else {
+				sql += "WHERE od_condition = ?";	
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, condition);
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				cnt = rs.getInt("cnt");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			if(rs!=null) rs.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return cnt;
+	}
+	
+	
+	// 상품 목록 구하기
+	@Override
+	public List<OrderVO> orderList(int start, int end, int condition) {
+		List<OrderVO> list = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT * FROM order_v ";
+			
+			if (condition==0) {
+				sql +=	"WHERE rNum >= ? AND rNum <= ?";
+				
+				pstmt = conn.prepareStatement(sql);	
+				pstmt.setInt(1, start);
+				pstmt.setInt(2, end);
+			
+			} else {
+				sql +=	"WHERE rNum >= ? AND rNum <=? AND od_condition = ?";
+			
+				pstmt = conn.prepareStatement(sql);		
+				pstmt.setInt(1, start);
+				pstmt.setInt(2, end);
+				pstmt.setInt(3, condition);
+		
+			}
+			
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				
+				list = new ArrayList<OrderVO>();
+				
+				do {
+					OrderVO oVo = new OrderVO();
+					
+					oVo.setOdId(rs.getInt("od_id"));
+					oVo.setMeId(rs.getString("me_id"));
+					oVo.setItId(rs.getInt("it_id"));
+					oVo.setAdId(rs.getInt("ad_id"));
+					oVo.setQuantity(rs.getInt("od_quantity"));
+					oVo.setRegDate(rs.getTimestamp("od_regDate"));
+					oVo.setCondition(rs.getInt("od_condition"));
+					oVo.setPrice(rs.getInt("it_price"));
+					oVo.setItName(rs.getString("it_name"));
+					oVo.setSmallImg(rs.getString("it_small_img"));
+					
+					list.add(oVo);
+					
+				} while(rs.next());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			if(rs!=null) rs.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+			
+		return list;
+	}
+	
+	// 주문 상세 정보
+	@Override
+	public OrderVO orderInfo(int odId) {
+		OrderVO oVo = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT * FROM orders WHERE od_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, odId);
+			
+			rs = pstmt.executeQuery();
+		
+			if(rs.next()) {
+				oVo = new OrderVO();
+				oVo.setOdId(rs.getInt("od_id"));
+				oVo.setAdId(rs.getInt("ad_id"));
+				oVo.setMeId(rs.getString("me_id"));
+				oVo.setItId(rs.getInt("it_id"));
+				oVo.setCondition(rs.getInt("od_condition"));
+				oVo.setQuantity(rs.getInt("od_quantity"));
+				oVo.setRegDate(rs.getTimestamp("od_regdate"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+			if(rs!=null) rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return oVo;
+	}
+	
+	// 주문정보 수정
+	@Override
+	public int updateOrder(int odId, int condition) {
+		int updateCnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "UPDATE orders "
+					   + "	 SET od_condition = ?"
+					   + " WHERE od_id = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, condition);
+			pstmt.setInt(2, odId);
+			
+			updateCnt = pstmt.executeUpdate();
+					
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return updateCnt;	
+	}
+	
+	// 재고 감소 프로시저
+	@Override
+	public int stockReduce(int itId, int quantity) {
+		int reduceCnt = 0;
+		Connection conn = null;
+		CallableStatement cstmt = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "{call item_stock_minus(?,?)}";
+			cstmt = conn.prepareCall(sql);
+			cstmt.setInt(1, itId);
+			cstmt.setInt(2, quantity);
+			
+			reduceCnt = cstmt.executeUpdate();
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cstmt!=null) cstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return reduceCnt;	
+	}
+	
+	// 재고 증가 프로시저
+	@Override
+	public int stockIncrease(int itId, int quantity) {
+		int reduceCnt = 0;
+		Connection conn = null;
+		CallableStatement cstmt = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "{call item_stock_plus(?,?)}";
+			cstmt = conn.prepareCall(sql);
+			cstmt.setInt(1, itId);
+			cstmt.setInt(2, quantity);
+			
+			reduceCnt = cstmt.executeUpdate();
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(cstmt!=null) cstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		return reduceCnt;	
+	}
+	
+	// 결산(5일간의 매출액과 영업이익)
+	@Override
+	public List<ReportVO> fiveDayReport() {
+		List<ReportVO> reportList = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT SUM(i.it_price * o.od_quantity) sales, \r\n" + 
+					"       SUM((i.it_price - i.it_cost) * o.od_quantity) margin,\r\n" + 
+					"       TO_CHAR(o.od_regdate,'yyyy-fmmm-dd') odate\r\n" + 
+					"  FROM orders o, item i\r\n" + 
+					" WHERE o.it_id = i.it_id\r\n" + 
+					"   AND o.od_condition = 9\r\n" + 
+					"   AND o.od_regdate BETWEEN sysdate-5 AND sysdate\r\n" + 
+					" GROUP BY TO_CHAR(o.od_regdate,'yyyy-fmmm-dd')";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				reportList = new ArrayList<ReportVO>();
+				do {
+					ReportVO rVo = new ReportVO(); 
+					rVo.setSales(rs.getInt("sales"));
+					rVo.setMargin(rs.getInt("margin"));
+					rVo.setoDate(rs.getString("odate"));
+					reportList.add(rVo);
+				} while (rs.next());
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs!=null) pstmt.close();
+				if(pstmt!=null) pstmt.close();
+				if(conn!=null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}			
+		return reportList;
+	}
+	
+
 	
 }

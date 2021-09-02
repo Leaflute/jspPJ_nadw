@@ -9,7 +9,7 @@
 <link rel="stylesheet" type="text/css" href="${cssPath}dashboard.css">
 <script src="./asset/js/jquery-3.6.0.min.js" type="text/javascript"></script>
 
-<title>상품관리</title>
+<title>배송지관리</title>
 </head>
 <body>
 <form action="" method="post">

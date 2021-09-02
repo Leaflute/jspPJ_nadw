@@ -1,6 +1,10 @@
-package leafcom.vo;
+  package leafcom.vo;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+
+import leafcom.util.Code;
 
 public class OrderVO {
 	
@@ -15,6 +19,8 @@ public class OrderVO {
 	int price;
 	String itName;
 	String smallImg;
+	
+	private Map<Integer,String> odConMap = null;
 	
 	public int getOdId() {
 		return odId;
@@ -77,5 +83,17 @@ public class OrderVO {
 		this.smallImg = smallImg;
 	}
 	
-	
+	public Map<Integer,String> getOdConMap() {
+		this.odConMap = new HashMap<Integer,String>();
+		odConMap.put(Code.PURCHASE_REQUEST, "구매요청");
+		odConMap.put(Code.PURCHASE_CANCEL, "결제취소");
+		odConMap.put(Code.PURCHASE_APPROVAL, "구매승인");
+		odConMap.put(Code.SHIPPING, "배송중");
+		odConMap.put(Code.SHIPPING_COMPLETE, "배송완료");
+		odConMap.put(Code.EXCHANGE_REQUEST, "교환요청");
+		odConMap.put(Code.REFUND_REQUEST, "환불요청");
+		odConMap.put(Code.REFUND_COMPLETE, "환불완료");
+		odConMap.put(Code.PURCHASE_COMPLETE, "구매확정");
+		return odConMap;
+	}
 }

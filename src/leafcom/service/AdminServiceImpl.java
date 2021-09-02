@@ -3,7 +3,9 @@ package leafcom.service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +15,7 @@ import leafcom.dao.AdminDAOImpl;
 import leafcom.util.Code;
 import leafcom.vo.ItemVO;
 import leafcom.vo.OrderVO;
+import leafcom.vo.ReportVO;
 
 public class AdminServiceImpl implements AdminService {
 	
@@ -256,7 +259,7 @@ public class AdminServiceImpl implements AdminService {
 	// 주문 목록
 	@Override
 	public void orderList(HttpServletRequest req, HttpServletResponse res) {
-		int pageSize = 5; 		// 한 페이지당 출력할 글 개수
+		int pageSize = 8; 		// 한 페이지당 출력할 글 개수
 		int pageBlock = 5;		// 한 블럭당 페이지 개수
 		
 		int cnt = 0;			// 게시글 개수
@@ -270,7 +273,10 @@ public class AdminServiceImpl implements AdminService {
 		int startPage = 0; 		// 시작페이지
 		int endPage = 0;		// 마지막 페이지
 		
-		cnt = dao.getOrderCnt();
+		int condition = req.getParameter("condition")!=null 
+				? Integer.parseInt(req.getParameter("condition")) : 0;
+		
+		cnt = dao.getOrderCnt(condition);
 		
 		pageNum = req.getParameter("pageNum");
 		
@@ -314,9 +320,17 @@ public class AdminServiceImpl implements AdminService {
 		System.out.println("endPage: " + endPage);
 		System.out.println("===================");
 		
-		List<OrderVO> orderList = dao.orderList(start, end);
+		List<OrderVO> orderList = null;
+		
+		if(cnt > 0) {
+			orderList = dao.orderList(start, end, condition);
+		}
+		OrderVO oVo = new OrderVO();
+		Map<Integer, String> odConMap = oVo.getOdConMap();
 		
 		req.setAttribute("orderList", orderList);
+		req.setAttribute("odConMap", odConMap);
+		req.setAttribute("condition", condition);
 		req.setAttribute("cnt", cnt);		
 		req.setAttribute("number", number);
 		req.setAttribute("pageNum", pageNum);
@@ -335,20 +349,48 @@ public class AdminServiceImpl implements AdminService {
 	public void updateOrder(HttpServletRequest req, HttpServletResponse res) {
 		int odId = Integer.parseInt(req.getParameter("odId"));
 		int condition = Integer.parseInt(req.getParameter("condition"));
+		int pageNum = Integer.parseInt(req.getParameter("pageNum"));
 		
-		if (condition==Code.PURCHASE_APPROVAL) {
-			// 프로시저로 재고 감소, 매출액 추가
-		} else if (condition==Code.REFUND_COMPLETE) {
-			// 프로시저로 재고 증가, 매출액 감소
+		OrderVO oVo = dao.orderInfo(odId);
+		
+		switch (condition) {
+			case Code.REFUND_COMPLETE :    
+				dao.stockIncrease(oVo.getItId(), oVo.getQuantity());
+				break;
+			case Code.PURCHASE_APPROVAL: 
+				dao.stockReduce(oVo.getItId(), oVo.getQuantity());
 		}
+		
 		int updateCnt = dao.updateOrder(odId, condition);
 		
+		req.setAttribute("condition", condition);
+		req.setAttribute("pageNum", pageNum);
 	}
 	
 	// 결산 항목 호출
 	@Override
-	public void accountReport(HttpServletRequest req, HttpServletResponse res) {
-		
+	public void fiveDayReport(HttpServletRequest req, HttpServletResponse res) {
+		System.out.println("[ad][service][fiveDayReport()]");
+		List<ReportVO> reportList = dao.fiveDayReport();
+		int i = 0;
+		Iterator<ReportVO> itr = reportList.iterator();
+		while(itr.hasNext()) {
+			ReportVO rVo = itr.next();
+			System.out.println(rVo);
+			String oDate = rVo.getoDate();
+			// 날짜 쪼개서 배열로 담고
+			String dateArr[] = oDate.split("-");
+			System.out.println(dateArr);
+			// 쪼갠걸 VO 바구니에 담고
+			rVo.setYear(dateArr[0]);
+			rVo.setMonth(dateArr[1]);
+			rVo.setDay(dateArr[2]);
+			// 리스트 갱신
+			reportList.set(i, rVo);
+			i++;
+		}
+		System.out.println(reportList);
+		req.setAttribute("reportList", reportList);
 	}
 	
 }

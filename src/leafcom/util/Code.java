@@ -1,5 +1,8 @@
 package leafcom.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public interface Code {
 	// 관리자 정보
 	public final static String ACTIVATION_HELPER = "leafcom.activation.helper@gmail.com";
@@ -40,12 +43,16 @@ public interface Code {
 	public final static int PURCHASE_CANCEL = 2;	// 결제 취소 
 	public final static int PURCHASE_APPROVAL = 3;	// 구매 승인
 	public final static int SHIPPING = 4;			// 배송중
-	public final static int EXCHANGE_REQUEST = 5;	// 교환 요청
-	public final static int REFUND_REQUEST = 6;	 	// 환불 요청
-	public final static int REFUND_COMPLETE = 7;	// 환불 완료
-	public final static int PURCHASE_COMPLETE = 8;	// 구매 확정
+	public final static int SHIPPING_COMPLETE = 5;	// 배송완료
+	public final static int EXCHANGE_REQUEST = 6;	// 교환 요청
+	public final static int REFUND_REQUEST = 7;	 	// 환불 요청
+	public final static int REFUND_COMPLETE = 8;	// 환불 완료
+	public final static int PURCHASE_COMPLETE = 9;	// 구매 확정
 	
 	// 주소록 상수코드
 	public final static int NORMAL_ADDRESS = 0;		// 일반주소
 	public final static int MAIN_ADDRESS = 1;		// 메인주소
+	
+
+	
 }

@@ -65,12 +65,12 @@
 												${dto.grade}점
 											</li>
 											<li>
-												<input type="number" value="1" min="1" max="${dto.stock}" id="amount">
+												<input type="number" value="1" min="1" max="${dto.stock}" name="amount" id="amount">
 											</li>
 											<li>
 												<input type="button" class="little_btn" value="장바구니"
 													onclick="cartPop()">
-												<input type="submit" class="little_btn" value="구매하기">
+												<input type="submit" class="little_btn" value="구매하기" formaction="buyNow.cu?itemId=${dto.itemId}">
 											</li>
 										</ul>
 									</div>

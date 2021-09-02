@@ -1,30 +1,26 @@
 /**
  * 장바구니 javaScript
  */
-
-$(function(){
-	$("#chkAll").change(function(){
-		var isChecked = $("#chkAll").is(":checked");
-		$(".cartcol :checkbox").prop("checked", isChecked);
-	});
-});
+function selectAll(selectAll) {
+	const chkbox = document.getElementsByName("caIdArray");
 	
-function changePrice() {
-	var chkBox = document.getElementsByName("caIdArray");
-	var rowPrice = Number(0);
-	for(var i=0; i<chkBox.length; i++) {
-		if(chkBox[i].checked) {
-			str = document.getElementsByName("rowPrice")[i].value;
-			arr = str.substr(0, str.length-1).split(',');
-			price = '';
-			for (var j=0; j<arr.length; j++) {
-				price += arr[j];
-			}
-			rowPrice += parseInt(price);
-		}
-	}
+	chkbox.forEach((checkbox) => {
+		checkbox.checked = selectAll.checked
+	})
 	
-	document.getElementById("totalPrice").innerHTML = '총 주문금액 ￦'
-		+ totalPrice.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","); 
+	totalPrice();
 }
 
+function totalPrice() {
+	var chkbox = document.getElementsByName("caIdArray");
+	var rowPrice = document.getElementsByName("rowPrice");
+	var result = document.getElementById("purchasePrice");
+	var sum = 0;
+	
+	for(var i=0;i<chkbox.length-1;i++) {
+		if(chkbox[i+1].checked) {
+			sum += parseInt(rowPrice[i].value);
+		}
+	}
+	result.value = sum;
+}

@@ -1,70 +1,113 @@
-/* Create, Grant Account */
-drop user leafcom cascade;
-create user leafcom identified by tiger default tablespace users;
-grant connect, resource, create view to leafcom;
-grant create view to leafcom;
-alter user leafcom account unlock;
-
-/* COMMIT */
-SAVEPOINT s1;
-COMMIT;
-
 /* Recyclebean */
 PURGE RECYCLEBIN;
 
-/* Drop Tables */
+-- 주문승인시 재고수량 변경(구매수량만큼 차감) 프로시저
+DROP procedure item_stock_minus;
+SET serveroutput ON
+CREATE OR REPLACE PROCEDURE item_stock_minus(
+    v_it_id IN orders.it_id%type,
+    v_od_quantity IN orders.od_quantity%type
+)
+IS
+BEGIN
+    UPDATE item 
+       SET it_stock = it_stock - v_od_quantity
+     WHERE it_id = v_it_id;
+END;
+/
 
-DROP TABLE item CASCADE CONSTRAINTS;
-DROP TABLE members CASCADE CONSTRAINTS;
-DROP TABLE post CASCADE CONSTRAINTS;
-DROP TABLE categories CASCADE CONSTRAINTS;
+-- 환불승인시 재고수량 변경(수량만큼 증가) 프로시저
+DROP procedure item_stock_plus;
+SET serveroutput ON
+CREATE OR REPLACE PROCEDURE item_stock_plus(
+    v_it_id IN orders.it_id%type,
+    v_od_quantity IN orders.od_quantity%type
+)
+IS
+BEGIN
+    UPDATE item 
+       SET it_stock = it_stock + v_od_quantity
+     WHERE it_id = v_it_id;
+END;
+/
 
-/* Create Tables */
-CREATE TABLE categories
-(
-    category_id number(1),
-    category_name varchar2(50),
-    PRIMARY KEY (category_id)
-);
-truncate table categories;
+DROP SEQUENCE cpu_num_seq;
+CREATE SEQUENCE cpu_num_seq
+ START WITH 10000
+ INCREMENT BY 1
+ MAXVALUE 19999;
 
-ALTER TABLE address
-RENAME COLUMN add_recipient to ad_recipient; 
+DROP SEQUENCE ram_num_seq;
+CREATE SEQUENCE ram_num_seq
+ START WITH 20000
+ INCREMENT BY 1
+ MAXVALUE 29999;
 
-CREATE OR REPLACE VIEW item_v
-AS
-SELECT i.it_id, c.cg_id, c.cg_name, i.it_name, i.it_company, i.it_small_img, i.it_large_img, 
-    i.it_detail_img, i.it_regdate, i.it_info, i.it_stock, i.it_cost, i.it_price, i.it_grade, ROWNUM rNum
-FROM item i JOIN categories c
-ON i.cg_id = c.cg_id;
+DROP SEQUENCE mbd_num_seq;
+CREATE SEQUENCE mbd_num_seq
+ START WITH 30000
+ INCREMENT BY 1
+ MAXVALUE 39999;
+ 
+DROP SEQUENCE gpu_num_seq;
+CREATE SEQUENCE gpu_num_seq
+ START WITH 40000
+ INCREMENT BY 1
+ MAXVALUE 49999;
 
-SELECT * FROM
-    (SELECT rownum rNum, p.* 
-       FROM (SELECT * 
-               FROM post 
-              WHERE bd_id = 1 
-                AND po_ref IN (SELECT po_ref 
-                                  FROM po 
-                                 WHERE po_writer = 'test1234') 
-              ORDER BY po_ref DESC, po_ref_step ASC) p) 
-      WHERE rNum >= 1 AND rNum <= 4;
+DROP SEQUENCE powsup_num_seq;
+CREATE SEQUENCE pws_num_seq
+ START WITH 50000
+ INCREMENT BY 1
+ MAXVALUE 59999;
 
-SELECT * FROM
-    (SELECT rownum rNum, p.* 
-       FROM (SELECT * 
-               FROM post 
-              WHERE bo_id = 1 
-              ORDER BY po_ref DESC, po_ref_step ASC) p) 
-      WHERE rNum >= 1 AND rNum <= 5;   
+DROP SEQUENCE ssd_num_seq;
+CREATE SEQUENCE ssd_num_seq
+ START WITH 60000
+ INCREMENT BY 1
+ MAXVALUE 69999;
 
+DROP SEQUENCE hdd_num_seq;
+CREATE SEQUENCE hdd_num_seq
+ START WITH 70000
+ INCREMENT BY 1
+ MAXVALUE 79999;
 
-      
-SELECT * FROM user_sequences; 
-SELECT * FROM cart;
-SELECT * FROM orders;
-SELECT * FROM members;
-SELECT * FROM post;
-SELECT * FROM item;
-SELECT * FROM categories;
-SELECT * FROM item_v;
-SELECT COUNT(*) cnt FROM item WHERE cg_id = 1;
+DROP SEQUENCE cse_num_seq;
+CREATE SEQUENCE cse_num_seq
+ START WITH 80000
+ INCREMENT BY 1
+ MAXVALUE 89999;
+
+DROP SEQUENCE mnt_num_seq;
+CREATE SEQUENCE mnt_num_seq
+ START WITH 90000
+ INCREMENT BY 1
+ MAXVALUE 99999;
+
+DROP SEQUENCE po_num_seq;
+CREATE SEQUENCE po_num_seq
+ START WITH 1
+ INCREMENT BY 1
+ MAXVALUE 999999;
+
+DROP SEQUENCE cart_num_seq;
+CREATE SEQUENCE cart_num_seq
+ START WITH 1
+ INCREMENT BY 1
+ CYCLE
+ MAXVALUE 999999;
+ 
+DROP SEQUENCE address_num_seq;
+CREATE SEQUENCE address_num_seq
+ START WITH 1
+ INCREMENT BY 1
+ CYCLE
+ MAXVALUE 999999;
+ 
+DROP SEQUENCE order_num_seq;
+CREATE SEQUENCE order_num_seq
+ START WITH 1
+ INCREMENT BY 1
+ CYCLE
+ MAXVALUE 999999;

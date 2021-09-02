@@ -21,7 +21,7 @@
 			<ul>
 				<li class="page_title"><a href="mypage.html">MY페이지</a></li>				
 				<li><a href="viewInfo.co">MY정보관리</a></li>
-				<li><a href="myorder.html">MY주문관리</a></li>
+				<li><a href="orderList.cu">MY주문관리</a></li>
 				<li><a href="addressList.cu">MY배송지</a></li>
 				<li><a href="myestimate.html">MY견적서</a></li>
 				<li><a href="csList.bo?boardId=1&fullList=false">MY문의</a></li>
@@ -38,9 +38,9 @@
 				<li class="page_title"><a href="dashboard.html">DASHBOARD</a></li>				
 				<li><a href="#">관리자정보관리</a></li>
 				<li><a href="dashboard_mem.html">회원관리</a></li>
-				<li><a href="dashboard_order.html">주문관리</a></li>
+				<li><a href="orderList.ad">주문관리</a></li>
 				<li><a href="itemManagement.ad">상품관리</a></li>
-				<li><a href="dashboard_report.html">결산관리</a></li>
+				<li><a href="report.ad">결산관리</a></li>
 				<li><a href="csList.bo?boardId=1&fullList=true">고객문의관리</a></li>
 				<li><a href="logout.co">로그아웃</a></li>
 			</ul>

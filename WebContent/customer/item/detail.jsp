@@ -12,7 +12,7 @@
 <title>상세 페이지</title>
 </head>
 <body>
-<form action="" method="Post" name="itemform">
+<form action="buyNow.cu" method="Post" name="itemform">
 <input type="hidden" name="itemId" id="itemId" value="${dto.itemId}">
 <%@ include file="../../include/header.jsp" %>
 <!-- article 시작 -->
@@ -45,7 +45,6 @@
 							<tr><th>판매가</th><td>￦<fmt:formatNumber value="${dto.price}" pattern="#,###"/></td></tr>
 							<tr><th>인기도</th><td>${dto.grade}점</td></tr>
 							<tr><th>배송정보</th><td>기본배송 | 당일발송</td></tr>
-							<tr><th>배송비</th><td>2500원</td></tr>
 							<tr><th>재고:${dto.stock}</th>
 							<td>
 								<input type="number" min=1 max="${dto.stock}" id="amount" name="amount" placeholder="수량">
@@ -54,10 +53,9 @@
 						<div class="item_content_btn">
 							<input type="button" id="addCart" value="장바구니" class="little_btn"
 								onclick="cartPop()">
-							<input type="button" id="buyNow" value="바로구매" class="little_btn"
-								onclick="window.location='buyNow.cu'">
+							<input type="submit" id="buyNow" value="바로구매" class="little_btn">
 							<input type="button" value="목록" class="little_btn"
-								onclick="window.location=''">		
+								onclick="window.history.back()">		
 						</div>
 					</div>
 				</div>

@@ -69,13 +69,12 @@ public interface CustomerDAO {
 
 	AddressVO getAddressInfo(int adId);
 
+	CartVO getCartInfo2(int itId, String meId);
 
+	AddressVO getPrimaryAddressInfo(String meId);
 
+	int updateOrder(int odId, int condition);
 
-
-
-	
-
-
+	OrderVO getOrderInfo(int odId);
 	
 }

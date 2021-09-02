@@ -126,3 +126,25 @@ th, td {
 .input_table td {
 	text-align: left;	
 }
+
+/* 구매 페이지 */
+#purchase_box {
+	width:100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+#purchase_box .pur_box {
+	border: 1px rightgray;
+	padding:5%; 	
+}
+
+.pur_box .left {
+	flex: 7 1 auto;
+	background-color: rightgray;
+}
+
+.pur_box .right {
+	flex: 3 1 auto;
+}

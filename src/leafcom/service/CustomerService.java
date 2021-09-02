@@ -50,6 +50,10 @@ public interface CustomerService {
 
 	void deleteCartList(HttpServletRequest req, HttpServletResponse res);
 
-	void addressInfo(HttpServletRequest req, HttpServletResponse res); 
+	void addressInfo(HttpServletRequest req, HttpServletResponse res);
+
+	void buyNowInfo(HttpServletRequest req, HttpServletResponse res);
+
+	void buyInCartInfo(HttpServletRequest req, HttpServletResponse res); 
 	
 }

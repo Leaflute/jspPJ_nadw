@@ -151,8 +151,32 @@ public class AdminController extends HttpServlet {
 			
 			viewPage = "/admin/item/deleteItemAction.jsp";
 		
-		}
+		// 주문 리스트 확인
+		} else if (url.equals("/orderList.ad")) {
+			System.out.println("[ad][cnt][url ==> /orderList.ad]");
+			
+			service.orderList(req, res);
+			
+			viewPage = "/admin/order/list.jsp";
 		
+		// 주문 상태 변경
+		} else if (url.equals("/updateOrder.ad")) {
+			System.out.println("[ad][cnt][url ==> /updateOrder.ad]");
+			
+			service.updateOrder(req, res);
+			service.orderList(req, res);
+			
+			viewPage = "/admin/order/updateAction.jsp";
+		
+		// 결산 페이지 로드
+		} else if (url.equals("/report.ad")) {
+			System.out.println("[ad][cnt][url ==> /report.ad]");
+			
+			service.fiveDayReport(req, res);
+			
+			viewPage = "/admin/report/report.jsp";	
+		}
+			
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 		dispatcher.forward(req, res);
 		

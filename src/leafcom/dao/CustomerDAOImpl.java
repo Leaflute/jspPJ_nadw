@@ -1,5 +1,6 @@
 package leafcom.dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -365,14 +366,13 @@ public class CustomerDAOImpl implements CustomerDAO{
 			String sql = "";	
 			
 			sql = "INSERT INTO cart (ca_id, me_id, it_id, ca_amount, ca_regdate, ca_condition) "
-				+ "VALUES (?, ?, ?, ?, ?, ?)";	
+				+ "VALUES (cart_num_seq.nextval, ?, ?, ?, ?, ?)";	
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, vo.getCaId());
-			pstmt.setString(2, vo.getMeId());
-			pstmt.setInt(3, vo.getItId());
-			pstmt.setInt(4, vo.getAmount());
-			pstmt.setTimestamp(5, vo.getRegDate());
-			pstmt.setInt(6, vo.getCondition()); 
+			pstmt.setString(1, vo.getMeId());
+			pstmt.setInt(2, vo.getItId());
+			pstmt.setInt(3, vo.getAmount());
+			pstmt.setTimestamp(4, vo.getRegDate());
+			pstmt.setInt(5, vo.getCondition()); 
 			insertCnt = pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -467,6 +467,48 @@ public class CustomerDAOImpl implements CustomerDAO{
 			String sql = "SELECT * FROM cart WHERE ca_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, caId);
+			
+			rs = pstmt.executeQuery();
+		
+			if(rs.next()) {
+				cVo = new CartVO();
+				cVo.setCaId(rs.getInt("ca_id"));
+				cVo.setMeId(rs.getString("me_id"));
+				cVo.setItId(rs.getInt("it_id"));
+				cVo.setAmount(rs.getInt("ca_amount"));
+				cVo.setCondition(rs.getInt("ca_condition"));
+				cVo.setRegDate(rs.getTimestamp("ca_regdate"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+			if(rs!=null) rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return cVo;
+	}
+	
+	// 장바구니 상세 정보 반환(매개변수 다름)
+	@Override
+	public CartVO getCartInfo2(int itId, String meId) {
+		CartVO cVo = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT * FROM cart WHERE me_id = ? AND it_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, meId);
+			pstmt.setInt(2, itId);
 			
 			rs = pstmt.executeQuery();
 		
@@ -590,7 +632,8 @@ public class CustomerDAOImpl implements CustomerDAO{
 			
 			String sql = "SELECT *"
 					+ "		FROM address"
-					+ "	   WHERE me_id = ?";
+					+ "	   WHERE me_id = ?"
+					+ "	   ORDER BY ad_condition DESC";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, meId);
@@ -729,7 +772,50 @@ public class CustomerDAOImpl implements CustomerDAO{
 				aVo.setZipcode(rs.getInt("ad_zipcode"));
 				aVo.setMain(rs.getString("ad_main"));
 				aVo.setDetail(rs.getString("ad_detail"));
-				aVo.setCondition(rs.getInt("ca_condition"));
+				aVo.setCondition(rs.getInt("ad_condition"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+			if(rs!=null) rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return aVo;
+	}
+	
+	// 기본 배송지 정보 
+	@Override
+	public AddressVO getPrimaryAddressInfo(String meId) {
+		AddressVO aVo = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT * FROM address WHERE me_id = ? AND ad_condition = 1";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, meId);
+			
+			rs = pstmt.executeQuery();
+		
+			if(rs.next()) {
+				aVo = new AddressVO();
+				aVo.setAdId(rs.getInt("ad_id"));
+				aVo.setMeId(rs.getString("me_id"));
+				aVo.setRecipient(rs.getString("ad_recipient"));
+				aVo.setTel(rs.getString("ad_tel"));
+				aVo.setZipcode(rs.getInt("ad_zipcode"));
+				aVo.setMain(rs.getString("ad_main"));
+				aVo.setDetail(rs.getString("ad_detail"));
+				aVo.setCondition(rs.getInt("ad_condition"));
 			}
 			
 		} catch (SQLException e) {
@@ -839,8 +925,8 @@ public class CustomerDAOImpl implements CustomerDAO{
 					+ "		 	 i.it_name it_name,"
 					+ "			 i.it_small_img it_small_img"
 					+ "		FROM orders o, item i"
-					+ "	   WHERE c.it_id = i.it_id"
-					+ "	 	 AND c.me_id = ?";
+					+ "	   WHERE o.it_id = i.it_id"
+					+ "	 	 AND o.me_id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, meId);
@@ -884,6 +970,48 @@ public class CustomerDAOImpl implements CustomerDAO{
 		return list;
 	}
 	
+	// 주문 상세 정보
+	@Override
+	public OrderVO getOrderInfo(int odId) {
+		OrderVO oVo = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dataSource.getConnection();
+			
+			String sql = "SELECT * FROM orders WHERE od_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, odId);
+			
+			rs = pstmt.executeQuery();
+		
+			if(rs.next()) {
+				oVo = new OrderVO();
+				oVo.setOdId(rs.getInt("od_id"));
+				oVo.setAdId(rs.getInt("ad_id"));
+				oVo.setMeId(rs.getString("me_id"));
+				oVo.setItId(rs.getInt("it_id"));
+				oVo.setCondition(rs.getInt("od_condition"));
+				oVo.setQuantity(rs.getInt("od_quantity"));
+				oVo.setRegDate(rs.getTimestamp("od_regdate"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+			if(rs!=null) rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return oVo;
+	}
+	
 	// 주문하기
 	@Override
 	public int insertOrder(OrderVO oVo) {
@@ -895,15 +1023,14 @@ public class CustomerDAOImpl implements CustomerDAO{
 			conn = dataSource.getConnection();
 			
 			String sql = "INSERT INTO orders (od_id, ad_id, me_id, it_id, od_condition, od_quantity, od_regdate)"
-					   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+					   + "VALUES (order_num_seq.nextval, ?, ?, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, oVo.getOdId());
-			pstmt.setInt(2, oVo.getAdId());
-			pstmt.setString(3, oVo.getMeId());
-			pstmt.setInt(4, oVo.getItId());
-			pstmt.setInt(5, oVo.getCondition());
-			pstmt.setInt(6, oVo.getQuantity());
-			pstmt.setTimestamp(7, oVo.getRegDate());
+			pstmt.setInt(1, oVo.getAdId());
+			pstmt.setString(2, oVo.getMeId());
+			pstmt.setInt(3, oVo.getItId());
+			pstmt.setInt(4, oVo.getCondition());
+			pstmt.setInt(5, oVo.getQuantity());
+			pstmt.setTimestamp(6, oVo.getRegDate());
 			
 			insertCnt = pstmt.executeUpdate();
 			
@@ -921,6 +1048,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 	}
 	
 	// 주문정보 수정
+	@Override
 	public int updateOrder(int odId, int condition) {
 		int updateCnt = 0;
 		Connection conn = null;
@@ -951,6 +1079,6 @@ public class CustomerDAOImpl implements CustomerDAO{
 		}		
 		return updateCnt;	
 	}
-	
+
 
 }

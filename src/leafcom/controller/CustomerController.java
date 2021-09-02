@@ -148,19 +148,34 @@ public class CustomerController extends HttpServlet {
 			
 			service.updateAddress(req, res);
 			
-			viewPage = "/customer/address/updateAction.jsp";	
+			viewPage = "/customer/address/updateAction.jsp";
+			
+		// 배송지 삭제	
+		} else if(url.equals("/deleteAddress.cu")) {
+			System.out.println("[cu][cnt][url ==> /deleteAddress.cu]");
+			
+			service.deleteAddress(req, res);
+			
+			viewPage = "/customer/address/delete.jsp";
+			
 			
 		// 장바구니 구매 페이지 로드
 		} else if(url.equals("/buyInCart.cu")) {
 			System.out.println("[cu][cnt][url ==> /buyInCart.cu]");
 			
-			service.addressList(req, res);
-			
 			if(req.getSession().getAttribute("member")==null) {
 				viewPage = "/common/login/login.jsp";
 			} else {
-				viewPage = "/customer/item/buyIncart.jsp";
+				service.buyInCartInfo(req, res);
+				viewPage = "/customer/cart/buyInCart.jsp";
 			}
+		
+		// 장바구니 구매 처리
+		} else if(url.equals("/buyInCartAction.cu")) {
+			System.out.println("[cu][cnt][url ==> /buyInCartAction.cu]");
+			
+			service.buyInCart(req, res);
+			viewPage = "/customer/cart/buyInCartAction.jsp";
 			
 		// 바로구매 페이지 로드
 		} else if(url.equals("/buyNow.cu")) {
@@ -169,10 +184,33 @@ public class CustomerController extends HttpServlet {
 			if(req.getSession().getAttribute("member")==null) {
 				viewPage = "/common/login/login.jsp";
 			} else {
+				service.buyNowInfo(req, res);
 				viewPage = "/customer/item/buyNow.jsp";
 			}
-		}	
+		
+		// 바로구매 처리
+		} else if(url.equals("/buyNowAction.cu")) {
+			System.out.println("[cu][cnt][url ==> /buyNowAction.cu]");
 			
+			service.buyNow(req, res);
+			viewPage = "/customer/item/buyNowAction.jsp";
+		
+		// 주문 목록
+		} else if(url.equals("/orderList.cu")) {
+			System.out.println("[cu][cnt][url ==> /buyNowAction.cu]");
+			
+			service.orderList(req, res);
+			viewPage = "/customer/order/list.jsp";
+		
+		// 주문 상태 수정
+		} else if(url.equals("/updateOrder.cu")) {
+			System.out.println("[cu][cnt][url ==> /updateOrder.cu]");
+			
+			service.updateOrder(req, res);
+			service.orderList(req, res);
+			viewPage = "/customer/order/list.jsp";
+		}
+		
 		RequestDispatcher dispatcher = req.getRequestDispatcher(viewPage);
 		dispatcher.forward(req, res);
 		
